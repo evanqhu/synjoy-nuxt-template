@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev -o -p 1024",
+    "dev": "nuxt dev -o -p 1024 --host",
     "generate": "nuxt generate",
     "preview": "PORT=1025 nuxt preview",
     "postinstall": "nuxt prepare",
