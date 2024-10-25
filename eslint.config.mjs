@@ -6,6 +6,10 @@ export default withNuxt(
   {
     rules: {
       '@typescript-eslint/no-unused-vars': 'warn',
+      '@stylistic/quotes': 'warn', // 单引号
+      '@stylistic/semi': 'warn', // 不添加尾随分号
+      '@stylistic/comma-dangle': 'warn', // 添加尾随逗号
+      'vue/html-quotes': 'warn', // Vue template 中用单引号
     },
   },
 )
