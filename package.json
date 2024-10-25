@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^0.6.0",
+    "@pinia/nuxt": "^0.5.5",
     "normalize.css": "^8.0.1",
     "nuxt": "^3.13.2",
+    "pinia": "^2.2.4",
     "vite": "^5.4.10",
     "vue": "latest",
     "vue-router": "latest"
