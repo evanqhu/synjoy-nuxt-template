@@ -2,16 +2,15 @@
 * 配置 ESLint：使用 @/nuxt/eslint 模块
 * 安装 sass
 * 网络请求最佳实践
-* 安装 nuxt-icons
-* 安装 nuxt-img，图片懒加载
-* 
+* 安装 nuxt-icons 模块
+* 安装 nuxt-img 模块，图片懒加载
+* 安装 NuxtDevice 模块
 
 ## 待办
 
 - [ ] rem 适配，移动端
 - [ ] adsense 封装
 - [ ] firebase 封装
-- [ ] useDevice 封装
 - [ ] vite 图片压缩插件
 
 
@@ -276,7 +275,16 @@ const { data: blogs } = await useAsyncData('blogs', () => getData('test params')
 ```
 
 > 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
->
+
+### 移动端适配
+
+暂时还是不使用 rem 单位，移动端和 PC 端的样式都使用 px 绝对单位进行布局，使用媒体查询来写
+
+PC 端和移动端的逻辑差异，需要使用 NuxtDevice 模块来处理
+
+### 设备判断
+
+使用 NuxtDevice 模块判断设备类型 https://nuxt.com/modules/device
 
 ## 注意事项
 

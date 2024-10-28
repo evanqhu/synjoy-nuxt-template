@@ -45,6 +45,8 @@ const { data: hello } = await useAsyncData('hello', () => $fetch('/api/hello'))
 
 const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
 // console.log('🚀🚀🚀  blogs: ', blogs.value)
+
+const { isMobile } = useDevice()
 /** 外部接口 */
 </script>
 

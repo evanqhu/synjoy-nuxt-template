@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   /** 模块 */
-  modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image'],
+  modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image', '@nuxtjs/device'],
 
   /** 插件 */
   plugins: [],
