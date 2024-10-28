@@ -1,7 +1,7 @@
 <!-- 首页 -->
 <script setup lang="ts">
 import { getData } from '~/api/modules/blog'
-import imgURL from '~/assets/imgs/demo.jpg'
+import imgURL from '~/assets/images/demo.jpg'
 
 definePageMeta({
   middleware: 'home-auth',
@@ -55,10 +55,31 @@ const { data: blogs } = await useAsyncData('blogs', () => getData('test params')
       click
     </button>
     <Counter />
+    <NuxtIcon
+      name="nuxt"
+      filled
+    />
+    <div class="text">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!
+      Exercitationem excepturi at reprehenderit! Tempore consectetur facilis rem accusamus dolor voluptate impedit rerum! Facilis, qui! Exercitationem hic magnam sapiente soluta rem facere laborum, laboriosam fugit harum repellendus esse natus amet.
+      Consequuntur eveniet blanditiis, eum aliquid qui doloribus rerum libero non dolorem. Sint nihil voluptate error pariatur ducimus natus, accusantium est. Quis dignissimos ab odit quia molestias quaerat voluptates distinctio veritatis.
+      Voluptatem deserunt delectus est sint dolorem, odio ex vitae asperiores in quisquam ipsa velit fugit? Porro dicta adipisci exercitationem, cumque ducimus, possimus nisi ea rerum quisquam recusandae expedita laborum architecto.
+      Explicabo quas qui rem quod magnam atque animi provident ex, deleniti assumenda repudiandae? Enim expedita maxime, facilis itaque magni deleniti eaque reprehenderit, tenetur nobis officiis, recusandae eligendi quis doloremque dignissimos.
+      Soluta vel mollitia eligendi commodi in incidunt atque excepturi sapiente praesentium, nobis labore eveniet possimus maxime nam, ducimus ipsum. Consequatur eos culpa inventore possimus omnis architecto fugiat fuga obcaecati beatae!
+      Maiores, alias corrupti? Non minima neque adipisci quisquam! Quo, dolor sed. Autem illum, eveniet, rem fugiat dignissimos quas nemo tempora officiis eius perspiciatis dolor fugit a unde error quae adipisci.
+      At inventore fuga officiis adipisci, magnam fugit, id repellat iure, excepturi pariatur molestiae ducimus? Porro dolores suscipit facere dolore. Quia porro tempora modi, delectus praesentium quo excepturi eligendi laborum sunt!
+      Natus incidunt nobis molestiae maxime at quam facere consequatur neque voluptatum possimus, suscipit ab recusandae, sint provident asperiores deserunt ad, aliquam minima dolores eveniet adipisci harum ipsa reiciendis. Odit, sunt.
+      Velit rerum harum perspiciatis voluptatibus iure distinctio totam vel! Corrupti perferendis commodi distinctio consequatur possimus cumque, blanditiis dolorem soluta architecto eum dicta magni saepe magnam deleniti, delectus, hic amet? Mollitia.
+    </div>
+    <NuxtImg src="/demo.jpg" />
     <img
       :src="imgURL"
       alt=""
     >
+    <NuxtImg
+      src="https://picsum.photos/200/300"
+      loading="lazy"
+    />
   </div>
 </template>
 
@@ -69,5 +90,9 @@ const { data: blogs } = await useAsyncData('blogs', () => getData('test params')
   img {
     width: 100%;
   };
+
+  .text {
+    height: 3000px;
+  }
 }
 </style>

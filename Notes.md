@@ -2,6 +2,17 @@
 * 配置 ESLint：使用 @/nuxt/eslint 模块
 * 安装 sass
 * 网络请求最佳实践
+* 安装 nuxt-icons
+* 安装 nuxt-img，图片懒加载
+* 
+
+## 待办
+
+- [ ] rem 适配，移动端
+- [ ] adsense 封装
+- [ ] firebase 封装
+- [ ] useDevice 封装
+- [ ] vite 图片压缩插件
 
 
 ## 目录结构
@@ -10,7 +21,7 @@
 │   ├── modules
 │   └── service.ts
 ├── assets #【静态资源】
-│   ├── imgs
+│   ├── images
 │   └── styles
 ├── components #【公共组件】
 │   ├── AppHeader.vue
@@ -54,13 +65,11 @@
 └── nuxt.config.ts
 ```
 
-## 组合式函数
+## Nuxt 常用 API
 
+### 工具函数
 
-
-## 工具函数
-
-### defineNuxtRouteMiddleware
+#### defineNuxtRouteMiddleware
 
 在 `middleware` 中使用，用来定义路由中间件；路由中间件是接收当前路由和下一个路由作为参数的导航守卫
 
@@ -78,7 +87,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 })
 ```
 
-### definePageMeta
+#### definePageMeta
 
 在 `pages` 中使用，可以使用它为位于 pages 目录中的页面组件设置元数据
 
@@ -93,7 +102,7 @@ definePageMeta({
 </script>
 ```
 
-### defineNuxtPlugin
+#### defineNuxtPlugin
 
 在 `plugins` 中使用，可以用来定义插件
 
@@ -103,7 +112,7 @@ export default defineNuxtPlugin(nuxtApp => {
 })
 ```
 
-### defineEventHandler
+#### defineEventHandler
 
 在 `server` 中使用，可以用来处理接口
 
@@ -153,7 +162,7 @@ Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据，其中�
 
 `useFetch(url)` 几乎等同于 `useAsyncData(url, () => $fetch(url))`
 
-### 封装自定义 $fetch 方法
+#### 封装自定义 $fetch 方法
 
 在 plugins 中新建 customFetch.ts 文件
 
@@ -189,7 +198,7 @@ export default defineNuxtPlugin(() => {
 })
 ```
 
-### 封装自定义 useCustomFetch 方法
+#### 封装自定义 useCustomFetch 方法
 
 在 composables 中新建 useCustomFetch.ts 文件
 
@@ -208,7 +217,7 @@ export function useCustomFetch<T>(
 }
 ```
 
-### 编写请求函数
+#### 编写请求函数
 
 在 api 中新建 service.ts 文件
 
@@ -232,7 +241,7 @@ export const getData = async (params?: string) => {
 
 ```
 
-### 在组件中使用
+#### 在组件中使用
 
 ```javascript
 const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
@@ -244,7 +253,30 @@ const { data: blogs } = await useAsyncData('blogs', () => getData('test params')
 </button>
 ```
 
+### 图标
 
+使用 Nuxt Icons 模块 https://nuxt.com/modules/icons
+
+```html
+<NuxIcon name="nuxt" filled />
+```
+
+### 图片懒加载
+
+使用 Nuxt Img 模块 https://image.nuxt.com/get-started/installation
+
+```html
+<NuxtImg
+  provider="cloudinary"
+  src="/remote/nuxt-org/blog/going-full-static/main.png"
+  width="300"
+  height="169"
+  loading="lazy"
+/>
+```
+
+> 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
+>
 
 ## 注意事项
 
