@@ -20,10 +20,13 @@ export default defineNuxtPlugin(() => {
       }
     },
   })
+
   // 向 nuxtApp 全局上下文提供自定义的 $customFetch 方法（Expose to useNuxtApp().$customFetch）
   return {
     provide: {
       customFetch: $customFetch,
     },
   }
+  // 使用 nuxtApp.provide 将 $customFetch 方法注入到全局上下文
+  // nuxtApp.provide('customFetch', $customFetch)
 })
