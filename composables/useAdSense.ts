@@ -1,14 +1,16 @@
+import { $eventTrack, type eventTrackType } from '~/configs/constants'
+
 export const useAdSense = (adsRefs: any) => {
-  const { $eventTrack } = useNuxtApp()
   const appStore = useAppStore()
   const { adSense } = storeToRefs(appStore)
+  const eventTrack = inject($eventTrack) as eventTrackType
 
   /** 加载脚本 URL */
   const loadAdSenseScript = () => {
     // 检查广告脚本是否加载
     if (window.adsbygoogle && window.adsbygoogle.loaded) {
       console.log('Adsense script already loaded.')
-      $eventTrack('adscript_loaded', 'expose')
+      eventTrack('adscript_loaded', 'expose')
       loadAdWithDelay()
       return
     }
@@ -16,13 +18,13 @@ export const useAdSense = (adsRefs: any) => {
     // 如果不存在广告脚本 URL，则不加载
     if (!adSense.value?.scriptUrl) {
       console.log('🚀🚀🚀 广告脚本的 URL 不存在，终止加载广告外链')
-      $eventTrack('no_adscript_config', 'expose')
+      eventTrack('no_adscript_config', 'expose')
       return
     }
     // 如果脚本已被加载，则不加载
     const existingScript = document.querySelector(`script[src="${adSense.value.scriptUrl}"]`)
     if (existingScript) {
-      $eventTrack('adscript_exist', 'expose')
+      eventTrack('adscript_exist', 'expose')
       console.log('🚀🚀🚀 脚本已存在，无需重新添加')
       return
     }
@@ -34,7 +36,7 @@ export const useAdSense = (adsRefs: any) => {
     script.async = true
     document.head.appendChild(script)
 
-    $eventTrack('adscript_add_success', 'expose')
+    eventTrack('adscript_add_success', 'expose')
     console.log('🚀🚀🚀 脚本插入完成，加载完成，执行加载插入广告及监听操作')
     script.onerror = () => console.error('🚀🚀🚀 广告脚本加载失败')
     script.onload = loadAdWithDelay

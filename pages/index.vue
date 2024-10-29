@@ -68,8 +68,11 @@ const { isMobile } = useDevice()
       name="nuxt"
       filled
     />
-    <AdsbygoogleNew :ads-attrs="adSense.home_1" />
-    <AdsbygoogleNew :ads-attrs="adSense.home_2" />
+    <ClientOnly>
+      <AdsbygoogleNew :ads-attrs="adSense.home_1" />
+      <AdsbygoogleNew :ads-attrs="adSense.home_2" />
+    </ClientOnly>
+
     <div class="text">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!
       Exercitationem excepturi at reprehenderit! Tempore consectetur facilis rem accusamus dolor voluptate impedit rerum! Facilis, qui! Exercitationem hic magnam sapiente soluta rem facere laborum, laboriosam fugit harum repellendus esse natus amet.

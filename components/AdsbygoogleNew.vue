@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-const { $eventTrack } = useNuxtApp()
-const appStore = useAppStore()
+import { $eventTrack, type eventTrackType } from '~/configs/constants'
+
 const route = useRoute()
-const { adSense } = storeToRefs(appStore)
+const { adSense } = useAppStore()
+const eventTrack = inject($eventTrack) as eventTrackType
 
 defineOptions({
-  name: 'AdsbyGoogle',
+  name: 'AdsbyGoogleNew',
 })
 
 interface Props {
@@ -62,25 +63,25 @@ const observeAdStatus = () => {
 /** 加载脚本 URL */
 const loadAdSenseScript = () => {
   // 1. 如果不存在广告脚本，则不加载
-  if (!adSense.value?.scriptUrl) {
+  if (!adSense?.scriptUrl) {
     console.log('🚀🚀🚀 广告脚本的 URL 不存在，终止加载广告外链')
-    $eventTrack('no_adscript_config', 'expose')
+    eventTrack('no_adscript_config', 'expose')
     return
   }
 
   // 2. 广告脚本已加载完毕
   if (window.adsbygoogle && window.adsbygoogle.loaded) {
     console.log('脚本已插入完成')
-    $eventTrack('adscript_loaded', 'expose')
+    eventTrack('adscript_loaded', 'expose')
     displayAd()
     return
   }
 
   // 3. 广告脚本已插入，还未加载完成
-  const existingScript = document.querySelector(`script[src="${adSense.value.scriptUrl}"]`)
+  const existingScript = document.querySelector(`script[src="${adSense.scriptUrl}"]`)
   if (existingScript) {
     console.log('🚀🚀🚀 脚本已存在，无需重新添加')
-    $eventTrack('adscript_exist', 'expose')
+    eventTrack('adscript_exist', 'expose')
     displayAd()
     return
   }
@@ -89,12 +90,12 @@ const loadAdSenseScript = () => {
   console.log('🚀🚀🚀 脚本未创建，准备创建并插入脚本')
   const script = document.createElement('script')
   script.type = 'text/javascript'
-  script.src = adSense.value.scriptUrl
+  script.src = adSense.scriptUrl
   script.crossOrigin = 'anonymous'
   script.async = true
   document.head.appendChild(script)
 
-  $eventTrack('adscript_add_success', 'expose')
+  eventTrack('adscript_add_success', 'expose')
   console.log('🚀🚀🚀 脚本插入完成，加载完成，执行加载插入广告及监听操作')
   script.onerror = () => console.error('🚀🚀🚀 广告脚本加载失败')
   script.onload = displayAd
@@ -115,6 +116,17 @@ const displayAd = async () => {
   ;(window.adsbygoogle = window.adsbygoogle || []).push({}) // 加载广告
 }
 
+/** 展示广告 */
+const showAd = async () => {
+  await nextTick()
+  try {
+    (window.adsbygoogle = window.adsbygoogle || []).push({})
+  }
+  catch (error) {
+    console.error(error)
+  }
+}
+
 onMounted(() => {
   console.log('🚀🚀🚀 onMounted')
   // 开启广告调试模式
@@ -122,12 +134,14 @@ onMounted(() => {
     showDebug.value = true
   }
   loadAdSenseScript()
+  // showAd()
   observeAdStatus()
 })
 
 onActivated(() => {
   console.log('🚀🚀🚀 onActivated')
   loadAdSenseScript()
+  // showAd()
 })
 
 onBeforeUnmount(() => {

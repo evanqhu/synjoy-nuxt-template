@@ -4,21 +4,53 @@ export const defaultSettings = {
   adSense: {
     // 加载 AdSense 脚本的 URL
     scriptUrl:
-      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3125188477567991',
+      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158555231596181',
     // 广告位配置
     home_1: {
       'class': 'adsbygoogle',
       'style': 'display:block',
-      'data-ad-client': 'ca-pub-3125188477567991',
-      'data-ad-slot': '9894162380',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '1468595611',
       'data-ad-format': 'auto',
       'data-full-width-responsive': 'true',
     },
     home_2: {
       'class': 'adsbygoogle',
       'style': 'display:block',
-      'data-ad-client': 'ca-pub-3125188477567991',
-      'data-ad-slot': '3365837503',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '9290411161',
+      'data-ad-format': 'auto',
+      'data-full-width-responsive': 'true',
+    },
+    home_3: {
+      'class': 'adsbygoogle',
+      'style': 'display:block',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '5216268932',
+      'data-ad-format': 'auto',
+      'data-full-width-responsive': 'true',
+    },
+    content_1: {
+      'class': 'adsbygoogle',
+      'style': 'display:block',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '4429670998',
+      'data-ad-format': 'auto',
+      'data-full-width-responsive': 'true',
+    },
+    content_2: {
+      'class': 'adsbygoogle',
+      'style': 'display:block',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '6607082089',
+      'data-ad-format': 'auto',
+      'data-full-width-responsive': 'true',
+    },
+    content_3: {
+      'class': 'adsbygoogle',
+      'style': 'display:block',
+      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-slot': '7650860583',
       'data-ad-format': 'auto',
       'data-full-width-responsive': 'true',
     },
@@ -30,8 +62,8 @@ export const defaultSettings = {
   //   projectId: 'webs-58a8d',
   //   storageBucket: 'webs-58a8d.appspot.com',
   //   messagingSenderId: '730684174767',
-  //   appId: '1:730684174767:web:c2116944c8d15fb40c3f5a',
-  //   measurementId: 'G-TYZVCBGETW',
+  //   appId: '1:730684174767:web:98cad94ee478557c0c3f5a',
+  //   measurementId: 'G-4MPLF3JL2K',
   // },
   /** 关于我们 */
   aboutUs:

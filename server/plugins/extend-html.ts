@@ -7,7 +7,7 @@ export default defineNitroPlugin((nitroApp) => {
       `<meta name="description" content="My custom description" />`,
     )
     html.head.push(
-      '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">',
+      '<script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158555231596181" crossorigin="anonymous" async></script>',
     )
   })
   // You can also intercept the response here.

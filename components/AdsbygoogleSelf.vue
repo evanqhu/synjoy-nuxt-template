@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 defineOptions({
-  name: 'AdsbyGoogle',
+  name: 'AdsbyGoogleSelf',
 })
 
 interface Props {

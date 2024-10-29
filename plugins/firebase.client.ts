@@ -1,20 +1,11 @@
 // 仅在客户端运行的插件
 import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
+import { $logEvent, $eventTrack } from '~/configs/constants'
 
-export default defineNuxtPlugin(async () => {
-  // TODO 是否应该放在 app.config.ts 中呢
-  const config = useAppConfig()
-
-  const firebaseConfig = {
-    apiKey: config.FB_API_KEY,
-    authDomain: config.FB_AUTH_DOMAIN,
-    projectId: config.FB_PROJECT_ID,
-    storageBucket: config.FB_STORAGE_BUCKET,
-    messagingSenderId: config.FB_MESSAGING_SENDER_ID,
-    appId: config.FB_APP_ID,
-    measurementId: config.FB_MEASUREMENT_ID,
-  }
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const runtimeConfig = useRuntimeConfig()
+  const firebaseConfig = runtimeConfig.public.firebase
 
   /** 初始化 Firebase */
   const initializeFirebase = () => {
@@ -33,12 +24,11 @@ export default defineNuxtPlugin(async () => {
     logEvent(analytics, 'in_page')
     console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
 
-    const $logEvent = (eventName: string, eventParams = {}) => {
+    const _logEvent = (eventName: string, eventParams = {}) => {
       logEvent(analytics, eventName, eventParams)
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     }
-
-    const $eventTrack = (eventName: string, method: string, eventParams = {}) => {
+    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
       const _eventParams = {
         time: new Date(),
         message: eventName,
@@ -49,24 +39,20 @@ export default defineNuxtPlugin(async () => {
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     }
 
-    return {
-      provide: {
-        logEvent: $logEvent,
-        eventTrack: $eventTrack,
-      },
-    }
+    nuxtApp.vueApp.provide($logEvent, _logEvent)
+    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
   }
   catch (error) {
     console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
-    return {
-      provide: {
-        logEvent: (eventName: string, eventParams = {}) => {
-          console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-        },
-        eventTrack: (eventName: string, method: string, eventParams = {}) => {
-          console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
-        },
-      },
+
+    const _logEvent = (eventName: string, eventParams = {}) => {
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
     }
+    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
+    }
+
+    nuxtApp.vueApp.provide($logEvent, _logEvent)
+    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
   }
 })
