@@ -5,6 +5,7 @@
 * 安装 nuxt-icons 模块
 * 安装 nuxt-img 模块，图片懒加载
 * 安装 NuxtDevice 模块
+* 安装 firebase 插件
 
 ## 待办
 
@@ -12,6 +13,7 @@
 - [ ] adsense 封装
 - [ ] firebase 封装
 - [ ] vite 图片压缩插件
+- [ ] 环境变量
 
 
 ## 目录结构

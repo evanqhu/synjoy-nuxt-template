@@ -11,6 +11,8 @@ export default withNuxt(
       '@stylistic/comma-dangle': 'warn', // 添加尾随逗号
       'vue/html-quotes': 'warn', // Vue template 中用单引号
       '@stylistic/no-trailing-spaces': 'warn', // 删除尾随空格
+      '@stylistic/eol-last': 'warn', // 添加尾随换行
+      '@typescript-eslint/no-explicit-any': 'warn', // 允许使用 any 类型
     },
   },
 )
