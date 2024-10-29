@@ -5,15 +5,13 @@
 * 安装 nuxt-icons 模块
 * 安装 nuxt-img 模块，图片懒加载
 * 安装 NuxtDevice 模块
-* 安装 firebase 插件
+* 封装 firebase 插件（待优化）
+* 封装 Adsbygoogle 组件（待优化）
 
 ## 待办
 
-- [ ] rem 适配，移动端
-- [ ] adsense 封装
-- [ ] firebase 封装
 - [ ] vite 图片压缩插件
-- [ ] 环境变量
+- [ ] 环境变量（重要）
 
 
 ## 目录结构
@@ -287,6 +285,212 @@ PC 端和移动端的逻辑差异，需要使用 NuxtDevice 模块来处理
 ### 设备判断
 
 使用 NuxtDevice 模块判断设备类型 https://nuxt.com/modules/device
+
+但是在设备类型切换的时候无法检测到自动切换（待处理）
+
+### Firebase
+
+在 plugins 中新建 firebase.client.ts 文件，firebase 插件只能在客户端使用，插件自动注册
+
+配置文件写在 .env 中，传递给 runtimeConfig.public
+
+```javascript
+// 仅在客户端运行的插件
+import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
+import { initializeApp } from 'firebase/app'
+import { $logEvent, $eventTrack } from '~/configs/constants'
+
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const runtimeConfig = useRuntimeConfig()
+  const firebaseConfig = runtimeConfig.public.firebase
+
+  /** 初始化 Firebase */
+  const initializeFirebase = () => {
+    const firebaseApp = initializeApp(firebaseConfig)
+
+    // 启用 Analytics
+    const analyticsInstance = getAnalytics(firebaseApp)
+    return analyticsInstance
+  }
+
+  try {
+    await isSupported()
+    const analytics = initializeFirebase()
+
+    // 记录一个名为 "in_page" 的事件，表示用户进入页面
+    logEvent(analytics, 'in_page')
+    console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
+
+    const _logEvent = (eventName: string, eventParams = {}) => {
+      logEvent(analytics, eventName, eventParams)
+      // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+    }
+    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+      const _eventParams = {
+        time: new Date(),
+        message: eventName,
+        method,
+        ...eventParams,
+      }
+      logEvent(analytics, eventName, _eventParams)
+      // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+    }
+
+    nuxtApp.vueApp.provide($logEvent, _logEvent)
+    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
+  }
+  catch (error) {
+    console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
+
+    const _logEvent = (eventName: string, eventParams = {}) => {
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
+    }
+    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
+    }
+
+    nuxtApp.vueApp.provide($logEvent, _logEvent)
+    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
+  }
+})
+```
+
+通过 `nuxtApp.vueApp.provide()` 将记录事件的函数传递出去
+
+### AdSense
+
+在 app.vue 中通过 useHead 加载广告脚本
+
+配置文件写在 .env 中，传递给 runtimeConfig.public
+
+封装一个 Adsbygoogle 组件，在组件内的 onMounted 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
+
+```vue
+<script lang="ts" setup>
+import { $eventTrack, type eventTrackType } from '~/configs/constants'
+
+const route = useRoute()
+const eventTrack = inject($eventTrack) as eventTrackType
+
+defineOptions({
+  name: 'AdsbyGoogle',
+})
+
+interface Props {
+  /**
+   * 广告配置对象 data-ad-client data-ad-slot 等
+   */
+  adsAttrs: object
+  /**
+   * 自定义样式
+   */
+  customClass?: string
+}
+
+withDefaults(defineProps<Props>(), {
+  adsAttrs: () => ({}),
+  customClass: '',
+})
+
+/** ins 标签模板引用 */
+const adsenseRef = ref<HTMLElement>()
+/** 广告是否显示 */
+const isAdFilled = ref(true)
+/** 是否进入调试模式 */
+const showDebug = ref(false)
+
+let observer: MutationObserver
+
+/** 监视广告是否加载成功，来控制是否显示广告内容区 */
+const observeAdStatus = () => {
+  /** ins 标签 DOM */
+  const ads = adsenseRef.value
+  if (!ads) return
+
+  // 监听 DOM 树变动
+  observer = new MutationObserver((mutations) => {
+    // 遍历监听到的 DOM 变化
+    mutations.forEach((mutation) => {
+      const target = mutation.target as Element
+      if (mutation.attributeName === 'data-ad-status') {
+        isAdFilled.value = target.getAttribute('data-ad-status') !== 'unfilled'
+      }
+    })
+  })
+
+  observer.observe(ads, {
+    attributes: true, // 监听属性变动
+    attributeFilter: ['data-ad-status'], // 只监听 data-ad-status 属性
+  })
+
+  // 初始化检查
+  isAdFilled.value = ads.getAttribute('data-ad-status') !== 'unfilled'
+}
+
+/** 展示广告 */
+const showAd = async () => {
+  await nextTick()
+  try {
+    (window.adsbygoogle = window.adsbygoogle || []).push({})
+    eventTrack('load_ads', 'expose')
+  }
+  catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(() => {
+  // 开启广告调试模式
+  if (route.query.db) {
+    showDebug.value = true
+  }
+  showAd()
+  observeAdStatus()
+})
+
+onActivated(() => {
+  showAd()
+})
+
+onBeforeUnmount(() => {
+  observer?.disconnect()
+})
+</script>
+
+<template>
+  <div class="ads-item">
+    <div
+      v-show="isAdFilled"
+      class="ads-content"
+      :class="customClass"
+    >
+      <div class="ads-content-title">
+        Advertisement
+      </div>
+      <ins
+        ref="adsenseRef"
+        v-bind="adsAttrs"
+      />
+    </div>
+    <div
+      v-if="showDebug"
+      class="ads-debug"
+    >
+      {{ adsAttrs }}
+    </div>
+  </div>
+</template>
+```
+
+在页面中使用该组件时使用 `<ClientOnly>` 包裹，防止服务端出现 inject 报错，因为 provide 是在客户端执行的
+
+```html
+<ClientOnly>
+  <Adsbygoogle :ads-attrs="adSense.home_1" />
+</ClientOnly>
+```
+
+
 
 ## 注意事项
 

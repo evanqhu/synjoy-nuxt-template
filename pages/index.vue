@@ -3,9 +3,7 @@
 import { getData } from '~/api/modules/blog'
 import imgURL from '~/assets/images/demo.jpg'
 
-const appStore = useAppStore()
-
-const { adSense, showDebug } = storeToRefs(appStore)
+const { adSense } = useAppStore()
 
 definePageMeta({
   middleware: 'home-auth',
@@ -69,8 +67,8 @@ const { isMobile } = useDevice()
       filled
     />
     <ClientOnly>
-      <AdsbygoogleNew :ads-attrs="adSense.home_1" />
-      <AdsbygoogleNew :ads-attrs="adSense.home_2" />
+      <Adsbygoogle :ads-attrs="adSense.home_1" />
+      <Adsbygoogle :ads-attrs="adSense.home_2" />
     </ClientOnly>
 
     <div class="text">

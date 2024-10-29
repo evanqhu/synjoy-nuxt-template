@@ -21,6 +21,7 @@ export default defineNuxtConfig({
       // baseURL: 'http://localhost:3000', // 这个值会被环境变量中的 NUXT_PUBLIC_BASE_URL 覆盖；和下方效果一样
       baseURL: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
       bothAvailable: 'both',
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID,
       firebase: {
         apiKey: process.env.NUXT_PUBLIC_FB_API_KEY,
         authDomain: process.env.NUXT_PUBLIC_FB_AUTH_DOMAIN,

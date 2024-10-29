@@ -6,9 +6,9 @@ export default defineNitroPlugin((nitroApp) => {
     html.head.push(
       `<meta name="description" content="My custom description" />`,
     )
-    html.head.push(
-      '<script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158555231596181" crossorigin="anonymous" async></script>',
-    )
+    // html.head.push(
+    //   '<script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158555231596181" crossorigin="anonymous" async></script>',
+    // )
   })
   // You can also intercept the response here.
   nitroApp.hooks.hook('render:response', (response, { event }) => {

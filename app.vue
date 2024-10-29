@@ -1,13 +1,14 @@
 <!-- 入口组件 -->
 <script lang="ts" setup>
-const route = useRoute()
-const appStore = useAppStore()
+const runtimeConfig = useRuntimeConfig()
 
-onMounted(() => {
-  // 开启广告调试模式
-  if (route.query.db) {
-    appStore.toggleDebug(true)
-  }
+// 加载谷歌广告脚本
+useHead({
+  script: [{
+    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${runtimeConfig.public.googleClientId}`,
+    crossorigin: 'anonymous',
+    async: true,
+  }],
 })
 </script>
 
