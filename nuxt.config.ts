@@ -18,10 +18,11 @@ export default defineNuxtConfig({
     serverOnly: 'server', // 这个值会被环境变量中的 NUXT_SERVER_ONLY 覆盖
     // public 下的内容可以在客户端和服务端访问
     public: {
-      // baseURL: 'http://localhost:3000', // 这个值会被环境变量中的 NUXT_PUBLIC_BASE_URL 覆盖；和下方效果一样
-      baseURL: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
-      bothAvailable: 'both',
+      // API 接口地址
+      baseURL: process.env.NUXT_PUBLIC_BASE_URL,
+      // 谷歌广告 ID (ca-pub-xxxxxxxxxxxxxx)
       googleClientId: process.env.NUXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID,
+      // Firebase 配置
       firebase: {
         apiKey: process.env.NUXT_PUBLIC_FB_API_KEY,
         authDomain: process.env.NUXT_PUBLIC_FB_AUTH_DOMAIN,

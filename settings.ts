@@ -1,15 +1,14 @@
+const AD_CLIENT = import.meta.env.NUXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID
+
 // 项目配置
 export const defaultSettings = {
   /** 广告配置 */
   adSense: {
-    // 加载 AdSense 脚本的 URL
-    scriptUrl:
-      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158555231596181',
     // 广告位配置
     home_1: {
       'class': 'adsbygoogle',
       'style': 'display:block',
-      'data-ad-client': 'ca-pub-8158555231596181',
+      'data-ad-client': AD_CLIENT,
       'data-ad-slot': '1468595611',
       'data-ad-format': 'auto',
       'data-full-width-responsive': 'true',

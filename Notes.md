@@ -1,4 +1,4 @@
-## 进展
+## ⚙️ 进展
 * 配置 ESLint：使用 @/nuxt/eslint 模块
 * 安装 sass
 * 网络请求最佳实践
@@ -8,14 +8,14 @@
 * 封装 firebase 插件（待优化）
 * 封装 Adsbygoogle 组件（待优化）
 
-## 待办
+## ⚙️ 待办
 
 - [ ] vite 图片压缩插件
 - [ ] 环境变量（重要）
 
 
-## 目录结构
-```bash
+## ⚙️ 目录结构
+```ini
 ├── api #【后端接口】
 │   ├── modules
 │   └── service.ts
@@ -64,7 +64,7 @@
 └── nuxt.config.ts
 ```
 
-## Nuxt 常用 API
+## ⚙️ Nuxt 常用 API
 
 ### 工具函数
 
@@ -125,13 +125,11 @@ export default defineEventHandler((event) => {
 })
 ```
 
-
-
-## 最佳实践
+## ⚙️ 最佳实践
 
 ### 全局样式
 
-可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 html 文件的 head 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
+可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 head 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
 
 如果没有安装其他 UI 框架，可以先安装 `normalize` 包，修改浏览器默认样式
 
@@ -146,7 +144,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: 'modern-compiler', // 使用新版 sass 编译器
+          api: 'modern-compiler', // 使用新版 sass 编译器，防止控制台警告
           additionalData: '@use "~/assets/styles/variables.scss" as *;', // 引入全局样式变量
         },
       },
@@ -157,97 +155,105 @@ export default defineNuxtConfig({
 
 ### 网络请求
 
-Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据，其中后面两种请求都需要写在 setup 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
+Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据，其中后面两种请求都需要写在 `setup` 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
 
 `useFetch(url)` 几乎等同于 `useAsyncData(url, () => $fetch(url))`
 
-#### 封装自定义 $fetch 方法
+#### 封装自定义 `$fetch` 方法 (组合式函数)
 
-在 plugins 中新建 customFetch.ts 文件
+在 `composables` 中新建 `useRequest.ts` 文件，对外暴露 `useRequest` 对象
 
 ```javascript
-// 定义全局自定义 $customFetch 方法的插件
-export default defineNuxtPlugin(() => {
-  const userAuth = useCookie('token')
-  const runtimeConfig = useRuntimeConfig()
+// useRequest.ts
+// API 接口请求 (如果有其他后端接口地址，封装其他的组合式函数)
+import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 
-  const $customFetch = $fetch.create({
-    baseURL: runtimeConfig.public.baseURL ?? 'http://localhost:3000',
-    onRequest({ request, options, error }) {
-      if (userAuth.value) {
-        // Add Authorization header
-        options.headers.set('Authorization', `Bearer ${userAuth.value}`)
-      }
-    },
-    onResponse({ response }) {
-      // response._data = new myBusinessResponse(response._data)
-    },
-    onResponseError({ response }) {
-      if (response.status === 401) {
-        navigateTo('/login')
-      }
-    },
-  })
-  // 向 nuxtApp 全局上下文提供自定义的 $customFetch 方法（Expose to useNuxtApp().$customFetch）
-  return {
-    provide: {
-      customFetch: $customFetch,
-    },
-  }
+type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'trace'>
+
+/** 自定义封装 $fetch 方法 */
+const _fetch = $fetch.create({
+  // 请求拦截器
+  onRequest({ options }) {
+    const { public: { baseURL } } = useRuntimeConfig()
+    const userAuth = useCookie('token')
+    options.baseURL = baseURL
+    if (userAuth.value) {
+      // Add Authorization header
+      options.headers.set('Authorization', `Bearer ${userAuth.value}`)
+    }
+  },
+  // 响应拦截器
+  onResponse() {
+    // response._data = new myBusinessResponse(response._data)
+  },
+  // 响应错误拦截器
+  onResponseError({ response }) {
+    if (response.status === 401) {
+      navigateTo('/login')
+    }
+  },
 })
-```
 
-#### 封装自定义 useCustomFetch 方法
-
-在 composables 中新建 useCustomFetch.ts 文件
-
-```javascript
-// 替代原生 useFetch 方法
-import type { UseFetchOptions } from 'nuxt/app'
-
-export function useCustomFetch<T>(
-  url: string | (() => string),
-  options: UseFetchOptions<T> = {},
-) {
-  return useFetch(url, {
-    ...options,
-    $fetch: useNuxtApp().$customFetch, // 将自定义的 fetch 方法传递给 useFetch
-  })
+/** 自动导出方法 */
+export const useRequest = {
+  get<T>(url: string, params?: RequestParams) {
+    return _fetch<T>(url, { method: 'get', ...params })
+  },
+  post<T>(url: string, data?: Record<string, unknown>, params?: RequestParams) {
+    return _fetch<T>(url, { method: 'post', body: data, ...params })
+  },
 }
 ```
 
 #### 编写请求函数
 
-在 api 中新建 service.ts 文件
+在 `api/modules` 中编写各模块的请求函数
+
+params 处定义请求参数的类型
+
+泛型传返回值的类型
 
 ```javascript
-import type { NitroFetchOptions } from 'nitropack'
-// 封装网络请求函数
-// TODO 感觉这里的类型定义写的不好
-export function customFetch(url: string, options?: NitroFetchOptions<string, 'options' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'trace'>) {
-  return useNuxtApp().$customFetch(url, options)
+// api/modules/blog.ts
+export const getData = (params?: string) => {
+  console.log('🚀🚀🚀 params: ', params)
+  return useRequest.get<Array<unknown>>('/posts')
 }
 ```
 
-之后在 modules 中编写相应模块的请求函数
+在 `api/index.ts` 中汇总各函数
 
 ```javascript
-import { customFetch } from '../service'
+// api/index.ts
+import * as blogApi from './modules/blog'
 
-export const getData = async (params?: string) => {
-  return customFetch('/posts')
+export default {
+  blogApi,
 }
+```
 
+在 `composables/index.ts` 中定义组合式函数
+
+```javascript
+// composables/index.ts
+import api from '~/api/index'
+
+/** 使用网络请求函数 */
+export const useApi = () => api
 ```
 
 #### 在组件中使用
 
+使用组合式函数的优点是无需引入
+
 ```javascript
-const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
+const { blogApi } = useApi()
+
+const { data: blogs } = await useAsyncData('blogs', () => blogApi.getData('test params'))
 ```
 
 ```html
-<button @click="getData('test params')">
+<button @click="blogApi.getData('test params')">
   click
 </button>
 ```

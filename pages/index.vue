@@ -4,6 +4,7 @@ import { getData } from '~/api/modules/blog'
 import imgURL from '~/assets/images/demo.jpg'
 
 const { adSense } = useAppStore()
+const { blogApi } = useApi()
 
 definePageMeta({
   middleware: 'home-auth',
@@ -57,7 +58,7 @@ const { isMobile } = useDevice()
 <template>
   <div class="home">
     <div>首页</div>
-    <button @click="getData('test params')">
+    <button @click="blogApi.getData('test params')">
       click
     </button>
     <Counter />
