@@ -127,7 +127,7 @@ export default defineEventHandler((event) => {
 
 ## ⚙️ 最佳实践
 
-### 全局样式
+### 🎯 全局样式
 
 可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 head 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
 
@@ -153,7 +153,7 @@ export default defineNuxtConfig({
 })
 ```
 
-### 网络请求
+### 🎯 网络请求
 
 Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据，其中后面两种请求都需要写在 `setup` 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
 
@@ -258,17 +258,17 @@ const { data: blogs } = await useAsyncData('blogs', () => blogApi.getData('test 
 </button>
 ```
 
-### 图标
+### 🎯 图标
 
-使用 Nuxt Icons 模块 https://nuxt.com/modules/icons
+使用 `NuxtIcons` 模块 https://nuxt.com/modules/icons
 
 ```html
 <NuxIcon name="nuxt" filled />
 ```
 
-### 图片懒加载
+### 🎯 图片懒加载
 
-使用 Nuxt Img 模块 https://image.nuxt.com/get-started/installation
+使用 `NuxtImg` 模块 https://image.nuxt.com/get-started/installation
 
 ```html
 <NuxtImg
@@ -282,23 +282,23 @@ const { data: blogs } = await useAsyncData('blogs', () => blogApi.getData('test 
 
 > 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
 
-### 移动端适配
+### 🎯 移动端适配
 
 暂时还是不使用 rem 单位，移动端和 PC 端的样式都使用 px 绝对单位进行布局，使用媒体查询来写
 
-PC 端和移动端的逻辑差异，需要使用 NuxtDevice 模块来处理
+PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块来处理
 
-### 设备判断
+### 🎯 设备判断
 
 使用 NuxtDevice 模块判断设备类型 https://nuxt.com/modules/device
 
-但是在设备类型切换的时候无法检测到自动切换（待处理）
+但是在设备类型切换的时候无法检测到自动切换**（待处理）**
 
-### Firebase
+### 🎯 Firebase
 
-在 plugins 中新建 firebase.client.ts 文件，firebase 插件只能在客户端使用，插件自动注册
+在 `plugins` 中新建 `firebase.client.ts` 文件，`firebase` 插件只能在客户端使用，插件自动注册
 
-配置文件写在 .env 中，传递给 runtimeConfig.public
+配置文件写在 .env 中，传递给 `runtimeConfig.public`
 
 ```javascript
 // 仅在客户端运行的插件
@@ -363,13 +363,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
 通过 `nuxtApp.vueApp.provide()` 将记录事件的函数传递出去
 
-### AdSense
+### 🎯 AdSense
 
-在 app.vue 中通过 useHead 加载广告脚本
+在 `app.vue` 中通过 `useHead` 加载广告脚本
 
-配置文件写在 .env 中，传递给 runtimeConfig.public
+配置文件写在 .env 中，传递给 `runtimeConfig.public`
 
-封装一个 Adsbygoogle 组件，在组件内的 onMounted 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
+封装一个 `Adsbygoogle` 组件，在组件内的 `onMounted` 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
 
 ```vue
 <script lang="ts" setup>
@@ -496,7 +496,9 @@ onBeforeUnmount(() => {
 </ClientOnly>
 ```
 
+### 🎯 环境变量
 
+待处理
 
 ## 注意事项
 
