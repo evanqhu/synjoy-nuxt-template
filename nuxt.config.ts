@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+console.log('🚀🚀🚀 process.env.NUXT_APP_BASE_URL: ', process.env.NUXT_APP_BASE_URL)
+
 export default defineNuxtConfig({
   /** 模块 */
   modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image', '@nuxtjs/device'],
@@ -8,6 +10,11 @@ export default defineNuxtConfig({
 
   /** 开发工具 */
   devtools: { enabled: true },
+
+  app: {
+    // 打包路径
+    baseURL: process.env.NUXT_APP_BASE_URL,
+  },
 
   /** 全局样式文件 */
   css: ['normalize.css', '~/assets/styles/main.scss'],
