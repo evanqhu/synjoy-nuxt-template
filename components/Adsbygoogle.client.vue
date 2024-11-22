@@ -63,7 +63,8 @@ const observer = new MutationObserver((mutations) => {
 })
 
 /** 监视广告是否加载成功，来控制是否显示广告内容区 */
-const observeAdStatus = () => {
+const observeAdStatus = async () => {
+  await nextTick()
   /** ins 标签 DOM */
   const ads = adsenseRef.value
   if (!ads) return
@@ -81,6 +82,7 @@ const observeAdStatus = () => {
 /** 展示广告 */
 const showAd = async () => {
   if (!isShowAd.value) return
+  // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
   await nextTick()
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
@@ -96,10 +98,8 @@ onMounted(async () => {
   if (route.query.db) {
     isShowDebug.value = true
   }
-  showAd()
-  // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-  await nextTick()
   observeAdStatus()
+  showAd()
 })
 
 onActivated(() => {
