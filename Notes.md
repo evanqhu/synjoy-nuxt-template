@@ -503,3 +503,4 @@ onBeforeUnmount(() => {
 ## 注意事项
 
 * 手动安装一下 typescript 和 vite `pn i typescript -D` `pn i vite`
+* 手动安装 `vue-tsc` 用于类型检查，`pn i vue-tsc -D`

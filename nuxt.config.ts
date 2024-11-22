@@ -1,12 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-console.log('🚀🚀🚀 process.env.NUXT_APP_BASE_URL: ', process.env.NUXT_APP_BASE_URL)
-
 export default defineNuxtConfig({
   /** 模块 */
   modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image', '@nuxtjs/device'],
 
   /** 插件 */
   plugins: [],
+
+  /** 自动引入其他文件夹 */
+  // imports: {
+  //   dirs: ['./configs'],
+  // },
 
   /** 开发工具 */
   devtools: { enabled: true },
