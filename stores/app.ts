@@ -4,9 +4,6 @@ export const useAppStore = defineStore('app', () => {
   /** 设备类型 */
   const deviceType = ref('mobile')
 
-  /** 调试广告模式 */
-  const showDebug = ref(false)
-
   /** 网站配置 */
   const webConfig = ref<WebConfig>({} as WebConfig)
 
@@ -15,16 +12,9 @@ export const useAppStore = defineStore('app', () => {
     deviceType.value = deviceType.value === 'mobile' ? 'desktop' : 'mobile'
   }
 
-  /** 切换 debug 模式 */
-  const toggleDebug = (type: boolean) => {
-    showDebug.value = type
-  }
-
   return {
     deviceType,
-    showDebug,
     webConfig,
     toggleDeviceType,
-    toggleDebug,
   }
 })

@@ -13,6 +13,15 @@ export default withNuxt(
       '@stylistic/no-trailing-spaces': 'warn', // 删除尾随空格
       '@stylistic/eol-last': 'warn', // 添加尾随换行
       '@typescript-eslint/no-explicit-any': 'warn', // 允许使用 any 类型
+      // Vue 属性换行
+      'vue/max-attributes-per-line': ['warn', {
+        singleline: {
+          max: 5,
+        },
+        multiline: {
+          max: 1,
+        },
+      }],
     },
   },
 )

@@ -1,7 +1,6 @@
 <!-- 入口组件 -->
 <script lang="ts" setup>
 // const runtimeConfig = useRuntimeConfig()
-const route = useRoute()
 const appStore = useAppStore()
 const { webConfig } = appStore
 
@@ -19,13 +18,6 @@ useHead({
     crossorigin: 'anonymous',
     async: true,
   }],
-})
-
-onBeforeMount(() => {
-  // 开启广告调试模式
-  if (route.query.db) {
-    appStore.toggleDebug(true)
-  }
 })
 </script>
 

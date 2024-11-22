@@ -8,13 +8,13 @@ const defaultConfig = {
   bodyStyleName: 'template',
   aboutUs: `The aboutUs of template web.`,
   firebase: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-    measurementId: '',
+    apiKey: 'AIzaSyBcS3cwlUXpK99s0FiNLcdhiTqTbqa8pRo',
+    authDomain: 'webs-58a8d.firebaseapp.com',
+    projectId: 'webs-58a8d',
+    storageBucket: 'webs-58a8d.appspot.com',
+    messagingSenderId: '730684174767',
+    appId: '1:730684174767:web:98cad94ee478557c0c3f5a',
+    measurementId: 'G-4MPLF3JL2K',
   },
   adSense: {
     // NOTE 这里的 client 只需要写 script 中 client= 后面的内容（如：ca-pub-8158555231596181），千万不要写成全部的 URL

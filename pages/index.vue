@@ -8,6 +8,9 @@ definePageMeta({
   layout: 'default',
 })
 
+const appStore = useAppStore()
+const { webConfig: { adSense } } = appStore
+
 // const { blogApi } = useApi()
 /** 运行时变量 */
 // const runtimeConfig = useRuntimeConfig()
@@ -63,8 +66,8 @@ definePageMeta({
       name="nuxt"
       filled
     />
-    <!-- <Adsbygoogle :ads-attrs="adSense.home_1" />
-    <Adsbygoogle :ads-attrs="adSense.home_2" /> -->
+    <Adsbygoogle :ads-attrs="adSense.home_1" />
+    <Adsbygoogle :ads-attrs="adSense.home_2" />
 
     <div class="text">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!
