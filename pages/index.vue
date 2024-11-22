@@ -1,6 +1,6 @@
 <!-- 首页 -->
 <script setup lang="ts">
-import { getData } from '~/api/modules/blog'
+// import { getData } from '~/api/modules/blog'
 import imgURL from '~/assets/images/demo.jpg'
 
 definePageMeta({
@@ -8,12 +8,16 @@ definePageMeta({
   layout: 'default',
 })
 
-const { adSense } = useAppStore()
-const { blogApi } = useApi()
+const { webConfig } = useAppStore()
+
+onMounted(() => {
+  console.log('🚀🚀🚀  webConfig: ', webConfig)
+})
+// const { blogApi } = useApi()
 /** 运行时变量 */
-const runtimeConfig = useRuntimeConfig()
+// const runtimeConfig = useRuntimeConfig()
 /** 全局 App 变量 */
-const appConfig = useAppConfig()
+// const appConfig = useAppConfig()
 
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
 // useHead({
@@ -42,30 +46,30 @@ const appConfig = useAppConfig()
 
 /** 写在 server 中的接口 */
 // const { data: hello } = await useFetch('/api/hello')
-const { data: hello } = await useAsyncData('hello', () => $fetch('/api/hello'))
+// const { data: hello } = await useAsyncData('hello', () => $fetch('/api/hello'))
 // console.log('🚀🚀🚀  hello: ', hello.value)
 
-const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
+// const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
 // console.log('🚀🚀🚀  blogs: ', blogs.value)
 
-const { isMobile } = useDevice()
+// const { isMobile } = useDevice()
 </script>
 
 <template>
   <div class="home">
     <div>首页</div>
     <br>
-    <button @click="blogApi.getData('test params')">
+    <!-- <button @click="blogApi.getData('test params')">
       click
-    </button>
+    </button> -->
     <Counter />
-    <div>{{ (blogs as Array<any>)?.length }}</div>
+    <!-- <div>{{ (blogs as Array<any>)?.length }}</div> -->
     <NuxtIcon
       name="nuxt"
       filled
     />
-    <Adsbygoogle :ads-attrs="adSense.home_1" />
-    <Adsbygoogle :ads-attrs="adSense.home_2" />
+    <!-- <Adsbygoogle :ads-attrs="adSense.home_1" />
+    <Adsbygoogle :ads-attrs="adSense.home_2" /> -->
 
     <div class="text">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!
