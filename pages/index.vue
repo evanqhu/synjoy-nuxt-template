@@ -8,11 +8,6 @@ definePageMeta({
   layout: 'default',
 })
 
-const { webConfig } = useAppStore()
-
-onMounted(() => {
-  console.log('🚀🚀🚀  webConfig: ', webConfig)
-})
 // const { blogApi } = useApi()
 /** 运行时变量 */
 // const runtimeConfig = useRuntimeConfig()

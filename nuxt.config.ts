@@ -30,18 +30,6 @@ export default defineNuxtConfig({
     public: {
       // API 接口地址
       baseURL: process.env.NUXT_PUBLIC_BASE_URL,
-      // 谷歌广告 ID (ca-pub-xxxxxxxxxxxxxx)
-      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID,
-      // Firebase 配置
-      firebase: {
-        apiKey: process.env.NUXT_PUBLIC_FB_API_KEY,
-        authDomain: process.env.NUXT_PUBLIC_FB_AUTH_DOMAIN,
-        projectId: process.env.NUXT_PUBLIC_FB_PROJECT_ID,
-        storageBucket: process.env.NUXT_PUBLIC_FB_STORAGE_BUCKET,
-        messagingSenderId: process.env.NUXT_PUBLIC_FB_MESSAGING_SENDER_ID,
-        appId: process.env.NUXT_PUBLIC_FB_APP_ID,
-        measurementId: process.env.NUXT_PUBLIC_FB_MEASUREMENT_ID,
-      },
     },
   },
 

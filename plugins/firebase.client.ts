@@ -4,8 +4,8 @@ import { initializeApp } from 'firebase/app'
 import { $logEvent, $eventTrack } from '~/configs/constants'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const runtimeConfig = useRuntimeConfig()
-  const firebaseConfig = runtimeConfig.public.firebase
+  const { webConfig } = useAppStore()
+  const firebaseConfig = webConfig.firebase
 
   /** 初始化 Firebase */
   const initializeFirebase = () => {
