@@ -2,7 +2,7 @@
  * 服务器中间件
  * 根据请求的 host，加载对应的配置到 nuxtApp 的上下文中
  */
-import webConfigs from '~/configs/webConfigs'
+import webConfigs from '~/configs/web-configs'
 
 export default defineEventHandler((event) => {
   const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'

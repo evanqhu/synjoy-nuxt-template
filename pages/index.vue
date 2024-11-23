@@ -66,6 +66,15 @@ const { webConfig: { adSense } } = appStore
       name="nuxt"
       filled
     />
+    <div v-if="$device.isDesktop">
+      Desktop
+    </div>
+    <div v-else-if="$device.isTablet">
+      Tablet
+    </div>
+    <div v-else>
+      Mobile
+    </div>
     <Adsbygoogle :ads-attrs="adSense.home_1" />
     <Adsbygoogle :ads-attrs="adSense.home_2" />
 
