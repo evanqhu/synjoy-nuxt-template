@@ -1,3 +1,7 @@
+/**
+ * 服务端插件
+ * 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
+ */
 import type { Pinia } from 'pinia'
 
 // 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中

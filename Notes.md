@@ -22,18 +22,21 @@
 ```shell
 ├── api #【后端接口】
 │   ├── modules
-│   └── service.ts
+│   └── index.ts
 ├── assets #【静态资源】
+│   ├── icons
 │   ├── images
 │   └── styles
 ├── components #【公共组件】
+│   ├── AdsbyGoogle.vue
 │   ├── AppHeader.vue
 │   └── AppFooter.vue
 ├── composables #【组合式 API 函数】
-│   ├── useCustomFetch.ts # 封装 useFetch
-│   └── useBar.ts
-├── content #【静态内容】
-│   └── index.md
+│   ├── index.ts
+│   └── useRequest.ts
+├── configs #【配置文件】
+│   ├── constants.ts
+│   └── web-configs.ts # 网站配置
 ├── layouts #【布局组件】
 │   ├── default.vue
 │   └── about.vue
@@ -47,15 +50,17 @@
 │   └── user
 │       └── profile.vue
 ├── plugins #【自定义插件】
-│   ├── customFetch.ts # 封装 $fetch
-│   └── foo.ts
+│   ├── firebase.client.ts
+│   └── load-config.server.ts
 ├── public #【静态资源】
+│   ├── images
 │   ├── favicon.ico
 │   └── og-image.png
 ├── server #【服务器相关】
 │   ├── api
-│   ├── routes
-│   └── middleware
+│   ├── middleware
+│   │   └── load-config.vue
+│   └── plugins
 ├── stores #【状态管理器】
 │   ├── app.ts
 │   └── others.ts
