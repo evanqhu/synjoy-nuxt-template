@@ -1,4 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+/**
+ * https://nuxt.com/docs/api/configuration/nuxt-config
+ */
 export default defineNuxtConfig({
   /** 模块 */
   modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image', '@nuxtjs/device'],
@@ -60,7 +62,7 @@ export default defineNuxtConfig({
   },
 
   /** NuxtImg 配置 */
-  image: {
-    dir: 'assets/images', // 图片存放目录
-  },
+  // image: {
+  //   dir: 'assets/images', // 图片存放目录
+  // },
 })

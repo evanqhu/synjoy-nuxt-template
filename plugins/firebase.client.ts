@@ -1,9 +1,8 @@
 // 仅在客户端运行的插件
 import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
-import { $logEvent, $eventTrack } from '~/configs/constants'
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin(async () => {
   const { webConfig } = useAppStore()
   const firebaseConfig = webConfig.firebase
 
@@ -39,8 +38,16 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     }
 
-    nuxtApp.vueApp.provide($logEvent, _logEvent)
-    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
+    return {
+      provide: {
+        logEvent: _logEvent,
+        eventTrack: _eventTrack,
+      },
+    }
+
+    // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
+    // nuxtApp.vueApp.provide($logEvent, _logEvent)
+    // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
   }
   catch (error) {
     console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
@@ -52,7 +59,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
     }
 
-    nuxtApp.vueApp.provide($logEvent, _logEvent)
-    nuxtApp.vueApp.provide($eventTrack, _eventTrack)
+    return {
+      provide: {
+        logEvent: _logEvent,
+        eventTrack: _eventTrack,
+      },
+    }
   }
 })

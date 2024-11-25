@@ -1,6 +1,5 @@
 <!-- 入口组件 -->
 <script lang="ts" setup>
-// const runtimeConfig = useRuntimeConfig()
 const appStore = useAppStore()
 const { webConfig } = appStore
 

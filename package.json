@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nuxi dev --dotenv .env.development --host",
     "build": "nuxi build --dotenv .env.production",
-    "build-stage": "nuxi build --dotenv .env.stage",
+    "build:dev": "nuxi build --dotenv .env.development",
+    "build:stage": "nuxi build --dotenv .env.stage",
     "generate": "nuxi generate",
     "preview": "nuxi preview",
     "deploy": "PORT=5000 node .output/server/index.mjs",
