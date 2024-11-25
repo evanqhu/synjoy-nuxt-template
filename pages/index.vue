@@ -3,7 +3,7 @@
 import imgURL from '~/assets/images/vite.jpg'
 
 definePageMeta({
-  middleware: 'home-auth',
+  middleware: 'my-middleware',
   layout: 'default',
 })
 

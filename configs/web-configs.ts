@@ -4,7 +4,7 @@ const defaultConfig = {
   appTitle: 'Template Web',
   appEmail: 'templateweb.support@gmail.com',
   appUrl: 'templateweb.com',
-  appLogo: 'template',
+  appLogo: 'logo1',
   bodyStyleName: 'template',
   aboutUs: `The aboutUs of template web.`,
   firebase: {
