@@ -22,21 +22,18 @@
 ```shell
 ├── api #【后端接口】
 │   ├── modules
-│   └── index.ts
+│   └── service.ts
 ├── assets #【静态资源】
-│   ├── icons
 │   ├── images
 │   └── styles
 ├── components #【公共组件】
-│   ├── AdsbyGoogle.vue
 │   ├── AppHeader.vue
 │   └── AppFooter.vue
 ├── composables #【组合式 API 函数】
-│   ├── index.ts
-│   └── useRequest.ts
-├── configs #【配置文件】
-│   ├── constants.ts
-│   └── web-configs.ts # 网站配置
+│   ├── useCustomFetch.ts # 封装 useFetch
+│   └── useBar.ts
+├── content #【静态内容】
+│   └── index.md
 ├── layouts #【布局组件】
 │   ├── default.vue
 │   └── about.vue
@@ -50,17 +47,15 @@
 │   └── user
 │       └── profile.vue
 ├── plugins #【自定义插件】
-│   ├── firebase.client.ts
-│   └── load-config.server.ts
+│   ├── customFetch.ts # 封装 $fetch
+│   └── foo.ts
 ├── public #【静态资源】
-│   ├── images
 │   ├── favicon.ico
 │   └── og-image.png
 ├── server #【服务器相关】
 │   ├── api
-│   ├── middleware
-│   │   └── load-config.vue
-│   └── plugins
+│   ├── routes
+│   └── middleware
 ├── stores #【状态管理器】
 │   ├── app.ts
 │   └── others.ts
@@ -441,11 +436,27 @@ export default defineNuxtConfig({
 
 ```typescript
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
+/** 网站图标 */
+const iconHref = ref('')
+try {
+  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default
+}
+catch (error) {
+  console.error('Failed to load app logo:', error)
+  iconHref.value = '' // 设置为默认值或留空
+}
+
 useHead({
   title: 'My App',
   meta: [{ name: 'description', content: 'My amazing site.' }],
   bodyAttrs: { class: 'test' },
   script: [{ innerHTML: 'console.log(\'Hello world\')' }],
+  link: [
+    {
+      rel: 'icon',
+      href: iconHref,
+    },
+  ],
 })
 useSeoMeta({
   title: 'My Amazing Site',
