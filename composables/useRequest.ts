@@ -5,11 +5,11 @@ type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'h
 
 /** 自定义封装 $fetch 方法 */
 const _fetch = $fetch.create({
+  // 请求根路径
+  baseURL: useRuntimeConfig().public.baseURL,
   // 请求拦截器
   onRequest({ options }) {
-    const { public: { baseURL } } = useRuntimeConfig()
     const userAuth = useCookie('token')
-    options.baseURL = baseURL
     if (userAuth.value) {
       // Add Authorization header
       options.headers.set('Authorization', `Bearer ${userAuth.value}`)
