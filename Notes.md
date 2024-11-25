@@ -72,7 +72,7 @@
 
 ## ⚙️ 脚本介绍
 
-```ini
+```shell
 "scripts": {
 	# 启动开发服务器
   "dev": "nuxi dev --dotenv .env.development --host",
@@ -756,7 +756,9 @@ onBeforeUnmount(() => {
 <AdsbyGoogle :ads-attrs="adSense.home_1" />
 ```
 
+#### 广告调试
 
+在 `url` 后面增加 `db` `query`参数即可，如 `www.xxx.com?db=1`，表示开启 debug 模式
 
 ## 注意事项
 
