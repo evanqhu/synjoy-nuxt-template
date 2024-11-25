@@ -23,7 +23,7 @@ useHead({
     },
   ],
   script: [{
-    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense.clientId}`,
+    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
     crossorigin: 'anonymous',
     async: true,
   }],
