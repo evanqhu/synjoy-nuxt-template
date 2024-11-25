@@ -4,13 +4,13 @@ const appStore = useAppStore()
 const { webConfig } = appStore
 
 /** 网站图标 */
-let iconHref = ''
+const iconHref = ref('')
 try {
-  iconHref = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default
+  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default
 }
 catch (error) {
   console.error('Failed to load app logo:', error)
-  iconHref = '' // 设置为默认值或留空
+  iconHref.value = '' // 设置为默认值或留空
 }
 
 // 加载谷歌广告脚本
