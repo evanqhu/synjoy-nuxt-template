@@ -31,7 +31,7 @@ export default defineNuxtConfig({
     // public 下的内容可以在客户端和服务端访问
     public: {
       // API 接口地址
-      baseURL: process.env.NUXT_PUBLIC_BASE_URL,
+      apiBase: process.env.NUXT_PUBLIC_API_BASE,
     },
   },
 

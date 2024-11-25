@@ -82,9 +82,11 @@
   "build:dev": "nuxi build --dotenv .env.development",
   # 测试构建
   "build:stage": "nuxi build --dotenv .env.stage",
-  "generate": "nuxi generate",
+  # 生成 .nuxt 文件夹
+  "prepare": "nuxi prepare",
   # 预览（需在打包后执行）
   "preview": "nuxi preview",
+  "generate": "nuxi generate",
   # 服务器部署
   "deploy": "PORT=5000 node .output/server/index.mjs",
   "postinstall": "nuxi prepare",
@@ -265,9 +267,9 @@ type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'h
 const _fetch = $fetch.create({
   // 请求拦截器
   onRequest({ options }) {
-    const { public: { baseURL } } = useRuntimeConfig()
+    const { public: { apiBase } } = useRuntimeConfig()
     const userAuth = useCookie('token')
-    options.baseURL = baseURL
+    options.baseURL = apiBase
     if (userAuth.value) {
       // Add Authorization header
       options.headers.set('Authorization', `Bearer ${userAuth.value}`)
