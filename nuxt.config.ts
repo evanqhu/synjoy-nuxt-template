@@ -72,10 +72,10 @@ export default defineNuxtConfig({
   // },
 
   /** Nuxt Device 模块 */
-  device: {
-    refreshOnResize: true,
+  // device: {
+  //   refreshOnResize: true,
 
-  },
+  // },
 
   /** Nuxt ESLint 模块 */
   eslint: {

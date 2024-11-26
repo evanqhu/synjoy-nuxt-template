@@ -234,6 +234,48 @@ const counter2 = Math.round(Math.random() * 1000)
 >
 > counter2 的值会在服务端和客户端分别渲染，会导致水合失败
 
+### 其他
+
+#### resolveComponent
+
+假如 HomeMobile 和 HomeDesktop 组件是放在 components 文件夹中的，则可以使用下面两种方法引入这些组件，然后使用
+
+`pages/home/index.vue`
+
+```html
+<script>
+<!-- 方法 1 -->
+const HomeMobile = resolveComponent('HomeMobile')
+const HomeDesktop = resolveComponent('HomeDesktop')
+
+<!-- 方法 2 -->
+import { HomeMobile, HomeDesktop } from '#components'
+
+const { isMobile } = useCustomDevice()
+</script>
+
+<template>
+  <component :is="isMobile ? HomeMobile : HomeDesktop" :ad-sense="adSense" />
+</template>
+```
+
+现在的解决方案是把 HomeMobile 和 HomeDesktop 组件放在 `pages/home/modules` 文件夹下，然后通过 `.nuxtignore` 来阻止生成路由
+
+```html
+<script>
+import HomeMobile from './modules/mobile.vue'
+import HomeDesktop from './modules/desktop.vue'
+
+const { isMobile } = useCustomDevice()
+</script>
+
+<template>
+  <component :is="isMobile ? HomeMobile : HomeDesktop" :ad-sense="adSense" />
+</template>
+```
+
+
+
 ## ⚙️ 最佳实践
 
 ### 🎯 全局样式
@@ -504,9 +546,65 @@ useSeoMeta({
 
 ### 🎯 移动端适配
 
+移动端和 PC 端分开写吧，更好
+
+
+
 暂时还是不使用 rem 单位，移动端和 PC 端的样式都使用 px 绝对单位进行布局，使用媒体查询来写
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块来处理
+
+#### 自定义 useCustomDevice
+
+`composables/useCustomDevice.ts`
+
+```typescript
+// 自定义检测设备类型
+export const useCustomDevice = () => {
+  // 从 Nuxt App 获取 device module 的实例
+  const { $device } = useNuxtApp()
+
+  // 初始化响应式状态
+  const isMobile = ref($device.isMobile)
+  const isDesktop = ref(!$device.isMobile)
+
+  // 更新状态的方法
+  const _resizeHandler = () => {
+    const userAgent = navigator.userAgent.toLocaleLowerCase()
+    const matchesMobile = /mobile|android|webos|iphone|ipod|blackberry/i.test(userAgent)
+    isMobile.value = matchesMobile
+    isDesktop.value = !matchesMobile
+  }
+
+  // 监听 window resize 事件
+  onMounted(() => {
+    window.addEventListener('resize', _resizeHandler)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', _resizeHandler)
+  })
+
+  return {
+    isMobile,
+    isDesktop,
+  }
+}
+```
+
+使用 `useCustomDevice()` 返回的值是响应式的，切换页面大小时这个值会自动改变
+
+```html
+<script>
+const { isMobile } = useCustomDevice()
+</script>
+
+<template>
+  <component :is="isMobile ? HomeMobile : HomeDesktop" :ad-sense="adSense" />
+</template>
+```
+
+
 
 ### 🎯 设备判断
 

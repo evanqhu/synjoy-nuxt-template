@@ -12,6 +12,7 @@ export default withNuxt(
       'vue/html-quotes': 'warn', // Vue template 中用单引号
       '@stylistic/no-trailing-spaces': 'warn', // 删除尾随空格
       '@stylistic/eol-last': 'warn', // 添加尾随换行
+      '@stylistic/no-multiple-empty-lines': 'warn', // 删除多余的空行
       '@typescript-eslint/no-explicit-any': 'warn', // 允许使用 any 类型
       // Vue 属性换行
       'vue/max-attributes-per-line': ['warn', {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import { HomeMobile, HomeDesktop } from '#components'
 import HomeMobile from './modules/mobile.vue'
 import HomeDesktop from './modules/desktop.vue'
 
@@ -17,10 +16,9 @@ useHead({
   ],
 })
 
-// const HomeMobile = resolveComponent('HomeMobile')
-// const HomeDesktop = resolveComponent('HomeDesktop')
-
-const { isMobile } = useDevice()
+// const { isMobile } = useDevice()
+const { isMobile } = useCustomDevice()
+console.log('🚀🚀🚀  isMobile: ', isMobile.value)
 
 const appStore = useAppStore()
 const {
