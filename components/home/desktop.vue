@@ -1,8 +1,4 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'HomeDesktop',
-})
-
 defineProps({
   adSense: Object,
 })

@@ -1,0 +1,7 @@
+# 告诉 Nuxt 在构建阶段忽略哪些文件
+
+# 指定 pages 文件夹下的 这些文件夹不生成路由
+/pages/**/modules/**
+/pages/**/components/**
+/pages/**/configs/**
+/pages/**/utils/**

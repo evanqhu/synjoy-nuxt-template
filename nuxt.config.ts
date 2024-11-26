@@ -42,6 +42,18 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-04-03',
 
+  /** Nitro 服务器配置 */
+  nitro: {
+    prerender: {
+      ignore: [
+        (route) => {
+          const regex = /.*\/(components|configs|modules|utils)(\/|$)/
+          return regex.test(route)
+        },
+      ],
+    },
+  },
+
   /** Vite 配置 */
   vite: {
     css: {

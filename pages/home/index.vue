@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // import { HomeMobile, HomeDesktop } from '#components'
+import HomeMobile from './modules/mobile.vue'
+import HomeDesktop from './modules/desktop.vue'
 
 defineOptions({
   name: 'HomeView',
@@ -15,8 +17,8 @@ useHead({
   ],
 })
 
-const HomeMobile = resolveComponent('HomeMobile')
-const HomeDesktop = resolveComponent('HomeDesktop')
+// const HomeMobile = resolveComponent('HomeMobile')
+// const HomeDesktop = resolveComponent('HomeDesktop')
 
 const { isMobile } = useDevice()
 

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// definePageMeta({
+//   validate: async () => false,
+// })
+
 defineProps({
   adSense: Object,
 })
@@ -6,7 +10,7 @@ defineProps({
 
 <template>
   <div class="home">
-    <h1>This is the home mobile page</h1>
+    <h1>This is the home mobile page2</h1>
     <!-- <AdsbyGoogle :ads-attrs="adSense?.home_1" />
     <AdsbyGoogle :ads-attrs="adSense?.home_2" /> -->
   </div>
