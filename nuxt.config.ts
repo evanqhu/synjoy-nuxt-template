@@ -66,15 +66,21 @@ export default defineNuxtConfig({
     },
   },
 
-  /** ESLint 配置 */
+  /** Nuxt Img 模块 */
+  // image: {
+  //   dir: 'assets/images', // 图片存放目录
+  // },
+
+  /** Nuxt Device 模块 */
+  device: {
+    refreshOnResize: true,
+
+  },
+
+  /** Nuxt ESLint 模块 */
   eslint: {
     config: {
       stylistic: true, // 启用样式校验
     },
   },
-
-  /** NuxtImg 配置 */
-  // image: {
-  //   dir: 'assets/images', // 图片存放目录
-  // },
 })
