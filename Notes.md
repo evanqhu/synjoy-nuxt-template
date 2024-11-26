@@ -86,6 +86,7 @@
   "prepare": "nuxi prepare",
   # 预览（需在打包后执行）
   "preview": "nuxi preview",
+  # 生成静态文件 dist，用于部署在静态托管服务上
   "generate": "nuxi generate",
   # 服务器部署
   "deploy": "PORT=5000 node .output/server/index.mjs",

@@ -17,8 +17,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   app: {
-    // 打包路径
-    baseURL: process.env.NUXT_APP_BASE_URL,
+    // 静态资源路径
+    cdnURL: process.env.NUXT_APP_CDN_URL,
   },
 
   /** 全局样式文件 */
