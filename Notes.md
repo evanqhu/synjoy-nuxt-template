@@ -3,17 +3,16 @@
 * 安装 sass
 * 网络请求最佳实践
 * 安装 nuxt-icons 模块
-* 安装 nuxt-img 模块，图片懒加载
+* 安装 nuxt-img 模块，图片懒加载（不好用）
 * 安装 NuxtDevice 模块
-* 封装 firebase 插件（待优化）
-* 封装 Adsbygoogle 组件（待优化）
+* 封装 firebase 插件
+* 封装 AdsbyGoogle 组件
 
 
 
 ## ⚙️ 待办
 
 - [ ] vite 图片压缩插件
-- [ ] 环境变量（重要）
 
 
 
@@ -22,18 +21,22 @@
 ```shell
 ├── api #【后端接口】
 │   ├── modules
-│   └── service.ts
+│   └── index.ts
 ├── assets #【静态资源】
+│   ├── icons
 │   ├── images
+│   ├── logos
 │   └── styles
 ├── components #【公共组件】
+│   ├── AdsbyGoogle.vue
 │   ├── AppHeader.vue
 │   └── AppFooter.vue
 ├── composables #【组合式 API 函数】
-│   ├── useCustomFetch.ts # 封装 useFetch
-│   └── useBar.ts
-├── content #【静态内容】
-│   └── index.md
+│   ├── index.ts
+│   └── useRequest.ts
+├── configs #【配置文件】
+│   ├── constants.ts
+│   └── web-configs.ts # 网站配置
 ├── layouts #【布局组件】
 │   ├── default.vue
 │   └── about.vue
@@ -47,15 +50,17 @@
 │   └── user
 │       └── profile.vue
 ├── plugins #【自定义插件】
-│   ├── customFetch.ts # 封装 $fetch
-│   └── foo.ts
+│   ├── firebase.client.ts
+│   └── load-config.server.ts
 ├── public #【静态资源】
+│   ├── images
 │   ├── favicon.ico
 │   └── og-image.png
 ├── server #【服务器相关】
 │   ├── api
-│   ├── routes
-│   └── middleware
+│   ├── middleware
+│   │   └── load-config.vue
+│   └── plugins
 ├── stores #【状态管理器】
 │   ├── app.ts
 │   └── others.ts
@@ -201,7 +206,33 @@ export default defineEventHandler((event) => {
 })
 ```
 
+### 组合式函数
 
+#### `useState`
+
+useState 可以创建响应式且 SSR 友好的共享状态
+
+useState 中的数据将被序列化为 JSON
+
+它的值在服务端渲染后保留，并使用唯一密钥在所有组件中共享
+
+```html
+<script setup lang="ts">
+const counter = useState('counter', () => Math.round(Math.random() * 1000))
+const counter2 = Math.round(Math.random() * 1000)
+</script>
+
+<template>
+  <div>
+    Counter: {{ counter }}
+    Counter2: {{ counter2 }}
+  </div>
+</template>
+```
+
+> counter 的值在服务端渲染后会水合到客户端，客户端不再重新生成
+>
+> counter2 的值会在服务端和客户端分别渲染，会导致水合失败
 
 ## ⚙️ 最佳实践
 

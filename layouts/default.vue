@@ -11,15 +11,18 @@
 </template>
 
 <style lang="scss" scoped>
+// header 高度
+$header-height: 4rem;
+
 .default-layout {
   width: 100%;
   height: 100%;
 }
 
 .header {
-  height: 4rem;
+  height: $header-height;
   margin: 0;
-  line-height: 4rem;
+  line-height: $header-height;
   text-align: center;
   border-bottom: 1px solid #ccc;
 }
