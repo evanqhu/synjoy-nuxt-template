@@ -88,7 +88,7 @@ const showAd = async () => {
 }
 
 onMounted(async () => {
-  // 开启广告调试模式.value
+  // 开启广告调试模式
   if (route.query.db) {
     isShowDebug.value = true
   }
@@ -127,6 +127,7 @@ onBeforeUnmount(() => {
   font-weight: 400;
   font-size: 16px;
 }
+
 .ads-content {
   border-bottom: 1px solid #c6c6c6;
   height: fit-content;
@@ -154,6 +155,7 @@ onBeforeUnmount(() => {
     }
   }
 }
+
 .ads-debug {
   border: 2px solid red;
   margin-bottom: 2px;
