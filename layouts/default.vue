@@ -3,7 +3,8 @@
   <div class="default-layout">
     <header class="header">
       <div class="header-title">
-        <NuxtIcon name="nuxt" filled :width="30" :height="40" />
+        <!-- <NuxtIcon name="nuxt" filled :width="30" :height="40" /> -->
+        <SvgIcon name="nuxt" size="2rem" />
         <span>123</span>
       </div>
       <div class="header-menu">

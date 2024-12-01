@@ -473,6 +473,114 @@ console.log('🚀🚀🚀  hello: ', hello.value)
 
 * svg 默认文件夹 `assets/icons`
 
+> NuxtIcons 存在一个问题，它将所有图标的大小固定为 1 rem，修改图标大小比较繁琐
+>
+> 项目中没有安装 NuxtIcons 模块，而是直接在 components 文件夹中封装了 NuxtIcon 组件
+
+
+
+#### 使用  vite-plugin-svg-icons 插件
+
+项目中推荐使用 `vite-plugin-svg-icons` 这个 vite 插件来实现 svg 雪碧图
+
+1️⃣ 安装插件
+
+```shell
+pnpm i vite-plugin-svg-icons -D
+```
+
+2️⃣ 在 `nuxt.config.ts` 中新增配置
+
+```ts
+import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
+export default defineNuxtConfig({
+  /** Vite 配置 */
+  vite: {
+    plugins: [
+      createSvgIconsPlugin({
+        // 指定需要缓存的图标文件夹
+        iconDirs: [
+          path.resolve(process.cwd(), 'assets/icons'),
+          path.resolve(process.cwd(), 'assets/logos'),
+        ],
+      }),
+    ],
+  },
+})
+
+```
+
+3️⃣ 新建 nuxt 插件
+
+`plugins/svg-icon.ts`
+
+```typescript
+import SvgIcon from '~/components/SvgIcon/index.vue';
+import 'virtual:svg-icons-register';
+
+export default defineNuxtPlugin(nuxtApp => {
+    nuxtApp.vueApp.component('svg-icon', SvgIcon);
+});
+```
+
+4️⃣ 创建 `SvgIcon` 组件
+
+`components/SvgIcon.vue`
+
+```typescript
+<script lang="ts" setup>
+interface Props {
+  prefix?: string
+  name: string
+  size?: string | number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  prefix: 'icon',
+})
+
+const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+
+// 动态计算 size 样式
+const svgStyle = computed(() => {
+  if (!props.size) return {}
+
+  // 如果是 number，自动添加 'px' 单位；如果是 string，按用户输入解析
+  const sizeValue = typeof props.size === 'number' ? `${props.size}px` : props.size
+
+  return {
+    width: sizeValue,
+    height: sizeValue,
+  }
+})
+</script>
+
+<template>
+  <svg class="svg-icon" aria-hidden="true" :style="svgStyle">
+    <use :href="symbolId" />
+  </svg>
+</template>
+
+<style lang="scss" scoped>
+.svg-icon {
+  fill: currentColor;
+  overflow: hidden;
+}
+</style>
+```
+
+5️⃣ 使用
+
+```html
+<SvgIcon name="nuxt" size="2rem" />
+
+<SvgIcon name="nuxt" size="30px" />
+```
+
+
+
 ### 🎯 图片懒加载
 
 使用 `NuxtImg` 模块 https://image.nuxt.com/get-started/installation

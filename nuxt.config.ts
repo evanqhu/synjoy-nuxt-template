@@ -1,6 +1,9 @@
 /**
  * https://nuxt.com/docs/api/configuration/nuxt-config
  */
+import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
 export default defineNuxtConfig({
   /** 模块 */
   modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/device'],
@@ -56,6 +59,15 @@ export default defineNuxtConfig({
 
   /** Vite 配置 */
   vite: {
+    plugins: [
+      createSvgIconsPlugin({
+        // 指定需要缓存的图标文件夹
+        iconDirs: [
+          path.resolve(process.cwd(), 'assets/icons'),
+          path.resolve(process.cwd(), 'assets/logos'),
+        ],
+      }),
+    ],
     css: {
       preprocessorOptions: {
         scss: {

@@ -1,4 +1,7 @@
-// 仅在客户端运行的插件
+/**
+ * firebase 插件，用于提供 logEvent 和 eventTrack 方法
+ * 仅在客户端运行
+ */
 import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 
