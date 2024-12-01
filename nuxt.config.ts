@@ -3,7 +3,7 @@
  */
 export default defineNuxtConfig({
   /** 模块 */
-  modules: ['@nuxt/eslint', '@pinia/nuxt', 'nuxt-icons', '@nuxt/image', '@nuxtjs/device'],
+  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/device'],
 
   /** 插件 */
   plugins: [],

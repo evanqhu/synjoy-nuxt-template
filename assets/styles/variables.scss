@@ -1,2 +1,12 @@
 // 全局样式变量
-$titleFont: 1.5rem;
+
+// px 转 rem
+@function rem($px, $base-font-size: 16) {
+  @return calc($px / $base-font-size) * 1rem;
+}
+
+// header 高度
+$header-height: 50px;
+
+// 版心宽度
+$container-width: 1200px;
