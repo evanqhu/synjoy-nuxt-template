@@ -2,7 +2,7 @@
 * 配置 ESLint：使用 @/nuxt/eslint 模块
 * 安装 sass
 * 网络请求最佳实践
-* 安装 nuxt-icons 模块
+* 安装 nuxt-icon 模块
 * 安装 nuxt-img 模块，图片懒加载（不好用）
 * 安装 NuxtDevice 模块
 * 封装 firebase 插件
@@ -465,7 +465,9 @@ console.log('🚀🚀🚀  hello: ', hello.value)
 
 ### 🎯 图标
 
-使用 `NuxtIcons` 模块 https://nuxt.com/modules/icons
+#### 使用 `NuxtIcons` 模块
+
+ https://nuxt.com/modules/icons
 
 ```html
 <NuxIcon name="nuxt" filled />
@@ -477,7 +479,46 @@ console.log('🚀🚀🚀  hello: ', hello.value)
 >
 > 项目中没有安装 NuxtIcons 模块，而是直接在 components 文件夹中封装了 NuxtIcon 组件
 
+#### 使用 `NuxtIcon` 模块
 
+https://nuxt.com/modules/icon
+
+1️⃣ 安装模块
+
+```shell
+npx nuxi module add icon
+```
+
+2️⃣ 配置
+
+`nuxt.config.ts`
+
+```typescript
+import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
+export default defineNuxtConfig({
+  /** 模块 */
+  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/device', '@nuxt/icon'],
+  /** Nuxt Icon 模块 */
+  icon: {
+    customCollections: [
+      {
+        prefix: 'local', // 配置本地 svg 的前缀
+        dir: './assets/icons', // 配置本地 svg 的文件夹
+      },
+    ],
+  },
+})
+```
+
+3️⃣ 使用
+
+```html
+<Icon name="local:nuxt" />
+```
+
+可以传 `size` `color` 等属性
 
 #### 使用  vite-plugin-svg-icons 插件
 

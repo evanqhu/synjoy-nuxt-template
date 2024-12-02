@@ -27,6 +27,7 @@ const { webConfig: { adSense } } = appStore
     <br>
     <span>Nuxt Icon: </span>
     <NuxtIcon name="nuxt" filled />
+    <Icon name="local:nuxt" />
     <br>
     <br>
     <div v-if="$device.isDesktop">
