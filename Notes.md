@@ -1,20 +1,17 @@
 ## ⚙️ 进展
-* 配置 ESLint：使用 @/nuxt/eslint 模块
-* 安装 sass
-* 网络请求最佳实践
-* 安装 nuxt-icon 模块
-* 安装 nuxt-img 模块，图片懒加载（不好用）
-* 安装 NuxtDevice 模块
-* 封装 firebase 插件
-* 封装 AdsbyGoogle 组件
 
-
+- 配置 ESLint：使用 @/nuxt/eslint 模块
+- 安装 sass
+- 网络请求最佳实践
+- 安装 nuxt-icon 模块
+- 安装 nuxt-img 模块，图片懒加载（不好用）
+- 安装 NuxtDevice 模块
+- 封装 firebase 插件
+- 封装 AdsbyGoogle 组件
 
 ## ⚙️ 待办
 
 - [ ] vite 图片压缩插件
-
-
 
 ## ⚙️ 目录结构
 
@@ -72,8 +69,6 @@
 ├── error.vue
 └── nuxt.config.ts
 ```
-
-
 
 ## ⚙️ 脚本介绍
 
@@ -143,8 +138,6 @@ NUXT_APP_BASE_URL = '/test/' # http://static-test.cdns.space/dailyhoroscope/
 NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
 ```
 
-
-
 ## ⚙️ Nuxt 常用 API
 
 ### 工具函数
@@ -155,16 +148,16 @@ NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
 
 ```javascript
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (to.params.id === '1') {
-    return abortNavigation()
+  if (to.params.id === "1") {
+    return abortNavigation();
   }
   // In a real app you would probably not redirect every route to `/`
   // however it is important to check `to.path` before redirecting or you
   // might get an infinite redirect loop
-  if (to.path !== '/') {
-    return navigateTo('/')
+  if (to.path !== "/") {
+    return navigateTo("/");
   }
-})
+});
 ```
 
 #### `definePageMeta`
@@ -173,12 +166,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
 ```html
 <script setup lang="ts">
-definePageMeta({
-  name: '',
-  layout: 'default',
-  middleware: ,
-  ...
-})
+  definePageMeta({
+    name: '',
+    layout: 'default',
+    middleware: ,
+    ...
+  })
 </script>
 ```
 
@@ -187,9 +180,9 @@ definePageMeta({
 在 `plugins` 中使用，可以用来定义插件
 
 ```javascript
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin((nuxtApp) => {
   // Doing something with nuxtApp
-})
+});
 ```
 
 #### `defineEventHandler`
@@ -201,9 +194,9 @@ export default defineNuxtPlugin(nuxtApp => {
 ```javascript
 export default defineEventHandler((event) => {
   return {
-    hello: 'world'
-  }
-})
+    hello: "world",
+  };
+});
 ```
 
 ### 组合式函数
@@ -218,15 +211,12 @@ useState 中的数据将被序列化为 JSON
 
 ```html
 <script setup lang="ts">
-const counter = useState('counter', () => Math.round(Math.random() * 1000))
-const counter2 = Math.round(Math.random() * 1000)
+  const counter = useState("counter", () => Math.round(Math.random() * 1000));
+  const counter2 = Math.round(Math.random() * 1000);
 </script>
 
 <template>
-  <div>
-    Counter: {{ counter }}
-    Counter2: {{ counter2 }}
-  </div>
+  <div>Counter: {{ counter }} Counter2: {{ counter2 }}</div>
 </template>
 ```
 
@@ -244,14 +234,14 @@ const counter2 = Math.round(Math.random() * 1000)
 
 ```html
 <script>
-<!-- 方法 1 -->
-const HomeMobile = resolveComponent('HomeMobile')
-const HomeDesktop = resolveComponent('HomeDesktop')
+  <!-- 方法 1 -->
+  const HomeMobile = resolveComponent("HomeMobile");
+  const HomeDesktop = resolveComponent("HomeDesktop");
 
-<!-- 方法 2 -->
-import { HomeMobile, HomeDesktop } from '#components'
+  <!-- 方法 2 -->
+  import { HomeMobile, HomeDesktop } from "#components";
 
-const { isMobile } = useCustomDevice()
+  const { isMobile } = useCustomDevice();
 </script>
 
 <template>
@@ -263,18 +253,16 @@ const { isMobile } = useCustomDevice()
 
 ```html
 <script>
-import HomeMobile from './modules/mobile.vue'
-import HomeDesktop from './modules/desktop.vue'
+  import HomeMobile from "./modules/mobile.vue";
+  import HomeDesktop from "./modules/desktop.vue";
 
-const { isMobile } = useCustomDevice()
+  const { isMobile } = useCustomDevice();
 </script>
 
 <template>
   <component :is="isMobile ? HomeMobile : HomeDesktop" :ad-sense="adSense" />
 </template>
 ```
-
-
 
 ## ⚙️ 最佳实践
 
@@ -283,26 +271,25 @@ const { isMobile } = useCustomDevice()
 可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 head 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
 
 > 如果没有安装其他 UI 框架，可以先安装 `normalize` 包，修改浏览器默认样式
->
 
 ```javascript
 // nuxt.config.ts
 export default defineNuxtConfig({
   /** 全局样式文件 */
-  css: ['normalize.css', '~/assets/styles/main.scss'],
-  
+  css: ["normalize.css", "~/assets/styles/main.scss"],
+
   /** Vite 配置 */
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          api: 'modern-compiler', // 使用新版 sass 编译器，防止控制台警告
+          api: "modern-compiler", // 使用新版 sass 编译器，防止控制台警告
           additionalData: '@use "~/assets/styles/variables.scss" as *;', // 引入全局样式变量
         },
       },
     },
   },
-})
+});
 ```
 
 ### 🎯 网络请求
@@ -315,14 +302,13 @@ Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
 ```html
 <script setup lang="ts">
-const { data, status, error, refresh, clear } = await useAsyncData(
-  'mountains',
-  () => $fetch('https://api.nuxtjs.dev/mountains')
-)
+  const { data, status, error, refresh, clear } = await useAsyncData("mountains", () =>
+    $fetch("https://api.nuxtjs.dev/mountains")
+  );
 </script>
 
 <script setup lang="ts">
-const { data, status, error, refresh, clear } = await useFetch('/api/modules')
+  const { data, status, error, refresh, clear } = await useFetch("/api/modules");
 </script>
 ```
 
@@ -333,20 +319,25 @@ const { data, status, error, refresh, clear } = await useFetch('/api/modules')
 ```javascript
 // useRequest.ts
 // API 接口请求 (如果有其他后端接口地址，封装其他的组合式函数)
-import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
+import type { NitroFetchOptions, NitroFetchRequest } from "nitropack";
 
-type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'trace'>
+type RequestParams = NitroFetchOptions<
+  NitroFetchRequest,
+  "options" | "get" | "head" | "patch" | "post" | "put" | "delete" | "connect" | "trace"
+>;
 
 /** 自定义封装 $fetch 方法 */
 const _fetch = $fetch.create({
   // 请求拦截器
   onRequest({ options }) {
-    const { public: { apiBase } } = useRuntimeConfig()
-    const userAuth = useCookie('token')
-    options.baseURL = apiBase
+    const {
+      public: { apiBase },
+    } = useRuntimeConfig();
+    const userAuth = useCookie("token");
+    options.baseURL = apiBase;
     if (userAuth.value) {
       // Add Authorization header
-      options.headers.set('Authorization', `Bearer ${userAuth.value}`)
+      options.headers.set("Authorization", `Bearer ${userAuth.value}`);
     }
   },
   // 响应拦截器
@@ -356,20 +347,20 @@ const _fetch = $fetch.create({
   // 响应错误拦截器
   onResponseError({ response }) {
     if (response.status === 401) {
-      navigateTo('/login')
+      navigateTo("/login");
     }
   },
-})
+});
 
 /** 自动导出方法 */
 export const useRequest = {
   get<T>(url: string, params?: RequestParams) {
-    return _fetch<T>(url, { method: 'get', ...params })
+    return _fetch < T > (url, { method: "get", ...params });
   },
   post<T>(url: string, data?: Record<string, unknown>, params?: RequestParams) {
-    return _fetch<T>(url, { method: 'post', body: data, ...params })
+    return _fetch < T > (url, { method: "post", body: data, ...params });
   },
-}
+};
 ```
 
 #### 编写请求函数
@@ -383,37 +374,37 @@ params 处定义请求参数的类型
 ```typescript
 // api/modules/blog.ts
 interface IBlog {
-  id: number
-  userId: number
-  title: string
-  body: string
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
 }
 
 export const getData = (params?: string) => {
-  console.log('🚀🚀🚀 params: ', params)
-  return useRequest.get<Array<IBlog>>('/posts')
-}
+  console.log("🚀🚀🚀 params: ", params);
+  return useRequest.get<Array<IBlog>>("/posts");
+};
 ```
 
 在 `api/index.ts` 中汇总各函数
 
 ```javascript
 // api/index.ts
-import * as blogApi from './modules/blog'
+import * as blogApi from "./modules/blog";
 
 export default {
   blogApi,
-}
+};
 ```
 
 在 `composables/index.ts` 中定义组合式函数
 
 ```javascript
 // composables/index.ts
-import api from '~/api/index'
+import api from "~/api/index";
 
 /** 使用网络请求函数 */
-export const useApi = () => api
+export const useApi = () => api;
 ```
 
 #### 在组件中使用
@@ -421,26 +412,24 @@ export const useApi = () => api
 1️⃣ 直接引入使用
 
 ```typescript
-import { getData } from '~/api/modules/blog'
+import { getData } from "~/api/modules/blog";
 
 // 方法 2：直接使用
-const { data: blogs } = await useAsyncData('blogs', () => getData('test params'))
+const { data: blogs } = await useAsyncData("blogs", () => getData("test params"));
 ```
 
 2️⃣ 通过组合式函数使用（无需引入）
 
 ```javascript
-const { blogApi } = useApi()
+const { blogApi } = useApi();
 
 /** 后端接口 */
 // 方法 1：通过组合式函数使用（推荐）
-const { data: blogs } = await useAsyncData('blogs', () => blogApi.getData('test params'))
+const { data: blogs } = await useAsyncData("blogs", () => blogApi.getData("test params"));
 ```
 
 ```html
-<button @click="blogApi.getData('test params')">
-  click
-</button>
+<button @click="blogApi.getData('test params')">click</button>
 ```
 
 #### 在 server 中定义接口
@@ -451,29 +440,29 @@ const { data: blogs } = await useAsyncData('blogs', () => blogApi.getData('test 
 // 访问 http://localhost:1024/api/hello 即可得到 { hello: "world" }
 export default defineEventHandler(() => {
   return {
-    hello: 'world',
-  }
-})
+    hello: "world",
+  };
+});
 ```
 
 ```typescript
 /** server 中的接口 */
-const { data: hello } = await useFetch('/api/hello')
-const { data: hello } = await useAsyncData('hello', () => $fetch('/api/hello'))
-console.log('🚀🚀🚀  hello: ', hello.value)
+const { data: hello } = await useFetch("/api/hello");
+const { data: hello } = await useAsyncData("hello", () => $fetch("/api/hello"));
+console.log("🚀🚀🚀  hello: ", hello.value);
 ```
 
 ### 🎯 图标
 
 #### 使用 `NuxtIcons` 模块
 
- https://nuxt.com/modules/icons
+https://nuxt.com/modules/icons
 
 ```html
 <NuxIcon name="nuxt" filled />
 ```
 
-* svg 默认文件夹 `assets/icons`
+- svg 默认文件夹 `assets/icons`
 
 > NuxtIcons 存在一个问题，它将所有图标的大小固定为 1 rem，修改图标大小比较繁琐
 >
@@ -494,22 +483,22 @@ npx nuxi module add icon
 `nuxt.config.ts`
 
 ```typescript
-import path from 'path'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from "path";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 export default defineNuxtConfig({
   /** 模块 */
-  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/device', '@nuxt/icon'],
+  modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxt/image", "@nuxtjs/device", "@nuxt/icon"],
   /** Nuxt Icon 模块 */
   icon: {
     customCollections: [
       {
-        prefix: 'local', // 配置本地 svg 的前缀
-        dir: './assets/icons', // 配置本地 svg 的文件夹
+        prefix: "local", // 配置本地 svg 的前缀
+        dir: "./assets/icons", // 配置本地 svg 的文件夹
       },
     ],
   },
-})
+});
 ```
 
 3️⃣ 使用
@@ -520,7 +509,7 @@ export default defineNuxtConfig({
 
 可以传 `size` `color` 等属性
 
-#### 使用  vite-plugin-svg-icons 插件
+#### 使用 vite-plugin-svg-icons 插件
 
 项目中推荐使用 `vite-plugin-svg-icons` 这个 vite 插件来实现 svg 雪碧图
 
@@ -533,8 +522,8 @@ pnpm i vite-plugin-svg-icons -D
 2️⃣ 在 `nuxt.config.ts` 中新增配置
 
 ```ts
-import path from 'path'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from "path";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 export default defineNuxtConfig({
   /** Vite 配置 */
@@ -542,15 +531,11 @@ export default defineNuxtConfig({
     plugins: [
       createSvgIconsPlugin({
         // 指定需要缓存的图标文件夹
-        iconDirs: [
-          path.resolve(process.cwd(), 'assets/icons'),
-          path.resolve(process.cwd(), 'assets/logos'),
-        ],
+        iconDirs: [path.resolve(process.cwd(), "assets/icons"), path.resolve(process.cwd(), "assets/logos")],
       }),
     ],
   },
-})
-
+});
 ```
 
 3️⃣ 新建 nuxt 插件
@@ -558,11 +543,11 @@ export default defineNuxtConfig({
 `plugins/svg-icon.ts`
 
 ```typescript
-import SvgIcon from '~/components/SvgIcon/index.vue';
-import 'virtual:svg-icons-register';
+import SvgIcon from "~/components/SvgIcon/index.vue";
+import "virtual:svg-icons-register";
 
-export default defineNuxtPlugin(nuxtApp => {
-    nuxtApp.vueApp.component('svg-icon', SvgIcon);
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.component("svg-icon", SvgIcon);
 });
 ```
 
@@ -620,8 +605,6 @@ const svgStyle = computed(() => {
 <SvgIcon name="nuxt" size="30px" />
 ```
 
-
-
 ### 🎯 图片懒加载
 
 使用 `NuxtImg` 模块 https://image.nuxt.com/get-started/installation
@@ -640,17 +623,17 @@ const svgStyle = computed(() => {
 
 > 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
 
-* src 必须是绝对路径
-* 图片默认位置为 public 文件夹，可以在配置文件中修改**（但是修改打包后无法加载图片）**
-* 所以还是将图片放在 public 文件夹下，直接用 NuxtImg 加绝对路径
+- src 必须是绝对路径
+- 图片默认位置为 public 文件夹，可以在配置文件中修改**（但是修改打包后无法加载图片）**
+- 所以还是将图片放在 public 文件夹下，直接用 NuxtImg 加绝对路径
 
 ```typescript
 export default defineNuxtConfig({
   /** NuxtImg 配置 */
   image: {
-    dir: 'assets/images', // 图片存放目录(改了也不行，打包后有问题)
+    dir: "assets/images", // 图片存放目录(改了也不行，打包后有问题)
   },
-})
+});
 ```
 
 如果不把图片放在 public 下，建议直接使用 img 标签即可
@@ -662,42 +645,39 @@ export default defineNuxtConfig({
 ```typescript
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
 /** 网站图标 */
-const iconHref = ref('')
+const iconHref = ref("");
 try {
-  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default
-}
-catch (error) {
-  console.error('Failed to load app logo:', error)
-  iconHref.value = '' // 设置为默认值或留空
+  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default;
+} catch (error) {
+  console.error("Failed to load app logo:", error);
+  iconHref.value = ""; // 设置为默认值或留空
 }
 
 useHead({
-  title: 'My App',
-  meta: [{ name: 'description', content: 'My amazing site.' }],
-  bodyAttrs: { class: 'test' },
-  script: [{ innerHTML: 'console.log(\'Hello world\')' }],
+  title: "My App",
+  meta: [{ name: "description", content: "My amazing site." }],
+  bodyAttrs: { class: "test" },
+  script: [{ innerHTML: "console.log('Hello world')" }],
   link: [
     {
-      rel: 'icon',
+      rel: "icon",
       href: iconHref,
     },
   ],
-})
+});
 useSeoMeta({
-  title: 'My Amazing Site',
-  ogTitle: 'My Amazing Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
+  title: "My Amazing Site",
+  ogTitle: "My Amazing Site",
+  description: "This is my amazing site, let me tell you all about it.",
+  ogDescription: "This is my amazing site, let me tell you all about it.",
+  ogImage: "https://example.com/image.png",
+  twitterCard: "summary_large_image",
+});
 ```
 
 ### 🎯 移动端适配
 
 移动端和 PC 端分开写吧，更好
-
-
 
 暂时还是不使用 rem 单位，移动端和 PC 端的样式都使用 px 绝对单位进行布局，使用媒体查询来写
 
@@ -711,49 +691,47 @@ PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块来处理
 // 自定义检测设备类型
 export const useCustomDevice = () => {
   // 从 Nuxt App 获取 device module 的实例
-  const { $device } = useNuxtApp()
+  const { $device } = useNuxtApp();
 
   // 初始化响应式状态
-  const isMobile = ref($device.isMobile)
-  const isDesktop = ref(!$device.isMobile)
+  const isMobile = ref($device.isMobile);
+  const isDesktop = ref(!$device.isMobile);
 
   // 更新状态的方法
   const _resizeHandler = () => {
-    const userAgent = navigator.userAgent.toLocaleLowerCase()
-    const matchesMobile = /mobile|android|webos|iphone|ipod|blackberry/i.test(userAgent)
-    isMobile.value = matchesMobile
-    isDesktop.value = !matchesMobile
-  }
+    const userAgent = navigator.userAgent.toLocaleLowerCase();
+    const matchesMobile = /mobile|android|webos|iphone|ipod|blackberry/i.test(userAgent);
+    isMobile.value = matchesMobile;
+    isDesktop.value = !matchesMobile;
+  };
 
   // 监听 window resize 事件
   onMounted(() => {
-    window.addEventListener('resize', _resizeHandler)
-  })
+    window.addEventListener("resize", _resizeHandler);
+  });
 
   onUnmounted(() => {
-    window.removeEventListener('resize', _resizeHandler)
-  })
+    window.removeEventListener("resize", _resizeHandler);
+  });
 
   return {
     isMobile,
     isDesktop,
-  }
-}
+  };
+};
 ```
 
 使用 `useCustomDevice()` 返回的值是响应式的，切换页面大小时这个值会自动改变
 
 ```html
 <script>
-const { isMobile } = useCustomDevice()
+  const { isMobile } = useCustomDevice();
 </script>
 
 <template>
   <component :is="isMobile ? HomeMobile : HomeDesktop" :ad-sense="adSense" />
 </template>
 ```
-
-
 
 ### 🎯 设备判断
 
@@ -763,18 +741,12 @@ const { isMobile } = useCustomDevice()
 
 ```html
 <script>
-const { isMobile, isDesktop, isTablet } = useDevice()
+  const { isMobile, isDesktop, isTablet } = useDevice();
 </script>
 
-<div v-if="$device.isDesktop">
-  Desktop
-</div>
-<div v-else-if="$device.isTablet">
-  Tablet
-</div>
-<div v-else>
-  Mobile
-</div>
+<div v-if="$device.isDesktop">Desktop</div>
+<div v-else-if="$device.isTablet">Tablet</div>
+<div v-else>Mobile</div>
 ```
 
 ### 🎯 Firebase
@@ -787,74 +759,73 @@ const { isMobile, isDesktop, isTablet } = useDevice()
 
 ```javascript
 // 仅在客户端运行的插件
-import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
-import { initializeApp } from 'firebase/app'
+import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
 
 export default defineNuxtPlugin(async () => {
-  const { webConfig } = useAppStore()
-  const firebaseConfig = webConfig.firebase
+  const { webConfig } = useAppStore();
+  const firebaseConfig = webConfig.firebase;
 
   /** 初始化 Firebase */
   const initializeFirebase = () => {
-    const firebaseApp = initializeApp(firebaseConfig)
+    const firebaseApp = initializeApp(firebaseConfig);
 
     // 启用 Analytics
-    const analyticsInstance = getAnalytics(firebaseApp)
-    return analyticsInstance
-  }
+    const analyticsInstance = getAnalytics(firebaseApp);
+    return analyticsInstance;
+  };
 
   try {
-    await isSupported()
-    const analytics = initializeFirebase()
+    await isSupported();
+    const analytics = initializeFirebase();
 
     // 记录一个名为 "in_page" 的事件，表示用户进入页面
-    logEvent(analytics, 'in_page')
-    console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
+    logEvent(analytics, "in_page");
+    console.log("🚀🚀🚀 firebase analytics: ", "in_page");
 
     const _logEvent = (eventName: string, eventParams = {}) => {
-      logEvent(analytics, eventName, eventParams)
+      logEvent(analytics, eventName, eventParams);
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-    }
+    };
     const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
       const _eventParams = {
         time: new Date(),
         message: eventName,
         method,
         ...eventParams,
-      }
-      logEvent(analytics, eventName, _eventParams)
+      };
+      logEvent(analytics, eventName, _eventParams);
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-    }
+    };
 
     return {
       provide: {
         logEvent: _logEvent,
         eventTrack: _eventTrack,
       },
-    }
+    };
 
     // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
     // nuxtApp.vueApp.provide($logEvent, _logEvent)
     // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
-  }
-  catch (error) {
-    console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
+  } catch (error) {
+    console.log("🚀🚀🚀 Firebase Analytics is not supported", error);
 
     const _logEvent = (eventName: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-    }
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
+    };
     const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
-    }
+      console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams);
+    };
 
     return {
       provide: {
         logEvent: _logEvent,
         eventTrack: _eventTrack,
       },
-    }
+    };
   }
-})
+});
 ```
 
 使用时通过 `const { $eventTrack } = useNuxtApp()` 得到相应的函数
@@ -865,17 +836,19 @@ export default defineNuxtPlugin(async () => {
 
 ```html
 <script lang="ts" setup>
-const appStore = useAppStore()
-const { webConfig } = appStore
+  const appStore = useAppStore();
+  const { webConfig } = appStore;
 
-// 加载谷歌广告脚本
-useHead({
-  script: [{
-    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense.clientId}`,
-    crossorigin: 'anonymous',
-    async: true,
-  }],
-})
+  // 加载谷歌广告脚本
+  useHead({
+    script: [
+      {
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense.clientId}`,
+        crossorigin: "anonymous",
+        async: true,
+      },
+    ],
+  });
 </script>
 ```
 
@@ -892,150 +865,147 @@ useHead({
  * 服务器中间件
  * 根据请求的 host，加载对应的配置到 nuxtApp 的上下文中
  */
-import webConfigs from '~/configs/web-configs'
+import webConfigs from "~/configs/web-configs";
 
 export default defineEventHandler((event) => {
-  const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
-  const host = originHost.replace(/^www\./, '')
+  const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
+  const host = originHost.replace(/^www\./, "");
 
-  console.log('🚀🚀🚀 请求的 host: ', host)
+  console.log("🚀🚀🚀 请求的 host: ", host);
 
-  const config = webConfigs[host] || webConfigs['localhost']
+  const config = webConfigs[host] || webConfigs["localhost"];
 
   // 将配置注入到响应的上下文中
-  event.context.config = config
+  event.context.config = config;
 
   /** 处理 ads.txt 请求 */
-  const url = event.node.req.url
-  console.log('🚀🚀🚀 请求的 url: ', url)
+  const url = event.node.req.url;
+  console.log("🚀🚀🚀 请求的 url: ", url);
 
   // 如果请求的路径是 /ads.txt
-  if (url === '/ads.txt') {
+  if (url === "/ads.txt") {
     // 设置响应类型为纯文本
-    event.node.res.setHeader('Content-Type', 'text/plain')
+    event.node.res.setHeader("Content-Type", "text/plain");
 
     // 返回自定义的 ads.txt 内容
-    event.node.res.end(config.adSense.ads)
+    event.node.res.end(config.adSense.ads);
   }
-})
+});
 ```
 
 `components/AdsbyGoogle.client.vue`
 
 ```vue
 <script lang="ts" setup>
-const { $eventTrack } = useNuxtApp()
-const route = useRoute()
-const { webConfig } = useAppStore()
+const { $eventTrack } = useNuxtApp();
+const route = useRoute();
+const { webConfig } = useAppStore();
 
 interface Props {
   /**
    * 广告配置对象 data-ad-client data-ad-slot 等
    */
-  adsAttrs?: object
+  adsAttrs?: object;
   /**
    * 自定义样式
    */
-  customClass?: string
+  customClass?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   adsAttrs: () => ({}),
-  customClass: '',
-})
+  customClass: "",
+});
 
 /** ins 标签模板引用 */
-const adsenseRef = ref<HTMLElement>()
+const adsenseRef = ref<HTMLElement>();
 /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
 const isShowAd = computed(() => {
-  return Object.keys(props.adsAttrs).includes('data-ad-slot')
-})
+  return Object.keys(props.adsAttrs).includes("data-ad-slot");
+});
 /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
-const isAdFilled = ref(true)
+const isAdFilled = ref(true);
 /** 是否进入调试模式 */
-const isShowDebug = ref(false)
+const isShowDebug = ref(false);
 
 /** 完整的广告位配置对象 */
 const adsAttrsFull = computed(() => {
   return Object.assign(
     {
-      'class': 'adsbygoogle',
-      'style': 'display:block',
-      'data-ad-format': 'auto',
-      'data-full-width-responsive': 'true',
-      'data-ad-client': webConfig.adSense?.clientId,
+      class: "adsbygoogle",
+      style: "display:block",
+      "data-ad-format": "auto",
+      "data-full-width-responsive": "true",
+      "data-ad-client": webConfig.adSense?.clientId,
     },
-    props.adsAttrs,
-  )
-})
+    props.adsAttrs
+  );
+});
 
 /** 创建一个 DOM 树变动观察器 */
 const observer = new MutationObserver((mutations) => {
   // 遍历监听到的 DOM 变化
   mutations.forEach((mutation) => {
-    const target = mutation.target as Element
-    if (mutation.attributeName === 'data-ad-status') {
-      console.log('🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变')
-      isAdFilled.value = target.getAttribute('data-ad-status') !== 'unfilled'
+    const target = mutation.target as Element;
+    if (mutation.attributeName === "data-ad-status") {
+      console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
+      isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
     }
-  })
-})
+  });
+});
 
 /** 监视广告是否加载成功，来控制是否显示广告内容区 */
 const observeAdStatus = async () => {
-  await nextTick()
+  await nextTick();
   /** ins 标签 DOM */
-  const ads = adsenseRef.value
-  if (!ads) return
+  const ads = adsenseRef.value;
+  if (!ads) return;
 
   // 观察 ins 标签的 data-ad-status 属性变化
   observer.observe(ads, {
     attributes: true, // 监听属性变动
-    attributeFilter: ['data-ad-status'], // 只监听 data-ad-status 属性
-  })
+    attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
+  });
 
   // 初始化检查
-  isAdFilled.value = ads.getAttribute('data-ad-status') !== 'unfilled'
-}
+  isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
+};
 
 /** 展示广告 */
 const showAd = async () => {
-  if (!isShowAd.value) return
+  if (!isShowAd.value) return;
   // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-  await nextTick()
+  await nextTick();
   try {
-    (window.adsbygoogle = window.adsbygoogle || []).push({})
-    $eventTrack('load_ads', 'expose')
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    $eventTrack("load_ads", "expose");
+  } catch (error) {
+    console.error(error);
   }
-  catch (error) {
-    console.error(error)
-  }
-}
+};
 
 onMounted(async () => {
   // 开启广告调试模式.value
   if (route.query.db) {
-    isShowDebug.value = true
+    isShowDebug.value = true;
   }
-  observeAdStatus()
-  showAd()
-})
+  observeAdStatus();
+  showAd();
+});
 
 onActivated(() => {
-  showAd()
-})
+  showAd();
+});
 
 onBeforeUnmount(() => {
-  observer?.disconnect()
-})
+  observer?.disconnect();
+});
 </script>
 
 <template>
   <div v-if="isShowAd" class="ads-item">
     <div v-show="isAdFilled" class="ads-content" :class="customClass">
-      <div class="ads-content-title">
-        Advertisement
-      </div>
+      <div class="ads-content-title">Advertisement</div>
       <ins ref="adsenseRef" v-bind="adsAttrsFull" />
     </div>
     <div v-if="isShowDebug" class="ads-debug">
@@ -1047,7 +1017,7 @@ onBeforeUnmount(() => {
 
 使用该组件
 
-* `ads-attrs` 是一个对象，只需要传递 `data-ad-slot` 属性即可，其他属性均已设置默认值，如果需要覆盖则可自行传递，会覆盖默认值
+- `ads-attrs` 是一个对象，只需要传递 `data-ad-slot` 属性即可，其他属性均已设置默认值，如果需要覆盖则可自行传递，会覆盖默认值
 
 ```html
 <AdsbyGoogle :ads-attrs="adSense.home_1" />
@@ -1059,5 +1029,5 @@ onBeforeUnmount(() => {
 
 ## 注意事项
 
-* 手动安装一下 typescript 和 vite `pn i typescript -D` `pn i vite`
-* 手动安装 `vue-tsc` 用于类型检查，`pn i vue-tsc -D`
+- 手动安装一下 typescript 和 vite `pn i typescript -D` `pn i vite`
+- 手动安装 `vue-tsc` 用于类型检查，`pn i vue-tsc -D`
