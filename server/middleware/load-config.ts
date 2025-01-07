@@ -8,16 +8,16 @@ export default defineEventHandler((event) => {
   const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
   const host = originHost.replace(/^www\./, '')
 
-  console.log('🚀🚀🚀 请求的 host: ', host)
+  // console.log('🚀🚀🚀 请求的 host: ', host)
 
-  const config = webConfigs[host] || webConfigs['localhost']
+  const config = webConfigs[host] || webConfigs.localhost
 
   // 将配置注入到响应的上下文中
   event.context.config = config
 
   /** 处理 ads.txt 请求 */
   const url = event.node.req.url
-  console.log('🚀🚀🚀 请求的 url: ', url)
+  // console.log('🚀🚀🚀 请求的 url: ', url)
 
   // 如果请求的路径是 /ads.txt
   if (url === '/ads.txt') {
@@ -25,6 +25,6 @@ export default defineEventHandler((event) => {
     event.node.res.setHeader('Content-Type', 'text/plain')
 
     // 返回自定义的 ads.txt 内容
-    event.node.res.end(config.adSense.ads)
+    event.node.res.end(config.adSense?.ads)
   }
 })

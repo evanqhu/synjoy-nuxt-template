@@ -1,3 +1,6 @@
+<!-- Vite 插件 vite-plugin-svg-icons -->
+<!-- 制作 svg 雪碧图，推荐使用 -->
+<!-- https://github.com/vbenjs/vite-plugin-svg-icons -->
 <script lang="ts" setup>
 interface Props {
   prefix?: string

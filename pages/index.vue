@@ -1,10 +1,10 @@
-<!-- 首页 -->
+<!-- 首页 home -->
 <script setup lang="ts">
 import imgURL from '~/assets/images/vite.jpg'
 
-definePageMeta({
-  middleware: 'my-middleware',
-  layout: 'default',
+useSeoMeta({
+  title: 'Home Page',
+  description: 'My home page description',
 })
 
 /** 运行时变量 */
@@ -13,32 +13,28 @@ definePageMeta({
 // const appConfig = useAppConfig()
 /** App Store */
 const appStore = useAppStore()
-const { webConfig: { adSense } } = appStore
+const { webConfig } = appStore
+const { adSense } = webConfig
 
-// const { isMobile, isDesktop } = useDevice()
+const { isMobile } = useCustomDevice()
 </script>
 
 <template>
   <div class="home">
     <div>首页</div>
     <br>
+    <div>isMobile: {{ isMobile }}</div>
+    <br>
     <Counter />
     <br>
-    <br>
-    <span>Nuxt Icon: </span>
-    <NuxtIcon name="nuxt" filled />
-    <Icon name="local:nuxt" />
-    <br>
-    <br>
-    <div v-if="$device.isDesktop">
-      Desktop
-    </div>
-    <div v-else>
-      Mobile
+    <div>
+      <span>Nuxt Icon: </span>
+      <SvgIcon name="nuxt" size="2rem" />
+      <Icon name="local:nuxt" />
     </div>
     <br>
-    <AdsbyGoogle :ads-attrs="adSense.home_1" />
-    <AdsbyGoogle :ads-attrs="adSense.home_2" />
+    <!-- <AdsbyGoogle :ads-attrs="adSense.home_1" />
+    <AdsbyGoogle :ads-attrs="adSense.home_2" /> -->
     <br>
     <div class="text">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!

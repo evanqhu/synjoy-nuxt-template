@@ -1,4 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
+<!-- nuxt-icons 模块，不方便调节图标大小，不推荐使用，仅作为学习使用 -->
+<!-- https://nuxt.com/modules/icons -->
 <template>
   <span
     class="nuxt-icon"

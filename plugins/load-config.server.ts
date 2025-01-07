@@ -11,7 +11,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   const appStore = useAppStore(pinia) // NOTE 下次遇到数据共享和不共享的例子时再做记录
 
   // 从服务端上下文中注入配置到 Pinia
-  if (nuxtApp.ssrContext?.event.context.config) {
-    appStore.webConfig = nuxtApp.ssrContext.event.context.config
-  }
+  appStore.webConfig = nuxtApp.ssrContext?.event.context.config || {}
 })

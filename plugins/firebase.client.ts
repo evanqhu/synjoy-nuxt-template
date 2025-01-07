@@ -6,6 +6,19 @@ import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 
 export default defineNuxtPlugin(async () => {
+  // 开发环境不运行 firebase
+  if (process.env.NODE_ENV === 'development') {
+    return {
+      provide: {
+        logEvent: () => {
+          console.log('🚀🚀🚀 测试环境 firebase analytics')
+        },
+        eventTrack: () => {
+          console.log('🚀🚀🚀 测试环境 firebase analytics')
+        },
+      },
+    }
+  }
   const { webConfig } = useAppStore()
   const firebaseConfig = webConfig.firebase
 
@@ -18,6 +31,9 @@ export default defineNuxtPlugin(async () => {
     return analyticsInstance
   }
 
+  let customLogEvent
+  let customEventTrack
+
   try {
     await isSupported()
     const analytics = initializeFirebase()
@@ -26,11 +42,11 @@ export default defineNuxtPlugin(async () => {
     logEvent(analytics, 'in_page')
     console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
 
-    const _logEvent = (eventName: string, eventParams = {}) => {
+    customLogEvent = (eventName: string, eventParams = {}) => {
       logEvent(analytics, eventName, eventParams)
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     }
-    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
       const _eventParams = {
         time: new Date(),
         message: eventName,
@@ -40,33 +56,26 @@ export default defineNuxtPlugin(async () => {
       logEvent(analytics, eventName, _eventParams)
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     }
-
-    return {
-      provide: {
-        logEvent: _logEvent,
-        eventTrack: _eventTrack,
-      },
-    }
-
-    // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
-    // nuxtApp.vueApp.provide($logEvent, _logEvent)
-    // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
   }
   catch (error) {
     console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
 
-    const _logEvent = (eventName: string, eventParams = {}) => {
+    customLogEvent = (eventName: string, eventParams = {}) => {
       console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
     }
-    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
       console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
     }
-
-    return {
-      provide: {
-        logEvent: _logEvent,
-        eventTrack: _eventTrack,
-      },
-    }
   }
+
+  return {
+    provide: {
+      logEvent: customLogEvent,
+      eventTrack: customEventTrack,
+    },
+  }
+
+  // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
+  // nuxtApp.vueApp.provide($logEvent, _logEvent)
+  // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
 })

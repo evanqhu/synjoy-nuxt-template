@@ -14,26 +14,28 @@ catch (error) {
 }
 
 // 加载谷歌广告脚本
-useHead({
+
+useSeoMeta({
   title: webConfig.appTitle,
-  meta: [
-    {
-      name: 'og:title',
-      content: webConfig.appTitle,
-    },
+  ogTitle: webConfig.appTitle,
+})
+useHead({
+  script: [
+    ...(webConfig.adSense?.clientId && process.env.NODE_ENV === 'production'
+      ? [{
+          src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
+          crossorigin: 'anonymous' as const,
+          async: true,
+        }]
+      : []),
   ],
-  script: [{
-    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
-    crossorigin: 'anonymous',
-    async: true,
-  }],
   link: [
     {
       rel: 'icon',
       href: iconHref,
     },
   ],
-})
+}, { mode: 'client' })
 </script>
 
 <template>

@@ -5,3 +5,6 @@
 /pages/**/components/**
 /pages/**/configs/**
 /pages/**/utils/**
+
+# 指定 components 文件夹下的 这些文件夹不生成组件
+/components/NuxtIcon.vue
