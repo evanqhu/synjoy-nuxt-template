@@ -1114,9 +1114,12 @@ export const useCustomPush = () => {
 
 ### 🎯 项目部署
 
+#### 1️⃣ Node 服务器部署
 1. Node 版本：>20
-2. 打包：`pnpm run build`
-3. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
+2. 安装 pnpm：`npm install pnpm`
+3. 打包：`pnpm run build`
+4. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
+5. 执行 `PORT=5000 node .output/server/index.mjs` 命令启动服务器
 
 ## 注意事项
 

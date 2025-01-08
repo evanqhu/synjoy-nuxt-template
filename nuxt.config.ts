@@ -82,11 +82,17 @@ export default defineNuxtConfig({
   hooks: {
     'pages:extend'(pages) {
       // 新增路由
-      pages.push({
-        name: 'HomeChannel',
-        path: '/:channel(channel[1-9]\\d?)',
-        file: '~/pages/index.vue',
-      })
+      pages.push(
+        {
+          name: 'HomeChannel',
+          path: '/:channel(channel[1-9]\\d?)',
+          file: '~/pages/index.vue',
+        },
+        {
+          name: 'DetailChannel',
+          path: '/:channel(channel[1-9]\\d?)/detail',
+          file: '~/pages/detail.vue',
+        })
     },
   },
 

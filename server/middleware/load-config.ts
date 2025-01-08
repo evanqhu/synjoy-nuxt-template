@@ -5,6 +5,8 @@
 import webConfigs from '~/configs/web-configs'
 
 export default defineEventHandler((event) => {
+  // console.log('🚀🚀🚀 process.env.NODE_ENV: ', process.env.NODE_ENV)
+
   const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
   const host = originHost.replace(/^www\./, '')
 

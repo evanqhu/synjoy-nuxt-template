@@ -17,21 +17,23 @@ const { webConfig } = appStore
 const { adSense } = webConfig
 
 const { isMobile } = useCustomDevice()
+const customPush = useCustomPush()
 </script>
 
 <template>
   <div class="home app-content">
     <div>首页</div>
     <br>
+    <button @click="customPush('/detail')">
+      to detail
+    </button>
+    <br>
+    <br>
     <div>isMobile: {{ isMobile }}</div>
     <br>
     <Counter />
     <br>
-    <div>
-      <span>Nuxt Icon: </span>
-      <SvgIcon name="nuxt" size="2rem" />
-      <Icon name="local:nuxt" />
-    </div>
+    <SvgIcon name="nuxt" size="2rem" />
     <br>
     <!-- <AdsbyGoogle :ads-attrs="adSense.home_1" />
     <AdsbyGoogle :ads-attrs="adSense.home_2" /> -->
