@@ -15,7 +15,7 @@
 
 ## ⚙️ 目录结构
 
-```shell
+```ini
 ├── api #【后端接口】
 │   ├── modules
 │   └── index.ts
@@ -72,7 +72,7 @@
 
 ## ⚙️ 脚本介绍
 
-```shell
+```ini
 "scripts": {
 	# 启动开发服务器
   "dev": "nuxi dev --dotenv .env.development --host",
@@ -94,7 +94,7 @@
   "lint": "eslint .",
   # 语法校验
   "lint-fix": "eslint . --fix"
-  },
+}
 ```
 
 ### 环境变量
@@ -268,7 +268,7 @@ useState 中的数据将被序列化为 JSON
 
 ### 🎯 全局样式
 
-可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 head 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
+可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 `<head>` 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
 
 > 如果没有安装其他 UI 框架，可以先安装 `normalize` 包，修改浏览器默认样式
 
@@ -454,7 +454,7 @@ console.log("🚀🚀🚀  hello: ", hello.value);
 
 ### 🎯 图标
 
-#### 使用 `NuxtIcons` 模块
+#### 1️⃣ 使用 `NuxtIcons` 模块
 
 https://nuxt.com/modules/icons
 
@@ -468,17 +468,17 @@ https://nuxt.com/modules/icons
 >
 > 项目中没有安装 NuxtIcons 模块，而是直接在 components 文件夹中封装了 NuxtIcon 组件
 
-#### 使用 `NuxtIcon` 模块
+#### 2️⃣ 使用 `NuxtIcon` 模块
 
 https://nuxt.com/modules/icon
 
-1️⃣ 安装模块
+1. 安装模块
 
 ```shell
 npx nuxi module add icon
 ```
 
-2️⃣ 配置
+2. 配置
 
 `nuxt.config.ts`
 
@@ -501,7 +501,7 @@ export default defineNuxtConfig({
 });
 ```
 
-3️⃣ 使用
+3. 使用
 
 ```html
 <Icon name="local:nuxt" />
@@ -509,17 +509,17 @@ export default defineNuxtConfig({
 
 可以传 `size` `color` 等属性
 
-#### 使用 vite-plugin-svg-icons 插件
+#### 3️⃣ 使用 vite-plugin-svg-icons 插件
 
 项目中推荐使用 `vite-plugin-svg-icons` 这个 vite 插件来实现 svg 雪碧图
 
-1️⃣ 安装插件
+1. 安装插件
 
 ```shell
 pnpm i vite-plugin-svg-icons -D
 ```
 
-2️⃣ 在 `nuxt.config.ts` 中新增配置
+2. 在 `nuxt.config.ts` 中新增配置
 
 ```ts
 import path from "path";
@@ -538,7 +538,7 @@ export default defineNuxtConfig({
 });
 ```
 
-3️⃣ 新建 nuxt 插件
+3. 新建 nuxt 插件
 
 `plugins/svg-icon.ts`
 
@@ -551,7 +551,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 });
 ```
 
-4️⃣ 创建 `SvgIcon` 组件
+4. 创建 `SvgIcon` 组件
 
 `components/SvgIcon.vue`
 
@@ -597,7 +597,7 @@ const svgStyle = computed(() => {
 </style>
 ```
 
-5️⃣ 使用
+5. 使用
 
 ```html
 <SvgIcon name="nuxt" size="2rem" />
@@ -677,13 +677,13 @@ useSeoMeta({
 
 ### 🎯 移动端适配
 
-移动端和 PC 端分开写吧，更好
-
-暂时还是不使用 rem 单位，移动端和 PC 端的样式都使用 px 绝对单位进行布局，使用媒体查询来写
+移动端和 PC 端还是写在一起，用媒体查询写不同的样式，尽量使用 rem 单位，同时也提供了 `rem()` 函数，将 px 单位转换为 rem 单位
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块来处理
 
 #### 自定义 useCustomDevice
+
+原生的 [NuxtDevice](https://nuxt.com/modules/device) 模块返回的值不是响应式的，这里进行封装，增加响应式
 
 `composables/useCustomDevice.ts`
 
@@ -733,22 +733,6 @@ export const useCustomDevice = () => {
 </template>
 ```
 
-### 🎯 设备判断
-
-使用 NuxtDevice 模块判断设备类型 https://nuxt.com/modules/device
-
-但是在设备类型切换的时候无法检测到自动切换**（待处理）**
-
-```html
-<script>
-  const { isMobile, isDesktop, isTablet } = useDevice();
-</script>
-
-<div v-if="$device.isDesktop">Desktop</div>
-<div v-else-if="$device.isTablet">Tablet</div>
-<div v-else>Mobile</div>
-```
-
 ### 🎯 Firebase
 
 在 `plugins` 中新建 `firebase.client.ts` 文件，`firebase` 插件只能在客户端使用，插件自动注册
@@ -758,11 +742,27 @@ export const useCustomDevice = () => {
 `plugins/firebase.client.ts`
 
 ```javascript
-// 仅在客户端运行的插件
+/**
+ * firebase 插件，用于提供 logEvent 和 eventTrack 方法
+ * 仅在客户端运行
+ */
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 
 export default defineNuxtPlugin(async () => {
+  // 开发环境不运行 firebase
+  if (process.env.NODE_ENV === "development") {
+    return {
+      provide: {
+        logEvent: () => {
+          console.log("🚀🚀🚀 测试环境 firebase analytics");
+        },
+        eventTrack: () => {
+          console.log("🚀🚀🚀 测试环境 firebase analytics");
+        },
+      },
+    };
+  }
   const { webConfig } = useAppStore();
   const firebaseConfig = webConfig.firebase;
 
@@ -775,6 +775,9 @@ export default defineNuxtPlugin(async () => {
     return analyticsInstance;
   };
 
+  let customLogEvent;
+  let customEventTrack;
+
   try {
     await isSupported();
     const analytics = initializeFirebase();
@@ -783,11 +786,11 @@ export default defineNuxtPlugin(async () => {
     logEvent(analytics, "in_page");
     console.log("🚀🚀🚀 firebase analytics: ", "in_page");
 
-    const _logEvent = (eventName: string, eventParams = {}) => {
+    customLogEvent = (eventName: string, eventParams = {}) => {
       logEvent(analytics, eventName, eventParams);
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     };
-    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
       const _eventParams = {
         time: new Date(),
         message: eventName,
@@ -797,34 +800,27 @@ export default defineNuxtPlugin(async () => {
       logEvent(analytics, eventName, _eventParams);
       // console.log('🚀🚀🚀 firebase analytics: ', eventName)
     };
-
-    return {
-      provide: {
-        logEvent: _logEvent,
-        eventTrack: _eventTrack,
-      },
-    };
-
-    // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
-    // nuxtApp.vueApp.provide($logEvent, _logEvent)
-    // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
   } catch (error) {
     console.log("🚀🚀🚀 Firebase Analytics is not supported", error);
 
-    const _logEvent = (eventName: string, eventParams = {}) => {
+    customLogEvent = (eventName: string, eventParams = {}) => {
       console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
     };
-    const _eventTrack = (eventName: string, method: string, eventParams = {}) => {
+    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
       console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams);
     };
-
-    return {
-      provide: {
-        logEvent: _logEvent,
-        eventTrack: _eventTrack,
-      },
-    };
   }
+
+  return {
+    provide: {
+      logEvent: customLogEvent,
+      eventTrack: customEventTrack,
+    },
+  };
+
+  // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
+  // nuxtApp.vueApp.provide($logEvent, _logEvent)
+  // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
 });
 ```
 
@@ -840,21 +836,28 @@ export default defineNuxtPlugin(async () => {
   const { webConfig } = appStore;
 
   // 加载谷歌广告脚本
-  useHead({
-    script: [
-      {
-        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense.clientId}`,
-        crossorigin: "anonymous",
-        async: true,
-      },
-    ],
-  });
+  useHead(
+    {
+      script: [
+        ...(webConfig.adSense?.clientId && process.env.NODE_ENV === "production"
+          ? [
+              {
+                src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
+                crossorigin: "anonymous" as const,
+                async: true,
+              },
+            ]
+          : []),
+      ],
+    },
+    { mode: "client" }
+  );
 </script>
 ```
 
 封装一个 `AdsbyGoogle` 组件，在组件内的 `onMounted` 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
 
-组件仅在客户端运行
+广告脚本仅在**生产环境**的**客户端**加载
 
 `ads.txt` 通过服务端中间件 `server/middleware/load-config.ts` 处理
 
@@ -871,16 +874,16 @@ export default defineEventHandler((event) => {
   const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
   const host = originHost.replace(/^www\./, "");
 
-  console.log("🚀🚀🚀 请求的 host: ", host);
+  // console.log('🚀🚀🚀 请求的 host: ', host)
 
-  const config = webConfigs[host] || webConfigs["localhost"];
+  const config = webConfigs[host] || webConfigs.localhost;
 
   // 将配置注入到响应的上下文中
   event.context.config = config;
 
   /** 处理 ads.txt 请求 */
   const url = event.node.req.url;
-  console.log("🚀🚀🚀 请求的 url: ", url);
+  // console.log('🚀🚀🚀 请求的 url: ', url)
 
   // 如果请求的路径是 /ads.txt
   if (url === "/ads.txt") {
@@ -888,7 +891,7 @@ export default defineEventHandler((event) => {
     event.node.res.setHeader("Content-Type", "text/plain");
 
     // 返回自定义的 ads.txt 内容
-    event.node.res.end(config.adSense.ads);
+    event.node.res.end(config.adSense?.ads);
   }
 });
 ```
@@ -1020,12 +1023,100 @@ onBeforeUnmount(() => {
 - `ads-attrs` 是一个对象，只需要传递 `data-ad-slot` 属性即可，其他属性均已设置默认值，如果需要覆盖则可自行传递，会覆盖默认值
 
 ```html
-<AdsbyGoogle :ads-attrs="adSense.home_1" />
+<AdsbyGoogle :ads-attrs="adSense?.home_1" />
 ```
 
 #### 广告调试
 
 在 `url` 后面增加 `db` `query`参数即可，如 `www.xxx.com?db=1`，表示开启 debug 模式
+
+### 🎯 Header 上报
+
+通过服务端的 `report-headers` 中间件进行上报
+
+`server/middleware/report-headers.ts`
+
+```ts
+export default defineEventHandler(async (event) => {
+  const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
+  const host = originHost.replace(/^www\./, "");
+  const url = event.node.req.url;
+  console.log("🚀🚀🚀 请求的 url: ", url);
+
+  if (!url?.includes(".")) {
+    const data = {
+      dt: new Date().toISOString().split("T")[0], // 当前日期，格式为 YYYY-MM-DD
+      host: host,
+      path: url,
+      timestamp: Date.now(),
+      ...event.node.req.headers,
+    };
+    // 异步地发送 POST 请求到后端的 /abc 接口
+    try {
+      // 使用 $fetch 发送 POST 请求
+      await $fetch("http://data-tr.videodownloader.software/web/report", {
+        method: "POST",
+        body: data,
+      });
+    } catch (error) {
+      // 处理错误，但不影响后续的渲染
+      console.error("Error sending data to /web/report:", error);
+    }
+  }
+});
+```
+
+### 🎯 分渠道路由
+
+实现分渠道路由，访问 `/` 和访问 `/channelX` 是同一个页面，X 取值为 1 ～ 99，同时在跳转路由的时候，保留路径中的 `channelX`；另外路由跳转保留 query 参数。
+
+#### 实现路由
+
+推荐在 `nuxt.config.ts` 中通过 hooks 进行配置
+
+```ts
+export default defineNuxtConfig({
+  hooks: {
+    "pages:extend"(pages) {
+      // 新增路由
+      pages.push({
+        name: "HomeChannel",
+        path: "/:channel(channel[1-9]\\d?)",
+        file: "~/pages/index.vue",
+      });
+    },
+  },
+});
+```
+
+#### 路由跳转
+
+封装自定义路由跳转函数，替换原生的 `route.push` 方法
+
+`composables/useCustomPush.ts`
+
+```ts
+export const useCustomPush = () => {
+  const router = useRouter();
+  const { params, query } = router.currentRoute.value;
+  const { channel } = params;
+  const queryString = new URLSearchParams(query as Record<string, string>).toString();
+  const fullChannel = channel ? `/${channel}` : "";
+  const fullQueryString = queryString ? `?${queryString}` : "";
+
+  const customPush = (path: string) => {
+    router.push(`${fullChannel}${path}${fullQueryString}`);
+  };
+
+  return customPush;
+};
+```
+
+### 🎯 项目部署
+
+1. Node 版本：>20
+2. 打包：`pnpm run build`
+3. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
 
 ## 注意事项
 

@@ -1,1 +1,51 @@
 // 全局公共样式
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+  // 隐藏滚动条
+  scrollbar-width: none;
+}
+
+html,
+body {
+  // height: 100%;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
+  /* 文本渲染优化 */
+  text-rendering: optimizeLegibility;
+  /* Webkit 字体平滑 */
+  -webkit-font-smoothing: antialiased;
+  /* macOS 字体平滑 */
+  -moz-osx-font-smoothing: grayscale;
+  /* 禁止字体合成 */
+  font-synthesis: none;
+}
+
+/* 清除 input 框自动填充的背景颜色 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  -webkit-transition:
+    background-color 0s ease-in-out 9999s,
+    color 0s ease-in-out 9999s;
+  -webkit-transition-delay: 9999s;
+  /* 设置一个很长的过渡延迟 */
+  -webkit-text-fill-color: inherit;
+}

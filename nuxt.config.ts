@@ -78,6 +78,18 @@ export default defineNuxtConfig({
     },
   },
 
+  /** 钩子 */
+  hooks: {
+    'pages:extend'(pages) {
+      // 新增路由
+      pages.push({
+        name: 'HomeChannel',
+        path: '/:channel(channel[1-9]\\d?)',
+        file: '~/pages/index.vue',
+      })
+    },
+  },
+
   /** Nuxt Img 模块 */
   // image: {
   //   dir: 'assets/images', // 图片存放目录

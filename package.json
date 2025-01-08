@@ -20,6 +20,7 @@
     "@nuxt/icon": "^1.9.0",
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/device": "^3.2.4",
+    "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@pinia/nuxt": "^0.5.5",
     "firebase": "^11.0.1",
     "normalize.css": "^8.0.1",

@@ -56,6 +56,7 @@ const { isMobile } = useCustomDevice()
 <style lang="scss" scoped>
 .home {
   width: 100%;
+  padding: 1rem;
 
   img {
     width: 100%;
