@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { resourceList } from '~/configs/constants'
+
 const appStore = useAppStore()
 const { toggleMenuDrawer } = appStore
 
@@ -23,10 +25,10 @@ watch(
     :class="['menu-drawer', { opened: appStore.menuDrawerOpened }]"
     :style="{ transform: 'translateY(-120%)' }"
   >
-    <div class="resource">
+    <h2 class="resource">
       Resource
-    </div>
-    <!-- <ul class="menu-list">
+    </h2>
+    <ul class="menu-list">
       <li
         v-for="(item, index) in resourceList"
         :key="index"
@@ -36,7 +38,7 @@ watch(
         <span>{{ item.name }}</span>
         <SvgIcon name="arrow-right" width="6.5" height="11" />
       </li>
-    </ul> -->
+    </ul>
   </div>
 </template>
 
@@ -61,12 +63,13 @@ watch(
   padding: 1.5rem 1rem 0.75rem;
 
   &.opened {
-    transform: translateY(0) !important; // TODO 默认行内样式，防止闪烁
+    transform: translateY(0) !important;
   }
 
   .resource {
-    // font-family: "Rubik One";
-    height: 25px;
+    font-family: "Rubik One";
+    height: 1.5rem;
+    font-weight: 600;
   }
 
   .menu-list {
@@ -85,18 +88,14 @@ watch(
       }
     }
   }
-}
 
-@media (min-width: 768px) {
-  .menu-drawer {
+  @media (min-width: 768px) {
     width: 360px;
     right: 0;
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.08);
   }
-}
 
-@media (min-width: $container-width) {
-  .menu-drawer {
+  @media (min-width: $container-width) {
     right: calc((100% - $container-width) / 2);
   }
 }

@@ -23,7 +23,6 @@
     "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@pinia/nuxt": "^0.5.5",
     "firebase": "^11.0.1",
-    "normalize.css": "^8.0.1",
     "nuxt": "^3.15.1",
     "pinia": "^2.2.4",
     "vite": "^5.4.10",

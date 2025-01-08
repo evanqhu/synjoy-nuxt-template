@@ -1,4 +1,6 @@
 // 全局公共样式
+@use "./reset.scss" as *;
+@use "./fonts.scss" as *;
 
 *,
 *::before,
@@ -48,4 +50,9 @@ input:-webkit-autofill:active {
   -webkit-transition-delay: 9999s;
   /* 设置一个很长的过渡延迟 */
   -webkit-text-fill-color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }

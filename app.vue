@@ -51,4 +51,12 @@ useHead({
   height: 100vh;
   width: 100vw;
 }
+
+.app-main {
+  padding-top: $header-height;
+}
+
+.app-content {
+  padding: 1rem;
+}
 </style>

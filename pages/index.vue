@@ -20,7 +20,7 @@ const { isMobile } = useCustomDevice()
 </script>
 
 <template>
-  <div class="home">
+  <div class="home app-content">
     <div>首页</div>
     <br>
     <div>isMobile: {{ isMobile }}</div>
@@ -56,7 +56,6 @@ const { isMobile } = useCustomDevice()
 <style lang="scss" scoped>
 .home {
   width: 100%;
-  padding: 1rem;
 
   img {
     width: 100%;

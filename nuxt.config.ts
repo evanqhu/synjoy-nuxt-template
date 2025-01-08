@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   },
 
   /** 全局样式文件 */
-  css: ['normalize.css', '~/assets/styles/main.scss'],
+  css: ['~/assets/styles/main.scss'],
 
   /** 运行时变量 */
   runtimeConfig: {

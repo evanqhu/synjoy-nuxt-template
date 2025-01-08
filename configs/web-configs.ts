@@ -5,7 +5,7 @@ const defaultConfig = {
   appEmail: 'templateweb.support@gmail.com',
   appUrl: 'templateweb.com',
   appLogo: 'logo1',
-  aboutUs: `The aboutUs of template web.`,
+  aboutUs: `The aboutUs of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   firebase: {
     apiKey: '',
     authDomain: '',

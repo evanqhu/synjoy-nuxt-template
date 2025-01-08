@@ -1,10 +1,8 @@
-<!-- 默认布局 -->
+<!-- 法律 (政策) 布局 -->
 <template>
   <div>
-    <BaseMenuDrawer />
-
-    <div class="default-layout">
-      <BaseHeader />
+    <div class="policies-layout">
+      <PoliciesHeader />
       <div class="app-main">
         <slot />
       </div>
@@ -14,7 +12,7 @@
 </template>
 
 <style lang="scss" scoped>
-.default-layout {
+.policies-layout {
   width: 100%;
   height: 100%;
 }
