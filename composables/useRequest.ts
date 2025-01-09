@@ -19,7 +19,24 @@ const _fetch = $fetch.create({
     }
   },
   // 响应拦截器
-  onResponse() {
+  onResponse({ response }) {
+    if (!response.ok) {
+      console.error('请求失败', response.statusText)
+      throw new Error(`请求错误：${response.status}`)
+    }
+
+    const { data, code, msg, success } = response._data
+
+    if (!success) {
+      console.error('接口错误：', msg)
+      throw new Error(msg || '未知错误')
+    }
+
+    // 通过修改 response._data 来修改响应数据
+    response._data = data
+
+    // 直接返回 data 不生效
+    // return data
     // response._data = new myBusinessResponse(response._data)
   },
   // 响应错误拦截器

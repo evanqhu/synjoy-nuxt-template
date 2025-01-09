@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
   const host = originHost.replace(/^www\./, '')
   const url = event.node.req.url
-  console.log('🚀🚀🚀 请求的 url: ', url)
+  // console.log('🚀🚀🚀 请求的 url: ', url)
 
   if (!url?.includes('.')) {
     const data = {

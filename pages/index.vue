@@ -18,11 +18,56 @@ const { adSense } = webConfig
 
 const { isMobile } = useCustomDevice()
 const customPush = useCustomPush()
+const { defaultApi } = useApi()
+
+const { data: topMoversData, refresh: refreshTopMovers } = await useAsyncData('topMovers', defaultApi.fetchTopMovers)
+// topMovers.value = topMoversData.value?.datas || []
+const topMovers = computed(() => topMoversData.value?.datas || [])
+
+const { data: jokeData, refresh: refreshJoke } = await useAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'))
+const joke = computed(() => (jokeData.value as any)?.setup)
+// joke.value = jokeData.value
 </script>
 
 <template>
   <div class="home app-content">
     <div>首页</div>
+    <br>
+    <button @click="refreshTopMovers()">
+      刷新 top movers 数据
+    </button>
+    <br>
+    <br>
+    <button @click="refreshJoke()">
+      刷新 joke 数据
+    </button>
+    <br>
+    <br>
+    <p>{{ joke }}</p>
+    <br>
+    <div class="top-cards-wrapper">
+      <div
+        v-for="(item, index) in topMovers"
+        :key="index"
+        class="card-item"
+        @click="customPush(`/${item.originId}`)"
+      >
+        <img class="icon" :src="item.logoUrl">
+        <div class="name">
+          {{ item.coinFullName }}
+        </div>
+        <div class="abbr">
+          {{ item.coinShortName }}
+        </div>
+        <div class="price">
+          <span class="num">${{ item.nowPriceText }}</span>
+          <div class="trend">
+            <SvgIcon name="up" width="16" height="16" style="margin-right: 8px" />
+            <span>{{ item.priceChange1d }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <br>
     <button @click="customPush('/detail')">
       to detail
@@ -62,5 +107,92 @@ const customPush = useCustomPush()
   img {
     width: 100%;
   };
+}
+
+.top-cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 列
+  gap: 20px;
+  min-height: 168px;
+
+  .card-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-width: 250px;
+    height: 168px;
+    padding: 16px;
+    border-radius: 12px;
+    color: #fff;
+    background: #151617;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      outline: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .name {
+      font-size: rem(20);
+      font-weight: 900;
+      max-width: 140px;
+      @include ellipsis;
+    }
+
+    .abbr {
+      font-size: 1rem;
+      color: #8c8c8c;
+    }
+
+    .price {
+      display: flex;
+      justify-content: space-between;
+      font-size: rem(20);
+      font-weight: 900;
+
+      .num {
+        max-width: 120px;
+        @include ellipsis;
+      }
+
+      .trend {
+        color: #1dc47b;
+      }
+    }
+
+    .sparkline {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr; /* 单列布局 */
+    min-height: auto;
+
+    .card-item {
+      height: 96px;
+      width: calc(100vw - 2rem);
+      padding-left: 70px;
+      padding-bottom: 12px;
+
+      .icon {
+        position: absolute;
+        left: 1rem;
+      }
+      .sparkline {
+        top: 10px;
+      }
+    }
+  }
 }
 </style>
