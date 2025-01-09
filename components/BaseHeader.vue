@@ -28,6 +28,7 @@ const handleMenuClick = () => {
   width: 100%;
   height: $header-height;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
   background: #fff;
@@ -38,7 +39,7 @@ const handleMenuClick = () => {
     display: flex;
     align-items: center;
     gap: 6px;
-    @include hover-effect;
+    @include hover-effect(1);
 
     .app-title {
       font-size: rem(24);
@@ -47,11 +48,14 @@ const handleMenuClick = () => {
   }
 
   &__right {
+    padding: 0.25rem;
     display: flex;
     align-items: center;
-    @include hover-effect;
+    border-radius: 4px;
+    @include hover-effect(1, rgba(0, 0, 0, 0.08));
   }
 
+  // > 1200px
   @media (min-width: $container-width) {
     padding: 0 calc((100% - $container-width) / 2);
   }

@@ -54,9 +54,16 @@ useHead({
 
 .app-main {
   padding-top: $header-height;
+  max-width: $container-width;
+  margin: 0 auto;
 }
 
 .app-content {
   padding: 1rem;
+
+  // > 1200px
+  @media screen and (min-width: $container-width) {
+    padding: 1rem 0;
+  }
 }
 </style>

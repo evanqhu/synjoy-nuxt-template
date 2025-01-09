@@ -5,7 +5,9 @@ const router = useRouter()
 
 <template>
   <div class="policies-header">
-    <SvgIcon name="back" size="24" class="back-btn" @click="router.back()" />
+    <div class="header__back">
+      <SvgIcon name="back" size="24" class="back-btn" @click="router.back()" />
+    </div>
     <h1 class="header__title">
       {{ route.meta.title }}
     </h1>
@@ -23,6 +25,13 @@ const router = useRouter()
   background: #fff;
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
 
+  .header__back {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    @include hover-effect(1, rgba(0, 0, 0, 0.08));
+  }
+
   .header__title {
     flex: 1;
     margin-right: 24px;
@@ -31,12 +40,19 @@ const router = useRouter()
     font-weight: 900;
   }
 
+  // PC
+  @media screen and (min-width: $device-point) {
+    .header__back {
+      padding: 0.25rem;
+    }
+    .header__title {
+      margin-right: 32px;
+    }
+  }
+
+  // > 1200px
   @media (min-width: $container-width) {
     padding: 0 calc((100% - $container-width) / 2);
-
-    .back-btn {
-      @include hover-effect;
-    }
   }
 }
 </style>

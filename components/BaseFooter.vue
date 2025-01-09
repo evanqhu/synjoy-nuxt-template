@@ -81,7 +81,7 @@ $pc-margin: calc((100% - $container-width) / 2);
 
     &__content {
       color: $text-color-muted;
-      line-height: 1.25;
+      line-height: 1.5;
     }
   }
 
@@ -109,8 +109,8 @@ $pc-margin: calc((100% - $container-width) / 2);
     }
   }
 
-  // 移动端
-  @media screen and (max-width: 768px) {
+  // mobile
+  @media screen and (max-width: $device-point) {
     padding: 0;
 
     &__container {

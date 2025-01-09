@@ -21,25 +21,24 @@ watch(
 
 <template>
   <div v-if="appStore.menuDrawerOpened" class="drawer-bg" @click="toggleMenuDrawer(false)" />
-  <div
-    :class="['menu-drawer', { opened: appStore.menuDrawerOpened }]"
-    :style="{ transform: 'translateY(-120%)' }"
-  >
-    <h2 class="resource">
-      Resource
-    </h2>
-    <ul class="menu-list">
-      <li
-        v-for="(item, index) in resourceList"
-        :key="index"
-        class="menu-item"
-        @click="handleItemClick(item)"
-      >
-        <span>{{ item.name }}</span>
-        <SvgIcon name="arrow-right" width="6.5" height="11" />
-      </li>
-    </ul>
-  </div>
+  <Transition>
+    <div v-if="appStore.menuDrawerOpened" class="menu__drawer">
+      <h2 class="menu__title">
+        Resource
+      </h2>
+      <ul class="menu__list">
+        <li
+          v-for="(item, index) in resourceList"
+          :key="index"
+          class="menu__item"
+          @click="handleItemClick(item)"
+        >
+          <span>{{ item.name }}</span>
+          <SvgIcon name="arrow-right" size="1rem" />
+        </li>
+      </ul>
+    </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
@@ -53,35 +52,31 @@ watch(
   z-index: 2001;
 }
 
-.menu-drawer {
+.menu__drawer {
   position: fixed;
   top: $header-height;
   z-index: 2001;
   width: 100%;
   background: #fff;
-  transition: all 0.2s ease-in-out;
-  padding: 1.5rem 1rem 0.75rem;
+  padding: 1.5rem 0.5rem 0.75rem;
 
-  &.opened {
-    transform: translateY(0) !important;
-  }
-
-  .resource {
+  .menu__title {
+    padding: 0.5rem;
     font-family: "Rubik One";
-    height: 1.5rem;
     font-weight: 600;
   }
 
-  .menu-list {
-    .menu-item {
+  .menu__list {
+    .menu__item {
+      padding: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 3rem;
       font-weight: 600;
       font-size: 0.875rem;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      border-radius: 0.5rem;
+      @include hover-effect(1, rgba(0, 0, 0, 0.04));
 
       &:not(:last-of-type) {
         border-bottom: 1px solid #e6e8ea;
@@ -89,14 +84,26 @@ watch(
     }
   }
 
-  @media (min-width: 768px) {
+  // PC
+  @media (min-width: $device-point) {
     width: 360px;
     right: 0;
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.08);
   }
 
+  // > 1200px
   @media (min-width: $container-width) {
     right: calc((100% - $container-width) / 2);
   }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateY(-100%);
 }
 </style>
