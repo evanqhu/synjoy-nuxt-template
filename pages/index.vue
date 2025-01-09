@@ -1,7 +1,5 @@
 <!-- 首页 home -->
 <script setup lang="ts">
-import imgURL from '~/assets/images/vite.jpg'
-
 useSeoMeta({
   title: 'Home Page',
   description: 'My home page description',
@@ -96,7 +94,7 @@ const joke = computed(() => (jokeData.value as any)?.setup)
       Velit rerum harum perspiciatis voluptatibus iure distinctio totam vel! Corrupti perferendis commodi distinctio consequatur possimus cumque, blanditiis dolorem soluta architecto eum dicta magni saepe magnam deleniti, delectus, hic amet? Mollitia.
     </div>
     <NuxtImg src="/images/demo.jpg" />
-    <img :src="imgURL" alt="">
+    <img src="~/assets/images/vite.jpg" alt="">
   </div>
 </template>
 
