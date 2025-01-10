@@ -478,7 +478,7 @@ export default defineNuxtConfig({
 
 不方便调整图标大小，不推荐使用
 
-### 🎯 图片懒加载
+### 🎯 图片
 
 使用 [NuxtImg](https://image.nuxt.com/get-started/installation) 模块
 
@@ -520,6 +520,7 @@ export default defineNuxtConfig({
 
 - src 必须是**绝对路径**
 - 图片必须放在 **public** 文件夹下
+- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
 
 如果不把图片放在 public 下，建议直接使用 img 标签即可
 
