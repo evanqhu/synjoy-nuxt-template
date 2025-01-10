@@ -16,24 +16,25 @@
     "lint-fix": "eslint . --fix"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.6.0",
-    "@nuxt/icon": "^1.9.0",
-    "@nuxt/image": "^1.8.1",
-    "@nuxtjs/device": "^3.2.4",
+    "@nuxt/eslint": "^0.7.5",
+    "@nuxt/icon": "^1.10.3",
+    "@nuxt/image": "^1.9.0",
     "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
-    "@pinia/nuxt": "^0.5.5",
-    "firebase": "^11.0.1",
+    "@nuxtjs/device": "^3.2.4",
+    "@pinia/nuxt": "^0.9.0",
+    "firebase": "^11.1.0",
     "nuxt": "^3.15.1",
-    "pinia": "^2.2.4",
-    "vite": "^5.4.10",
+    "pinia": "^2.3.0",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "eslint": "^9.13.0",
-    "sass": "^1.80.4",
-    "typescript": "^5.6.3",
+    "eslint": "^9.17.0",
+    "sass": "^1.83.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vue-tsc": "^2.1.10"
-  }
+    "vue-tsc": "^2.2.0"
+  },
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }

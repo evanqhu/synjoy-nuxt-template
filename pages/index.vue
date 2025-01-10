@@ -1,5 +1,9 @@
 <!-- 首页 home -->
 <script setup lang="ts">
+definePageMeta({
+  path: '/:channel(channel[1-9]\\d?)?',
+})
+
 useSeoMeta({
   title: 'Home Page',
   description: 'My home page description',
@@ -60,7 +64,7 @@ const joke = computed(() => (jokeData.value as any)?.setup)
         <div class="price">
           <span class="num">${{ item.nowPriceText }}</span>
           <div class="trend">
-            <SvgIcon name="up" width="16" height="16" style="margin-right: 8px" />
+            <SvgIcon name="up" size="1rem" style="margin-right: 8px" />
             <span>{{ item.priceChange1d }}%</span>
           </div>
         </div>
@@ -77,6 +81,8 @@ const joke = computed(() => (jokeData.value as any)?.setup)
     <Counter />
     <br>
     <SvgIcon name="nuxt" size="2rem" />
+    <br>
+    <Icon name="local:nuxt" size="2rem" />
     <br>
     <!-- <AdsbyGoogle :ads-attrs="adSense.home_1" />
     <AdsbyGoogle :ads-attrs="adSense.home_2" /> -->

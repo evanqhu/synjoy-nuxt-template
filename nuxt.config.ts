@@ -70,42 +70,29 @@ export default defineNuxtConfig({
     ],
     css: {
       preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler', // 使用新版 sass 编译器
-          additionalData: '@use "~/assets/styles/variables.scss" as *;', // 引入全局样式变量
-        },
+        // 引入全局样式变量
+        scss: { additionalData: '@use "~/assets/styles/variables.scss" as *;' },
       },
     },
   },
 
   /** 钩子 */
   hooks: {
-    'pages:extend'(pages) {
-      // 新增路由
-      pages.push(
-        {
-          name: 'HomeChannel',
-          path: '/:channel(channel[1-9]\\d?)',
-          file: '~/pages/index.vue',
-        },
-        {
-          name: 'DetailChannel',
-          path: '/:channel(channel[1-9]\\d?)/detail',
-          file: '~/pages/detail.vue',
-        })
-    },
+    // 'pages:extend'(pages) {
+    //   // 新增路由
+    //   pages.push(
+    //     {
+    //       name: 'HomeChannel',
+    //       path: '/:channel(channel[1-9]\\d?)',
+    //       file: '~/pages/index.vue',
+    //     },
+    //     {
+    //       name: 'DetailChannel',
+    //       path: '/:channel(channel[1-9]\\d?)/detail',
+    //       file: '~/pages/detail.vue',
+    //     })
+    // },
   },
-
-  /** Nuxt Img 模块 */
-  // image: {
-  //   dir: 'assets/images', // 图片存放目录
-  // },
-
-  /** Nuxt Device 模块 */
-  // device: {
-  //   refreshOnResize: true,
-
-  // },
 
   /** Nuxt ESLint 模块 */
   eslint: {

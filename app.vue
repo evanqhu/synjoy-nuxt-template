@@ -13,10 +13,9 @@ catch (error) {
   iconHref.value = '' // 设置为默认值或留空
 }
 
-// 加载谷歌广告脚本
-
 useSeoMeta({
   title: webConfig.appTitle,
+  description: 'app description',
   ogTitle: webConfig.appTitle,
 })
 useHead({
