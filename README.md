@@ -173,6 +173,7 @@ export default defineNuxtConfig({
 > ⚠️ 默认情况下， `useAsyncData` 会阻止导航，直到其异步处理程序得到解析。这会导致路由跳转延迟，用户体验不佳。可以通过添加 `lazy: true` 选项或使用 `useLazyAsyncData`
 
 > 如果在一个组件中需要发送多个请求，且这些请求之间没有依赖关系，则不需要加 `await`，直接获取数据即可；只有当请求之间有依赖关系时，才需要加 `await`
+> 加 `await` 的作用是等待当前请求完成，这样解构拿到的 `data` 就是有数据的，如果不加，在请求完成前，拿到的 `data` 是 `null`；不过没关系，代码中会通过 `status` 判断请求是否完成，如果未完成，则显示加载动画
 
 Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
@@ -315,7 +316,7 @@ const blogsObj = computed(() => blogs.map(...));
 <script setup lang="ts">
 import { getData } from "~/api/modules/blog";
 
-const { data: blogs } = useAsyncData("blogs", () => getData("test params"), { lazy: true});
+const { data: blogs } = useAsyncData("blogs", () => getData("test params"), { lazy: true });
 
 const { data: blogs } = useLazyAsyncData("blogs", () => getData("test params"));
 </script>
@@ -756,34 +757,34 @@ export default defineNuxtPlugin(async () => {
  * 服务器中间件
  * 根据请求的 host，加载对应的配置到 nuxtApp 的上下文中
  */
-import webConfigs from '~/configs/web-configs'
+import webConfigs from "~/configs/web-configs";
 
 export default defineEventHandler((event) => {
   // console.log('🚀🚀🚀 process.env.NODE_ENV: ', process.env.NODE_ENV)
 
-  const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
-  const host = originHost.replace(/^www\./, '')
+  const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
+  const host = originHost.replace(/^www\./, "");
 
   // console.log('🚀🚀🚀 请求的 host: ', host)
 
-  const config = webConfigs[host] || webConfigs.localhost
+  const config = webConfigs[host] || webConfigs.localhost;
 
   // 将配置注入到响应的上下文中
-  event.context.config = config
+  event.context.config = config;
 
   /** 处理 ads.txt 请求 */
-  const url = event.node.req.url
+  const url = event.node.req.url;
   // console.log('🚀🚀🚀 请求的 url: ', url)
 
   // 如果请求的路径是 /ads.txt
-  if (url === '/ads.txt') {
+  if (url === "/ads.txt") {
     // 设置响应类型为纯文本
-    event.node.res.setHeader('Content-Type', 'text/plain')
+    event.node.res.setHeader("Content-Type", "text/plain");
 
     // 返回自定义的 ads.txt 内容
-    event.node.res.end(config.adSense?.ads)
+    event.node.res.end(config.adSense?.ads);
   }
-})
+});
 ```
 
 3️⃣ **广告组件**
@@ -793,118 +794,115 @@ export default defineEventHandler((event) => {
 ```vue
 <!-- components/AdsbyGoogle.client.vue -->
 <script lang="ts" setup>
-const { $eventTrack } = useNuxtApp()
-const route = useRoute()
-const { webConfig } = useAppStore()
+const { $eventTrack } = useNuxtApp();
+const route = useRoute();
+const { webConfig } = useAppStore();
 
 interface Props {
   /**
    * 广告配置对象 data-ad-client data-ad-slot 等
    */
-  adsAttrs?: object
+  adsAttrs?: object;
   /**
    * 自定义样式
    */
-  customClass?: string
+  customClass?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   adsAttrs: () => ({}),
-  customClass: '',
-})
+  customClass: "",
+});
 
 /** ins 标签模板引用 */
-const adsenseRef = ref<HTMLElement>()
+const adsenseRef = ref<HTMLElement>();
 /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
 const isShowAd = computed(() => {
-  return Object.keys(props.adsAttrs).includes('data-ad-slot')
-})
+  return Object.keys(props.adsAttrs).includes("data-ad-slot");
+});
 /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
-const isAdFilled = ref(true)
+const isAdFilled = ref(true);
 /** 是否进入调试模式 */
-const isShowDebug = ref(false)
+const isShowDebug = ref(false);
 
 /** 完整的广告位配置对象 */
 const adsAttrsFull = computed(() => {
   return Object.assign(
     {
-      'class': 'adsbygoogle',
-      'style': 'display:block',
-      'data-ad-format': 'auto',
-      'data-full-width-responsive': 'true',
-      'data-ad-client': webConfig.adSense?.clientId,
+      class: "adsbygoogle",
+      style: "display:block",
+      "data-ad-format": "auto",
+      "data-full-width-responsive": "true",
+      "data-ad-client": webConfig.adSense?.clientId,
     },
-    props.adsAttrs,
-  )
-})
+    props.adsAttrs
+  );
+});
 
 /** 创建一个 DOM 树变动观察器 */
 const observer = new MutationObserver((mutations) => {
   // 遍历监听到的 DOM 变化
   mutations.forEach((mutation) => {
-    const target = mutation.target as Element
-    if (mutation.attributeName === 'data-ad-status') {
-      console.log('🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变')
-      isAdFilled.value = target.getAttribute('data-ad-status') !== 'unfilled'
+    const target = mutation.target as Element;
+    if (mutation.attributeName === "data-ad-status") {
+      console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
+      isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
     }
-  })
-})
+  });
+});
 
 /** 监视广告是否加载成功，来控制是否显示广告内容区 */
 const observeAdStatus = async () => {
-  await nextTick()
+  await nextTick();
   /** ins 标签 DOM */
-  const ads = adsenseRef.value
-  if (!ads) return
+  const ads = adsenseRef.value;
+  if (!ads) return;
 
   // 观察 ins 标签的 data-ad-status 属性变化
   observer.observe(ads, {
     attributes: true, // 监听属性变动
-    attributeFilter: ['data-ad-status'], // 只监听 data-ad-status 属性
-  })
+    attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
+  });
 
   // 初始化检查
-  isAdFilled.value = ads.getAttribute('data-ad-status') !== 'unfilled'
-}
+  isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
+};
 
 /** 展示广告 */
 const showAd = async () => {
-  if (!isShowAd.value) return
+  if (!isShowAd.value) return;
   // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-  await nextTick()
+  await nextTick();
   try {
-    (window.adsbygoogle = window.adsbygoogle || []).push({})
-    $eventTrack('load_ads', 'expose')
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    $eventTrack("load_ads", "expose");
+  } catch (error) {
+    console.error(error);
   }
-  catch (error) {
-    console.error(error)
-  }
-}
+};
 
 onMounted(async () => {
   // 开启广告调试模式
   if (route.query.db) {
-    isShowDebug.value = true
+    isShowDebug.value = true;
   }
-  observeAdStatus()
-  showAd()
-})
+  observeAdStatus();
+  showAd();
+});
 
 onActivated(() => {
-  showAd()
-})
+  showAd();
+});
 
 onBeforeUnmount(() => {
-  observer?.disconnect()
-})
+  observer?.disconnect();
+});
 </script>
 
 <template>
   <div v-if="isShowAd" class="ads-item">
     <div v-show="isAdFilled" class="ads-content" :class="customClass">
-      <div class="ads-content-title">
-        Advertisement
-      </div>
+      <div class="ads-content-title">Advertisement</div>
       <ins ref="adsenseRef" v-bind="adsAttrsFull" />
     </div>
     <div v-if="isShowDebug" class="ads-debug">
@@ -975,10 +973,10 @@ onBeforeUnmount(() => {
 
 1️⃣ 在服务器上加载配置
 
-通过服务端中间件 `server/middleware/load-config.ts` 根据请求的host 将相应的网站配置加载到上下文，见上方 ads.txt 相关代码
+通过服务端中间件 `server/middleware/load-config.ts` 根据请求的 host 将相应的网站配置加载到上下文，见上方 ads.txt 相关代码
 
 ```ts
-event.context.config = config
+event.context.config = config;
 ```
 
 2️⃣ 在服务端渲染时将配置存储到状态管理器
@@ -991,17 +989,17 @@ event.context.config = config
  * 服务端插件
  * 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
  */
-import type { Pinia } from 'pinia'
+import type { Pinia } from "pinia";
 
 // 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
 export default defineNuxtPlugin((nuxtApp) => {
-  const pinia = nuxtApp.$pinia as Pinia
+  const pinia = nuxtApp.$pinia as Pinia;
   // 获取 Pinia Store 实例
-  const appStore = useAppStore(pinia) // NOTE 下次遇到数据共享和不共享的例子时再做记录
+  const appStore = useAppStore(pinia); // NOTE 下次遇到数据共享和不共享的例子时再做记录
 
   // 从服务端上下文中注入配置到 Pinia
-  appStore.webConfig = nuxtApp.ssrContext?.event.context.config || {}
-})
+  appStore.webConfig = nuxtApp.ssrContext?.event.context.config || {};
+});
 ```
 
 ### 🎯 Header 上报
@@ -1041,7 +1039,7 @@ export default defineEventHandler(async (event) => {
 
 ### 🎯 分渠道路由
 
->  实现分渠道路由，访问 `/` 和访问 `/channelX` 是同一个页面，X 取值为 1 ～ 99，同时在跳转路由的时候，保留路径中的 `channelX`；另外路由跳转保留 query 参数。
+> 实现分渠道路由，访问 `/` 和访问 `/channelX` 是同一个页面，X 取值为 1 ～ 99，同时在跳转路由的时候，保留路径中的 `channelX`；另外路由跳转保留 query 参数。
 
 1️⃣ **实现路由**
 
@@ -1116,4 +1114,3 @@ const customPush = useCustomPush()
 3. 打包：`pnpm run build`
 4. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
 5. 执行 `PORT=5000 node .output/server/index.mjs` 命令启动服务器 (或者执行 `pnpm run deploy`)
-
