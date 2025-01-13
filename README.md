@@ -12,6 +12,7 @@
 - 使用自定义路由 `path` ，实现分渠道路由
 - 封装 `useCustomPush()` 扩展 `router.push()` 方法，实现携带渠道路径和 `query` 参数跳转
 - 封装 `useRequest()`，提供网络请求最佳实践
+- 封装 `v-loading` 自定义指令
 
 ## ⚙️ 目录结构
 
@@ -169,6 +170,8 @@ export default defineNuxtConfig({
 
 ### 🎯 网络请求
 
+> ⚠️ 默认情况下， `useAsyncData` 会阻止导航，直到其异步处理程序得到解析。这会导致路由跳转延迟，用户体验不佳。可以通过添加 `lazy: true` 选项或使用 `useLazyAsyncData`
+
 Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
 其中 `useFetch` 和 `useAsyncData` 都需要写在 `setup` 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
@@ -310,7 +313,9 @@ const blogsObj = computed(() => blogs.map(...));
 <script setup lang="ts">
 import { getData } from "~/api/modules/blog";
 
-const { data: blogs } = await useAsyncData("blogs", () => getData("test params"));
+const { data: blogs } = await useAsyncData("blogs", () => getData("test params"), { lazy: true});
+
+const { data: blogs } = await useLazyAsyncData("blogs", () => getData("test params"));
 </script>
 ```
 

@@ -2,16 +2,7 @@
 <script lang="ts" setup>
 const appStore = useAppStore()
 const { webConfig } = appStore
-
-/** 网站图标 */
-const iconHref = ref('')
-try {
-  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default
-}
-catch (error) {
-  console.error('Failed to load app logo:', error)
-  iconHref.value = '' // 设置为默认值或留空
-}
+const clientId = webConfig.adSense?.clientId
 
 useSeoMeta({
   title: webConfig.appTitle,
@@ -20,9 +11,9 @@ useSeoMeta({
 })
 useHead({
   script: [
-    ...(webConfig.adSense?.clientId && process.env.NODE_ENV === 'production'
+    ...(clientId
       ? [{
-          src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
+          src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`,
           crossorigin: 'anonymous' as const,
           async: true,
         }]
@@ -31,7 +22,7 @@ useHead({
   link: [
     {
       rel: 'icon',
-      href: iconHref,
+      href: (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default,
     },
   ],
 }, { mode: 'client' })

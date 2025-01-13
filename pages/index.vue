@@ -22,13 +22,13 @@ const { isMobile } = useCustomDevice()
 const customPush = useCustomPush()
 const { defaultApi } = useApi()
 
-const { data: topMoversData, refresh: refreshTopMovers } = await useAsyncData('topMovers', defaultApi.fetchTopMovers)
-// topMovers.value = topMoversData.value?.datas || []
+const { status, data: topMoversData, refresh: refreshTopMovers } = await useLazyAsyncData('topMovers', defaultApi.fetchTopMovers)
 const topMovers = computed(() => topMoversData.value?.datas || [])
 
-const { data: jokeData, refresh: refreshJoke } = await useAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'))
+const { data: jokeData, refresh: refreshJoke } = await useLazyAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'), {
+  watch: [isMobile],
+})
 const joke = computed(() => (jokeData.value as any)?.setup)
-// joke.value = jokeData.value
 </script>
 
 <template>
@@ -47,7 +47,14 @@ const joke = computed(() => (jokeData.value as any)?.setup)
     <br>
     <p>{{ joke }}</p>
     <br>
-    <div class="top-cards-wrapper">
+    <div
+      v-loading="{
+        show: status === 'pending',
+        text: 'loading',
+        background: 'rgba(255, 255, 255, 0.5)',
+      }"
+      class="top-cards-wrapper"
+    >
       <div
         v-for="(item, index) in topMovers"
         :key="index"
