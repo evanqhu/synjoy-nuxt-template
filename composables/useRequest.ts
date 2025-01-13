@@ -25,6 +25,7 @@ const _fetch = $fetch.create({
       throw new Error(`请求错误：${response.status}`)
     }
 
+    // 与后端约定的数据响应格式
     const { data, code, msg, success } = response._data
 
     if (!success) {

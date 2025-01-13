@@ -36,14 +36,14 @@ const { webConfig } = appStore
         <h2 class="footer__section__title">
           CONTACT US
         </h2>
-        <a class="footer__section__content" :href="`mailto:${webConfig.appEmail}`">
-          {{ webConfig.appEmail }}
+        <a class="footer__section__content" :href="`mailto:${webConfig.webEmail}`">
+          {{ webConfig.webEmail }}
         </a>
       </div>
     </div>
 
     <div class="footer__copyright">
-      Copyright © {{ new Date().getFullYear() }} {{ webConfig.appUrl }}. All Rights Reserved.
+      Copyright © {{ new Date().getFullYear() }} {{ webConfig.webUrl }}. All Rights Reserved.
     </div>
   </footer>
 </template>

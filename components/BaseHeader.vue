@@ -12,8 +12,8 @@ const handleMenuClick = () => {
 <template>
   <header class="header">
     <div class="header__left" @click="customPush('/')">
-      <SvgIcon :name="webConfig.appLogo" size="2rem" />
-      <span class="app-title">{{ webConfig.appTitle }}</span>
+      <SvgIcon :name="webConfig.webLogo" size="2rem" />
+      <span class="web-title">{{ webConfig.webTitle }}</span>
     </div>
     <div class="header__right" @click="handleMenuClick">
       <SvgIcon v-if="appStore.menuDrawerOpened" name="close" size="24" />
@@ -41,7 +41,7 @@ const handleMenuClick = () => {
     gap: 6px;
     @include hover-effect(1);
 
-    .app-title {
+    .web-title {
       font-size: rem(24);
       font-weight: 900;
     }

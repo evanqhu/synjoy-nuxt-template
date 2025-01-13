@@ -172,6 +172,8 @@ export default defineNuxtConfig({
 
 > ⚠️ 默认情况下， `useAsyncData` 会阻止导航，直到其异步处理程序得到解析。这会导致路由跳转延迟，用户体验不佳。可以通过添加 `lazy: true` 选项或使用 `useLazyAsyncData`
 
+> 如果在一个组件中需要发送多个请求，且这些请求之间没有依赖关系，则不需要加 `await`，直接获取数据即可；只有当请求之间有依赖关系时，才需要加 `await`
+
 Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
 其中 `useFetch` 和 `useAsyncData` 都需要写在 `setup` 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
@@ -180,10 +182,10 @@ Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
 ```html
 <script setup lang="ts">
-  const { data, status, error, refresh, clear } = await useAsyncData("mountains", () =>
+  const { data, status, error, refresh, clear } = useAsyncData("mountains", () =>
     $fetch("https://api.nuxtjs.dev/mountains")
   );
-  const { data, status, error, refresh, clear } = await useFetch("/api/modules");
+  const { data, status, error, refresh, clear } = useFetch("/api/modules");
   // refresh 用于重新发送请求
 </script>
 ```
@@ -297,7 +299,7 @@ export const useApi = () => api;
 <script setup lang="ts">
 const { blogApi } = useApi();
 
-const { data: blogs, refresh } = await useAsyncData("blogs", () => blogApi.getData("test params"));
+const { data: blogs, refresh } = useAsyncData("blogs", () => blogApi.getData("test params"));
 // 使用 computed 定义 blogsObj，这样在调用 refresh 后，blogsObj 会响应式更新
 const blogsObj = computed(() => blogs.map(...));
 </script>
@@ -313,9 +315,9 @@ const blogsObj = computed(() => blogs.map(...));
 <script setup lang="ts">
 import { getData } from "~/api/modules/blog";
 
-const { data: blogs } = await useAsyncData("blogs", () => getData("test params"), { lazy: true});
+const { data: blogs } = useAsyncData("blogs", () => getData("test params"), { lazy: true});
 
-const { data: blogs } = await useLazyAsyncData("blogs", () => getData("test params"));
+const { data: blogs } = useLazyAsyncData("blogs", () => getData("test params"));
 </script>
 ```
 
@@ -538,16 +540,16 @@ export default defineNuxtConfig({
 /** 网站图标 */
 const iconHref = ref("");
 try {
-  iconHref.value = (await import(`~/assets/logos/${webConfig.appLogo}.svg`)).default;
+  iconHref.value = (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default;
 } catch (error) {
   console.error("Failed to load app logo:", error);
   iconHref.value = ""; // 设置为默认值或留空
 }
 
 useSeoMeta({
-  title: webConfig.appTitle,
+  title: webConfig.webTitle,
   description: "app description",
-  ogTitle: webConfig.appTitle,
+  ogTitle: webConfig.webTitle,
 });
 
 useHead(

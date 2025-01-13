@@ -1,10 +1,17 @@
 // 网站配置
 
 const defaultConfig = {
-  appTitle: 'Template Web',
-  appEmail: 'templateweb.support@gmail.com',
-  appUrl: 'templateweb.com',
-  appLogo: 'logo1',
+  // 网站标题
+  webTitle: 'App Title',
+  // 网站标题模板
+  webTitleTemplate: 'Title Template',
+  // 网站邮箱
+  webEmail: 'web-email.support@gmail.com',
+  // 网站地址
+  webUrl: 'templateweb.com',
+  // 网站 logo
+  webLogo: 'logo1',
+  // 关于我们
   aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   firebase: {
     apiKey: '',
@@ -25,11 +32,12 @@ const defaultConfig = {
   },
 }
 const defaultConfig2 = {
-  appTitle: 'Template Web2',
-  appEmail: 'templateweb.support@gmail.com2',
-  appUrl: 'templateweb.com',
-  appLogo: 'template',
-  aboutUs: `The aboutUs of template web.`,
+  webTitle: 'App2 Title',
+  webTitleTemplate: 'Title2 Template',
+  webEmail: 'web2-email.support@gmail.com',
+  webUrl: 'templateweb2.com',
+  webLogo: 'logo2',
+  aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   firebase: {
     apiKey: '',
     authDomain: '',
@@ -42,8 +50,8 @@ const defaultConfig2 = {
   adSense: {
     clientId: 'ca-google',
     ads: 'template ads.txt',
-    home_1: { 'data-ad-slot': '1468595611' },
-    home_2: { 'data-ad-slot': '9290411161' },
+    home_1: { 'data-ad-slot': '123456789' },
+    home_2: { 'data-ad-slot': '987654321' },
   },
 }
 
@@ -55,3 +63,5 @@ export default {
 } as {
   [key: string]: WebConfig
 }
+
+export const webDescription = 'This is a description for the web app'

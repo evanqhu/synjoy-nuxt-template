@@ -22,10 +22,10 @@ const { isMobile } = useCustomDevice()
 const customPush = useCustomPush()
 const { defaultApi } = useApi()
 
-const { status, data: topMoversData, refresh: refreshTopMovers } = await useLazyAsyncData('topMovers', defaultApi.fetchTopMovers)
+const { status, data: topMoversData, refresh: refreshTopMovers } = useLazyAsyncData('topMovers', defaultApi.fetchTopMovers)
 const topMovers = computed(() => topMoversData.value?.datas || [])
 
-const { data: jokeData, refresh: refreshJoke } = await useLazyAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'), {
+const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'), {
   watch: [isMobile],
 })
 const joke = computed(() => (jokeData.value as any)?.setup)
