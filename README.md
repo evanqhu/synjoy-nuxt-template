@@ -108,11 +108,12 @@
 ```ini
 # 开发环境
 
-# 打包路径
-NUXT_APP_BASE_URL = '/' # https://static.cdns.space/dailyhoroscope/
+# 静态资源路径
+NUXT_APP_CDN_URL = ''
 
 # API 接口地址
-NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
+# NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
+NUXT_PUBLIC_API_BASE = 'http://test.ptc-pluto.ptc.sg2.api'
 
 # 开发服务器端口号
 NUXT_PORT = 1024
@@ -123,11 +124,11 @@ NUXT_PORT = 1024
 ```ini
 # 生产环境
 
-# 打包路径
-NUXT_APP_BASE_URL = '/prod/' # https://static.cdns.space/dailyhoroscope/
+# 静态资源路径
+NUXT_APP_CDN_URL = 'https://static.cdns.space/nuxt-template/'
 
 # API 接口地址
-NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
+NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 ```
 
 `.env.stage`
@@ -135,11 +136,11 @@ NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
 ```ini
 # 测试环境
 
-# 打包路径
-NUXT_APP_BASE_URL = '/test/' # http://static-test.cdns.space/dailyhoroscope/
+# 静态资源路径
+NUXT_APP_CDN_URL = 'https://static-test.cdns.space/nuxt-template/'
 
 # API 接口地址
-NUXT_PUBLIC_BASE_URL = 'https://jsonplaceholder.typicode.com'
+NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 ```
 
 ## ⚙️ 最佳实践

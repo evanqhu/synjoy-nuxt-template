@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   app: {
     // 静态资源路径
     cdnURL: process.env.NUXT_APP_CDN_URL,
+    // baseURL: '/prefix', // 设置后，所有路由都会带上这个前缀，部署在子路径时需要设置
   },
 
   /** 全局样式文件 */
