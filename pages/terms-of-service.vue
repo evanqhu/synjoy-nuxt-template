@@ -1,5 +1,9 @@
 <!-- 服务条款 -->
 <script setup lang="ts">
+defineRouteRules({
+  prerender: true,
+})
+
 definePageMeta({
   layout: 'policies',
   title: 'Terms of Service',

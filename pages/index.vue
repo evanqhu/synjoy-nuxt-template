@@ -27,8 +27,12 @@ const topMovers = computed(() => topMoversData.value?.datas || [])
 
 const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'), {
   watch: [isMobile],
+  // 使用 transform 函数来更改查询的结果
+  transform: (data) => {
+    return (data as any).setup
+  },
 })
-const joke = computed(() => (jokeData.value as any)?.setup)
+// const joke = computed(() => (jokeData.value as any)?.setup)
 </script>
 
 <template>
@@ -45,7 +49,7 @@ const joke = computed(() => (jokeData.value as any)?.setup)
     </button>
     <br>
     <br>
-    <p>{{ joke }}</p>
+    <p>{{ jokeData }}</p>
     <br>
     <div
       v-loading="{

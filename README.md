@@ -1115,3 +1115,40 @@ const customPush = useCustomPush()
 3. 打包：`pnpm run build`
 4. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
 5. 执行 `PORT=5000 node .output/server/index.mjs` 命令启动服务器 (或者执行 `pnpm run deploy`)
+
+### 🎯 混合渲染
+
+对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
+
+::: code-tabs
+@tab nuxt.config.ts
+
+```ts
+export default defineNuxtConfig({
+  /** 服务器路由渲染规则 */
+  routeRules: {
+    "/privacy-policy": { prerender: true },
+  },
+
+  /** 实验性配置 */
+  experimental: {
+    inlineRouteRules: true, // 启用后可以在路由组件中使用 defineRouteRules() 配置 prerender
+  },
+});
+```
+
+@tab pages/privacy-policy.vue
+
+```vue :collapsed-lines
+<script setup lang="ts">
+defineRouteRules({
+  prerender: true,
+});
+</script>
+```
+
+:::
+
+可以在 `nuxt.config` 中配置 `routeRules`，也可以在路由组件中通过 `defineRouteRules` 配置 (需开启 `experimental.inlineRouteRules` 选项)。设置指定路由为 prerender，在构建时生成对应的 HTML 文件。
+
+构建后，输出目录 `.output/public` 中会生成 `privacy-policy/index.html` 文件。访问 `/privacy-policy` 路由时会直接返回相应的 HTML 文件，服务端不再重新渲染。之后在客户端进行水合激活激活。

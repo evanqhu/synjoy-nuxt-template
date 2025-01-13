@@ -31,12 +31,23 @@ export default defineNuxtConfig({
   /** 运行时变量 */
   runtimeConfig: {
     // 只能在服务端访问
-    serverOnly: 'server', // 这个值会被环境变量中的 NUXT_SERVER_ONLY 覆盖
+    // serverOnly: 'server', // 这个值会被环境变量中的 NUXT_SERVER_ONLY 覆盖
     // public 下的内容可以在客户端和服务端访问
     public: {
       // API 接口地址
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
     },
+  },
+
+  /** 服务器路由渲染规则 */
+  routeRules: {
+    '/privacy-policy': { prerender: true },
+    '/terms-of-service': { prerender: true },
+  },
+
+  /** 实验性配置 */
+  experimental: {
+    inlineRouteRules: true, // 启用后可以在路由组件中使用 defineRouteRules() 配置 prerender
   },
 
   // srcDir: 'app/',
@@ -47,16 +58,16 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
 
   /** Nitro 服务器配置 */
-  nitro: {
-    prerender: {
-      ignore: [
-        (route) => {
-          const regex = /.*\/(components|configs|modules|utils)(\/|$)/
-          return regex.test(route)
-        },
-      ],
-    },
-  },
+  // nitro: {
+  //   prerender: {
+  //     ignore: [
+  //       (route) => {
+  //         const regex = /.*\/(components|configs|modules|utils)(\/|$)/
+  //         return regex.test(route)
+  //       },
+  //     ],
+  //   },
+  // },
 
   /** Vite 配置 */
   vite: {
