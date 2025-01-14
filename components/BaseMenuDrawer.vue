@@ -69,13 +69,13 @@ watch(
   .menu__list {
     .menu__item {
       padding: 0.5rem;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 3rem;
       font-weight: 600;
       font-size: 0.875rem;
-      border-radius: 0.5rem;
       @include hover-effect(1, rgba(0, 0, 0, 0.04));
 
       &:not(:last-of-type) {
