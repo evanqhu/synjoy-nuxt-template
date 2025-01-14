@@ -26,8 +26,8 @@ watch(
       <h2 class="menu__title">
         Resource
       </h2>
-      <ul class="menu__list">
-        <li
+      <div class="menu__list">
+        <div
           v-for="(item, index) in resourceList"
           :key="index"
           class="menu__item"
@@ -35,8 +35,8 @@ watch(
         >
           <span>{{ item.name }}</span>
           <SvgIcon name="arrow-right" size="1rem" />
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </Transition>
 </template>
@@ -62,8 +62,7 @@ watch(
 
   .menu__title {
     padding: 0.5rem;
-    font-family: "Rubik One";
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .menu__list {
