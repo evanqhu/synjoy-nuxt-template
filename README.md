@@ -1120,10 +1120,8 @@ const customPush = useCustomPush()
 
 对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
 
-::: code-tabs
-@tab nuxt.config.ts
-
 ```ts
+// nuxt.config.ts
 export default defineNuxtConfig({
   /** 服务器路由渲染规则 */
   routeRules: {
@@ -1137,9 +1135,8 @@ export default defineNuxtConfig({
 });
 ```
 
-@tab pages/privacy-policy.vue
-
-```vue :collapsed-lines
+```vue
+<!-- pages/privacy-policy.vue -->
 <script setup lang="ts">
 defineRouteRules({
   prerender: true,
@@ -1147,8 +1144,10 @@ defineRouteRules({
 </script>
 ```
 
-:::
-
 可以在 `nuxt.config` 中配置 `routeRules`，也可以在路由组件中通过 `defineRouteRules` 配置 (需开启 `experimental.inlineRouteRules` 选项)。设置指定路由为 prerender，在构建时生成对应的 HTML 文件。
 
-构建后，输出目录 `.output/public` 中会生成 `privacy-policy/index.html` 文件。访问 `/privacy-policy` 路由时会直接返回相应的 HTML 文件，服务端不再重新渲染。之后在客户端进行水合激活激活。
+构建后，输出目录 `.output/public` 中会生成 `privacy-policy/index.html` 文件。访问 `/privacy-policy` 路由时会直接返回相应的 HTML 文件，服务端不再重新渲染。之后在客户端进行水合激活。
+
+
+
+推荐使用 `defineRouteRules`
