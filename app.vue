@@ -41,18 +41,28 @@ useHead({
 </template>
 
 <style lang="scss">
+// 0. __nuxt 容器
 #__nuxt {
   height: 100vh;
   width: 100vw;
 }
 
-.app-main {
-  padding-top: $header-height;
-  max-width: $container-width;
-  margin: 0 auto;
+// 1. 布局容器
+.default-layout,
+.policies-layout {
+  width: 100%;
+  height: 100%;
 }
 
+// 2. 网页主体容器 (header 和 footer 中间部分)
+.app-main {
+  padding-top: $header-height;
+}
+
+// 3. 网页内容容器 (限制版心宽宽度，设置内部 padding)
 .app-content {
+  max-width: $container-width;
+  margin: 0 auto;
   padding: 1rem;
 
   // > 1200px
