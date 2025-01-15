@@ -5,6 +5,8 @@ type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'h
 
 /** 自定义封装 $fetch 方法 */
 const _fetch = $fetch.create({
+  // 设置超时时间为 10 秒
+  timeout: 1000 * 10,
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径

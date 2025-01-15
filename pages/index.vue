@@ -22,17 +22,15 @@ const { isMobile } = useCustomDevice()
 const customPush = useCustomPush()
 const { defaultApi } = useApi()
 
-const { status, data: topMoversData, refresh: refreshTopMovers } = useLazyAsyncData('topMovers', defaultApi.fetchTopMovers)
-const topMovers = computed(() => topMoversData.value?.datas || [])
+const { status, data: topMoversData, refresh: refreshTopMovers } = useLazyAsyncData('topMovers', defaultApi.fetchTopMovers, {
+  transform: data => data.datas || [],
+})
 
-const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('blog', () => $fetch('https://official-joke-api.appspot.com/random_joke'), {
+const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => $fetch('http://hmajax.itheima.net/api/randjoke'), {
   watch: [isMobile],
   // 使用 transform 函数来更改查询的结果
-  transform: (data) => {
-    return (data as any).setup
-  },
+  transform: data => data.data || '',
 })
-// const joke = computed(() => (jokeData.value as any)?.setup)
 </script>
 
 <template>
@@ -60,7 +58,7 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('blog', () => 
       class="top-cards-wrapper"
     >
       <div
-        v-for="(item, index) in topMovers"
+        v-for="(item, index) in topMoversData"
         :key="index"
         class="card-item"
         @click="customPush(`/${item.originId}`)"
