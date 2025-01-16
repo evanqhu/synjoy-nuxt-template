@@ -29,7 +29,7 @@ const { status, data: topMoversData, refresh: refreshTopMovers } = useLazyAsyncD
 const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => $fetch('http://hmajax.itheima.net/api/randjoke'), {
   watch: [isMobile],
   // 使用 transform 函数来更改查询的结果
-  transform: data => data.data || '',
+  transform: data => (data as any).data || '',
 })
 </script>
 
