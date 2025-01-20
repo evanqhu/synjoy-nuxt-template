@@ -2,6 +2,7 @@
 <script lang="ts" setup>
 import { webDescription } from '~/configs/web-configs'
 
+useAdsClickListener()
 const appStore = useAppStore()
 const { webConfig } = appStore
 const clientId = webConfig.adSense?.clientId
