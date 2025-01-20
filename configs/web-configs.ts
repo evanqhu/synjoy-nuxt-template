@@ -30,6 +30,10 @@ const defaultConfig = {
     home_1: { 'data-ad-slot': '123456789' },
     home_2: { 'data-ad-slot': '987654321' },
   },
+  adExchange: {
+    home_1: { headScript: '', bodyScript: '' },
+    home_2: { headScript: '', bodyScript: '' },
+  },
 }
 const defaultConfig2 = {
   webTitle: 'App2 Title',
@@ -52,6 +56,10 @@ const defaultConfig2 = {
     ads: 'template ads.txt',
     home_1: { 'data-ad-slot': '123456789' },
     home_2: { 'data-ad-slot': '987654321' },
+  },
+  adExchange: {
+    home_1: { headScript: '', bodyScript: '' },
+    home_2: { headScript: '', bodyScript: '' },
   },
 }
 

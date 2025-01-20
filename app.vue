@@ -5,6 +5,7 @@ import { webDescription } from '~/configs/web-configs'
 const appStore = useAppStore()
 const { webConfig } = appStore
 const clientId = webConfig.adSense?.clientId
+const isAdx = !!webConfig.adSense
 
 useSeoMeta({
   title: webConfig.webTitle,
@@ -18,6 +19,13 @@ useHead({
     ...(clientId && process.env.NODE_ENV === 'production'
       ? [{
           src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`,
+          crossorigin: 'anonymous' as const,
+          async: true,
+        }]
+      : []),
+    ...(isAdx && process.env.NODE_ENV === 'production'
+      ? [{
+          src: `https://securepubads.g.doubleclick.net/tag/js/gpt.js`,
           crossorigin: 'anonymous' as const,
           async: true,
         }]

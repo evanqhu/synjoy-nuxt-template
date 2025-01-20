@@ -1,3 +1,5 @@
+<!-- AdSense -->
+<!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
 const { $eventTrack } = useNuxtApp()
 const route = useRoute()
@@ -14,16 +16,14 @@ interface Props {
   customClass?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  adsAttrs: () => ({}),
-  customClass: '',
-})
+const { adsAttrs = {}, customClass = '' } = defineProps<Props>()
 
 /** ins 标签模板引用 */
-const adsenseRef = ref<HTMLElement>()
+const adsenseRef = useTemplateRef<HTMLElement>('adsense')
+
 /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
 const isShowAd = computed(() => {
-  return Object.keys(props.adsAttrs).includes('data-ad-slot')
+  return Object.keys(adsAttrs).includes('data-ad-slot')
 })
 /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
 const isAdFilled = ref(true)
@@ -40,7 +40,7 @@ const adsAttrsFull = computed(() => {
       'data-full-width-responsive': 'true',
       'data-ad-client': webConfig.adSense?.clientId,
     },
-    props.adsAttrs,
+    adsAttrs,
   )
 })
 
@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
       <div class="ads-content-title">
         Advertisement
       </div>
-      <ins ref="adsenseRef" v-bind="adsAttrsFull" />
+      <ins ref="adsense" v-bind="adsAttrsFull" />
     </div>
     <div v-if="isShowDebug" class="ads-debug">
       {{ adsAttrsFull }}
