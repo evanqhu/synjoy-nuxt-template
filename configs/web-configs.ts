@@ -31,7 +31,26 @@ const defaultConfig = {
     home_2: { 'data-ad-slot': '987654321' },
   },
   adExchange: {
-    home_1: { headScript: '', bodyScript: '' },
+    home_1: {
+      headScript: `<script>
+        window.googletag = window.googletag || { cmd: [] };
+
+        googletag.cmd.push(() => {
+          googletag
+            .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
+            .addService(googletag.pubads());
+
+          googletag.enableServices();
+        });
+      </script>`,
+      bodyScript: `<div id="banner-ad" style="width: 300px; height: 250px">
+        <script>
+          googletag.cmd.push(() => {
+            googletag.display("banner-ad");
+          });
+        </script>
+      </div>`,
+    },
     home_2: { headScript: '', bodyScript: '' },
   },
 }
@@ -58,7 +77,26 @@ const defaultConfig2 = {
     home_2: { 'data-ad-slot': '987654321' },
   },
   adExchange: {
-    home_1: { headScript: '', bodyScript: '' },
+    home_1: {
+      headScript: `<script>
+        window.googletag = window.googletag || { cmd: [] };
+
+        googletag.cmd.push(() => {
+          googletag
+            .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
+            .addService(googletag.pubads());
+
+          googletag.enableServices();
+        });
+      </script>`,
+      bodyScript: `<div id="banner-ad" style="width: 300px; height: 250px">
+        <script>
+          googletag.cmd.push(() => {
+            googletag.display("banner-ad");
+          });
+        </script>
+      </div>`,
+    },
     home_2: { headScript: '', bodyScript: '' },
   },
 }

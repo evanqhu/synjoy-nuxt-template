@@ -95,7 +95,7 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => 
     <br>
     <!-- <AdsbyGoogle :ads-attrs="adSense?.home_1" /> -->
     <!-- <AdsbyGoogle :ads-attrs="adSense?.home_2" /> -->
-    <!-- <AdsbyExchange :ads-attrs="adExchange?.home_1" /> -->
+    <AdsbyExchange :ads-attrs="adExchange?.home_1" />
     <br>
     <div class="text">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet provident saepe laboriosam tempore molestiae reprehenderit qui, commodi at minus exercitationem dolorum accusamus facilis quibusdam. Delectus soluta sint maiores ipsa reprehenderit!

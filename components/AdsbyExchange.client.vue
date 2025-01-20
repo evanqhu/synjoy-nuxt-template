@@ -44,6 +44,7 @@ const insertScript = (scriptContent: string, target: HTMLElement) => {
 
 const insertAdxScript = async () => {
   if (!isShowAd.value) return
+  await nextTick()
   const { headScript, bodyScript } = adsAttrs
   if (headScript) {
     const head = document.head || document.getElementsByTagName('head')[0]
@@ -51,6 +52,13 @@ const insertAdxScript = async () => {
   }
   if (bodyScript && adxRef.value) {
     adxRef.value.innerHTML = bodyScript
+    const scripts = adxRef.value.getElementsByTagName('script')
+    for (const script of scripts) {
+      const newScript = document.createElement('script')
+      newScript.type = 'text/javascript'
+      newScript.text = script.text
+      document.body.appendChild(newScript)
+    }
   }
   $eventTrack('load_ads', 'expose')
 }
@@ -115,6 +123,12 @@ onActivated(() => {
     &::after {
       margin-left: 15px;
     }
+  }
+
+  .adsbyexchange {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

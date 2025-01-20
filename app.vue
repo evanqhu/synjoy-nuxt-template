@@ -24,7 +24,7 @@ useHead({
           async: true,
         }]
       : []),
-    ...(isAdx && process.env.NODE_ENV === 'production'
+    ...(isAdx
       ? [{
           src: `https://securepubads.g.doubleclick.net/tag/js/gpt.js`,
           crossorigin: 'anonymous' as const,
