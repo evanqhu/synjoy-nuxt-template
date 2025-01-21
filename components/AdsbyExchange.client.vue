@@ -28,7 +28,7 @@ const adxRef = useTemplateRef<HTMLElement>('adx')
 /** 是否显示广告 */
 const isShowAd = computed(() => {
   const requiredKeys = ['headScript', 'bodyScript']
-  return requiredKeys.every(key => Object.keys(adsAttrs).includes(key))
+  return requiredKeys.some(key => Object.keys(adsAttrs).includes(key))
 })
 /** 是否进入调试模式 */
 const isShowDebug = ref(false)
