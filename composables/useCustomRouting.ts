@@ -1,7 +1,7 @@
 /**
  * 自定义路由跳转方法，用于在路由跳转时保留当前频道参数和查询参数
  */
-export const useCustomPush = () => {
+export const useCustomRouting = () => {
   const router = useRouter()
   const { params, query } = router.currentRoute.value
   const { channel } = params
@@ -13,5 +13,9 @@ export const useCustomPush = () => {
     navigateTo(`${fullChannel}${path}${fullQueryString}`)
   }
 
-  return customPush
+  const getHref = (path: string) => {
+    return `${fullChannel}${path}${fullQueryString}`
+  }
+
+  return { customPush, getHref }
 }

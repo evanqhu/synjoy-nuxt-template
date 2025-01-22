@@ -1079,11 +1079,11 @@ export default defineNuxtConfig({
 
 2️⃣ **路由跳转**
 
-封装自定义路由跳转函数，替换原生的 `route.push()` 方法
+封装自定义路由跳转函数，替换原生的 `navigateTo()` 方法；同时封装生成跳转链接的函数 `getHref()`，用于生成跳转链接。
 
 ```ts
-// composables/useCustomPush.ts
-export const useCustomPush = () => {
+// composables/useCustomRouting.ts
+export const useCustomRouting = () => {
   const router = useRouter();
   const { params, query } = router.currentRoute.value;
   const { channel } = params;
@@ -1095,18 +1095,23 @@ export const useCustomPush = () => {
     navigateTo(`${fullChannel}${path}${fullQueryString}`);
   };
 
-  return customPush;
+  const getHref = (path: string) => {
+    return `${fullChannel}${path}${fullQueryString}`;
+  };
+
+  return { customPush, getHref };
 };
 ```
 
 ```vue
 <script setup lang="ts">
-const customPush = useCustomPush()
+const { customPush, getHref } = useCustomRouting()
 </script>
 
 <template>
   <header class="header">
     <div class="header__left" @click="customPush('/')">
+    <NuxtLink :href="getHref('/detail')">to detail</NuxtLink>
   </header>
 </template>
 ```

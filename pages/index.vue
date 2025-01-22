@@ -19,7 +19,7 @@ const { webConfig } = appStore
 const { adSense, adExchange } = webConfig
 
 const { isMobile } = useCustomDevice()
-const customPush = useCustomPush()
+const { customPush } = useCustomRouting()
 const { defaultApi } = useApi()
 
 const { status, data: topMoversData, refresh: refreshTopMovers } = useLazyAsyncData('topMovers', defaultApi.fetchTopMovers, {

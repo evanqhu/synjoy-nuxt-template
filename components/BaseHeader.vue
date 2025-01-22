@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const appStore = useAppStore()
 const { webConfig, toggleMenuDrawer } = appStore
-const customPush = useCustomPush()
+const { customPush, getHref } = useCustomRouting()
 
 /** 点击菜单 */
 const handleMenuClick = () => {
@@ -11,10 +11,10 @@ const handleMenuClick = () => {
 
 <template>
   <header class="header">
-    <div class="header__left" @click="customPush('/')">
+    <NuxtLink :to="getHref('/')" class="header__left">
       <SvgIcon :name="webConfig.webLogo" size="2rem" />
       <span class="web-title">{{ webConfig.webTitle }}</span>
-    </div>
+    </NuxtLink>
     <div class="header__right" @click="handleMenuClick">
       <SvgIcon v-if="appStore.menuDrawerOpened" name="close" size="24" />
       <SvgIcon v-else name="menu" size="24" />

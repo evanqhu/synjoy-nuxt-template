@@ -78,3 +78,13 @@ input:-webkit-autofill:active {
   /* 设置一个很长的过渡延迟 */
   -webkit-text-fill-color: inherit;
 }
+
+/* 清除 a 标签默认样式 */
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
