@@ -1,7 +1,8 @@
 <!-- AdSense -->
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
-const { $eventTrack } = useNuxtApp()
+// const { $eventTrack } = useNuxtApp()
+const { customEventTrack } = useFirebase()
 const route = useRoute()
 const { webConfig } = useAppStore()
 
@@ -80,7 +81,8 @@ const showAd = async () => {
   await nextTick()
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
-    $eventTrack('load_ads', 'expose')
+    customEventTrack('load_ads', 'expose')
+    // $eventTrack('load_ads', 'expose')
   }
   catch (error) {
     console.error(error)

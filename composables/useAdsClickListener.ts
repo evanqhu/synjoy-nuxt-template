@@ -2,7 +2,8 @@
 import { onMounted } from 'vue'
 
 export const useAdsClickListener = () => {
-  const { $eventTrack } = useNuxtApp()
+  // const { $eventTrack } = useNuxtApp()
+  const { customEventTrack } = useFirebase()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
@@ -51,9 +52,12 @@ export const useAdsClickListener = () => {
             }
 
             // 2. firebase 上报
-            $eventTrack('ad_click', 'click', {
+            customEventTrack('ad_click', 'click', {
               'data-ad-slot': iframeObj.adSlot,
             })
+            // $eventTrack('ad_click', 'click', {
+            //   'data-ad-slot': iframeObj.adSlot,
+            // })
           }
         })
       }
