@@ -39,7 +39,7 @@ const handleMenuClick = () => {
     display: flex;
     align-items: center;
     gap: 6px;
-    @include hover-effect(1);
+    @include hover-effect(0.6);
 
     .web-title {
       font-size: rem(24);
@@ -52,7 +52,7 @@ const handleMenuClick = () => {
     display: flex;
     align-items: center;
     border-radius: 4px;
-    @include hover-effect(1, rgba(0, 0, 0, 0.08));
+    @include hover-effect($bgc: rgba(0, 0, 0, 0.08));
   }
 
   // > 1200px

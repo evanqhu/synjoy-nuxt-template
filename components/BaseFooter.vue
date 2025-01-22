@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { resourceList } from '~/configs/constants'
 
-const router = useRouter()
 const appStore = useAppStore()
 const { webConfig } = appStore
 </script>
@@ -26,7 +25,7 @@ const { webConfig } = appStore
           v-for="(item, index) in resourceList"
           :key="index"
           class="footer__section__content"
-          @click="router.push(item.path)"
+          @click="navigateTo(item.path)"
         >
           {{ item.name }}
         </span>

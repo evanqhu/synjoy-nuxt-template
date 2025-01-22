@@ -10,7 +10,7 @@ export const useCustomPush = () => {
   const fullQueryString = queryString ? `?${queryString}` : ''
 
   const customPush = (path: string) => {
-    router.push(`${fullChannel}${path}${fullQueryString}`)
+    navigateTo(`${fullChannel}${path}${fullQueryString}`)
   }
 
   return customPush

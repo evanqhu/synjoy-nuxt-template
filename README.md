@@ -1,4 +1,5 @@
 ## 待办
+
 - [ ] 封装 ADX 组件
 - [ ] 增加广告点击追踪 hooks
 
@@ -1051,10 +1052,10 @@ export default defineEventHandler(async (event) => {
 在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
 
 ```vue
-<!-- pages/index.vue -->
+<!-- pages/detail.vue -->
 <script setup lang="ts">
 definePageMeta({
-  path: "/:channel(channel[1-9]\\d?)?", // 实现分渠道路由
+  path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
 });
 </script>
 ```
@@ -1091,7 +1092,7 @@ export const useCustomPush = () => {
   const fullQueryString = queryString ? `?${queryString}` : "";
 
   const customPush = (path: string) => {
-    router.push(`${fullChannel}${path}${fullQueryString}`);
+    navigateTo(`${fullChannel}${path}${fullQueryString}`);
   };
 
   return customPush;
@@ -1151,7 +1152,5 @@ defineRouteRules({
 可以在 `nuxt.config` 中配置 `routeRules`，也可以在路由组件中通过 `defineRouteRules` 配置 (需开启 `experimental.inlineRouteRules` 选项)。设置指定路由为 prerender，在构建时生成对应的 HTML 文件。
 
 构建后，输出目录 `.output/public` 中会生成 `privacy-policy/index.html` 文件。访问 `/privacy-policy` 路由时会直接返回相应的 HTML 文件，服务端不再重新渲染。之后在客户端进行水合激活。
-
-
 
 推荐使用 `defineRouteRules`

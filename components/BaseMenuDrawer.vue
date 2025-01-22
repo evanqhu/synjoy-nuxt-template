@@ -4,10 +4,8 @@ import { resourceList } from '~/configs/constants'
 const appStore = useAppStore()
 const { toggleMenuDrawer } = appStore
 
-const router = useRouter()
-
 const handleItemClick = (item: { name: string, path: string }) => {
-  router.push(item.path)
+  navigateTo(item.path)
   toggleMenuDrawer(false)
 }
 
@@ -75,7 +73,7 @@ watch(
       height: 3rem;
       font-weight: 600;
       font-size: 0.875rem;
-      @include hover-effect(1, rgba(0, 0, 0, 0.04));
+      @include hover-effect($bgc: rgba(0, 0, 0, 0.04));
 
       &:not(:last-of-type) {
         border-bottom: 1px solid #e6e8ea;
