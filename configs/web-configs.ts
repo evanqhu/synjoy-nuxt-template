@@ -34,6 +34,7 @@ const defaultConfig = {
   // Google Ad Exchange
   adExchange: {
     home_1: {
+      index: 'ad1',
       headScript: `<script>
         window.googletag = window.googletag || { cmd: [] };
 
@@ -47,6 +48,7 @@ const defaultConfig = {
       </script>`,
       bodyScript: `<div id="banner-ad" style="width: 300px; height: 250px">
         <script>
+          console.log('banner-ad')
           googletag.cmd.push(() => {
             googletag.display("banner-ad");
           });
