@@ -75,7 +75,7 @@ watch(
       font-weight: 600;
       font-size: 0.875rem;
       border-radius: 0.5rem;
-      @include hover($bgc: rgba(0, 0, 0, 0.08));
+      @include hover($bg-color: rgba(0, 0, 0, 0.08));
     }
   }
   // PC

@@ -52,7 +52,7 @@ const handleMenuClick = () => {
     display: flex;
     align-items: center;
     border-radius: 4px;
-    @include hover($bgc: rgba(0, 0, 0, 0.08));
+    @include hover($bg-color: rgba(0, 0, 0, 0.08));
   }
 
   // > 1200px
