@@ -82,6 +82,7 @@ const defaultConfig2 = {
   },
   adExchange: {
     home_1: {
+      index: 'ad1',
       headScript: `<script>
         window.googletag = window.googletag || { cmd: [] };
 
