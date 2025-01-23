@@ -7,23 +7,19 @@ const appStore = useAppStore()
 const { webConfig } = appStore
 const clientId = webConfig.adSense?.clientId
 const isAdx = !!webConfig.adSense
-const adScripts = [] // 广告脚本
+const globalScripts = [] // 全局脚本
 
-// 是 adSense 广告且是生产环境，则加载 adSense 广告脚本
+// 是 Google adSense 广告且是生产环境，则加载 adSense 广告脚本
 if (clientId && process.env.NODE_ENV === 'production') {
-  adScripts.push({
-    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`,
-    crossorigin: 'anonymous' as const,
-    async: true,
-  })
+  globalScripts.push(getAdSenseScript(clientId))
 }
-// 是 adx 广告则加载 adx 广告脚本
+// 是 Google adx 广告则加载 adx 广告脚本
 if (isAdx) {
-  adScripts.push({
-    src: `https://securepubads.g.doubleclick.net/tag/js/gpt.js`,
-    crossorigin: 'anonymous' as const,
-    async: true,
-  })
+  globalScripts.push(getAdxScript())
+}
+// TikTok Pixel 追踪
+if (webConfig.pixelTrackKey) {
+  globalScripts.push(getPixelTrackScript(webConfig.pixelTrackKey))
 }
 
 useSeoMeta({
@@ -34,7 +30,7 @@ useSeoMeta({
   ogDescription: webDescription,
 })
 useHead({
-  script: [...adScripts],
+  script: [...globalScripts],
   link: [
     {
       rel: 'icon',

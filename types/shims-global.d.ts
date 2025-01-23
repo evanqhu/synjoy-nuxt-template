@@ -3,8 +3,9 @@ import type { WebConfig as ConfigType } from '~/configs/web-configs'
 
 declare global {
   interface Window {
-    adsbygoogle: any
     JSCallAndroid: any
+    adsbygoogle: any
+    ttq: any
   }
 
   type WebConfig = ConfigType

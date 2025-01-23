@@ -11,7 +11,7 @@ export const useFirebase = () => {
       console.log(`🚀🚀🚀 Server Log: ${eventName}`, eventParams)
     }
     customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Server Log: ${eventName}`, method, eventParams)
+      console.log(`🚀🚀🚀 Server Track: ${eventName}`, method, eventParams)
     }
   }
   else {
@@ -21,7 +21,7 @@ export const useFirebase = () => {
         console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
       }
       customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, method, eventParams)
+        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
       }
     }
     else {

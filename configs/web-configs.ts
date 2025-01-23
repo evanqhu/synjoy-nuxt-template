@@ -22,6 +22,7 @@ const defaultConfig = {
     appId: '',
     measurementId: '',
   },
+  // Google AdSense
   adSense: {
     // NOTE 这里的 client 只需要写 script 中 client= 后面的内容（如：ca-pub-8158555231596181），千万不要写成全部的 URL
     // 广告位信息只需要传递  slot 即可，其他的都在广告组件中给了默认值
@@ -30,6 +31,7 @@ const defaultConfig = {
     home_1: { 'data-ad-slot': '123456789' },
     home_2: { 'data-ad-slot': '987654321' },
   },
+  // Google Ad Exchange
   adExchange: {
     home_1: {
       headScript: `<script>
@@ -53,6 +55,8 @@ const defaultConfig = {
     },
     home_2: { headScript: '', bodyScript: '' },
   },
+  // TikTok Pixel
+  pixelTrackKey: '1234567890',
 }
 const defaultConfig2 = {
   webTitle: 'App2 Title',
@@ -99,6 +103,7 @@ const defaultConfig2 = {
     },
     home_2: { headScript: '', bodyScript: '' },
   },
+  pixelTrackKey: '',
 }
 
 export type WebConfig = typeof defaultConfig
