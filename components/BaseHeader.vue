@@ -15,6 +15,10 @@ const handleMenuClick = () => {
       <SvgIcon :name="webConfig.webLogo" size="2rem" />
       <span class="web-title">{{ webConfig.webTitle }}</span>
     </NuxtLink>
+    <button data-allow-mismatch class="color-mode-btn" @click.stop="$colorMode.preference = $colorMode.value === 'dark' ? 'light' : 'dark'">
+      <span v-if="$colorMode.value === 'dark'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
     <div class="header__right" @click="handleMenuClick">
       <SvgIcon v-if="appStore.menuDrawerOpened" name="close" size="24" />
       <SvgIcon v-else name="menu" size="24" />
@@ -31,7 +35,7 @@ const handleMenuClick = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  background: #fff;
+  background-color: var(--bg-color);
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
   z-index: 2001;
 

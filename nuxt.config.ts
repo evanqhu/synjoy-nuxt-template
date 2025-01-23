@@ -6,7 +6,14 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 export default defineNuxtConfig({
   /** 模块 */
-  modules: ['@nuxt/eslint', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/device', '@nuxt/icon'],
+  modules: [
+    '@nuxt/eslint',
+    '@pinia/nuxt',
+    '@nuxt/image',
+    '@nuxtjs/device',
+    '@nuxt/icon',
+    '@nuxtjs/color-mode',
+  ],
 
   /** 插件 */
   plugins: [],

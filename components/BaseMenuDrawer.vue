@@ -56,7 +56,7 @@ watch(
   z-index: 2001;
   width: 100%;
   border-radius: 0 0 0.5rem 0.5rem;
-  background: #fff;
+  background-color: var(--bg-color);
   padding: 0.5rem;
 
   .menu__title {
