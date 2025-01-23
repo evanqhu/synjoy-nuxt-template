@@ -45,7 +45,7 @@
 │   └── web-configs.ts # 网站配置
 ├── layouts #【布局组件】
 │   ├── default.vue
-│   └── policies.vue
+│   └── legal.vue
 ├── middleware #【路由中间件】
 │   ├── auth.global.ts
 │   └── my-middleware.ts
@@ -364,7 +364,7 @@ pnpm i vite-plugin-svg-icons -D
 
 2. 在 `nuxt.config.ts` 中新增配置
 
-```ts
+```typescript
 import path from "path";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
@@ -1061,7 +1061,7 @@ onBeforeUnmount(() => {
 
 通过服务端中间件 `server/middleware/load-config.ts` 根据请求的 host 将相应的网站配置加载到上下文，见上方 ads.txt 相关代码
 
-```ts
+```typescript
 event.context.config = config;
 ```
 
@@ -1069,7 +1069,7 @@ event.context.config = config;
 
 通过服务端插件 `plugins/load-config.server.ts` 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
 
-```ts
+```typescript
 // plugins/load-config.server.ts
 /**
  * 服务端插件
@@ -1092,7 +1092,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 通过服务器的 `report-headers` 中间件进行上报
 
-```ts
+```typescript
 // server/middleware/report-headers.ts
 export default defineEventHandler(async (event) => {
   const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
@@ -1142,7 +1142,7 @@ definePageMeta({
 
 也可以在 `nuxt.config.ts` 中通过 hooks 进行配置
 
-```ts
+```typescript
 export default defineNuxtConfig({
   hooks: {
     "pages:extend"(pages) {
@@ -1161,7 +1161,7 @@ export default defineNuxtConfig({
 
 封装自定义路由跳转函数，替换原生的 `navigateTo()` 方法；同时封装生成跳转链接的函数 `getHref()`，用于生成跳转链接。
 
-```ts
+```typescript
 // composables/useCustomRouting.ts
 export const useCustomRouting = () => {
   const router = useRouter();
@@ -1210,7 +1210,7 @@ const { customPush, getHref } = useCustomRouting()
 
 对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
 
-```ts
+```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
   /** 服务器路由渲染规则 */

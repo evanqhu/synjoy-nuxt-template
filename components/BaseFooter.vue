@@ -21,14 +21,14 @@ const { webConfig } = appStore
         <h2 class="footer__section__title">
           RESOURCE
         </h2>
-        <span
+        <a
           v-for="(item, index) in resourceList"
           :key="index"
+          :href="item.path"
           class="footer__section__content"
-          @click="navigateTo(item.path)"
         >
           {{ item.name }}
-        </span>
+        </a>
       </div>
 
       <div class="footer__section contact">
@@ -75,7 +75,7 @@ $pc-margin: calc((100% - $container-width) / 2);
     &__title {
       font-size: 1.25rem;
       font-weight: 600;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     &__content {
@@ -94,11 +94,7 @@ $pc-margin: calc((100% - $container-width) / 2);
   .resource,
   .contact {
     .footer__section__content {
-      cursor: pointer;
-      transition: color 0.3s ease;
-      &:hover {
-        color: $text-color;
-      }
+      @include hover($c: $text-color);
     }
   }
 

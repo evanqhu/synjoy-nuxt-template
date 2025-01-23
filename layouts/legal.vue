@@ -1,8 +1,8 @@
 <!-- 法律 (政策) 布局 -->
 <template>
   <div>
-    <div class="policies-layout">
-      <PoliciesHeader />
+    <div class="legal-layout">
+      <LegalHeader />
       <div class="app-main">
         <slot />
       </div>

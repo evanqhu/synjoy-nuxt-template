@@ -5,7 +5,7 @@ defineRouteRules({
 })
 
 definePageMeta({
-  layout: 'policies',
+  layout: 'legal',
   title: 'Privacy Policy',
 })
 </script>

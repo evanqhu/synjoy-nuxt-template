@@ -55,17 +55,18 @@ watch(
   top: $header-height;
   z-index: 2001;
   width: 100%;
+  border-radius: 0 0 0.5rem 0.5rem;
   background: #fff;
-  padding: 1.5rem 0.5rem 0.75rem;
+  padding: 0.5rem;
 
   .menu__title {
-    padding: 0.5rem;
+    padding: 0.75rem;
     font-weight: 700;
   }
 
   .menu__list {
     .menu__item {
-      padding: 0.5rem;
+      padding: 0.75rem;
       margin-bottom: 4px;
       display: flex;
       align-items: center;
@@ -73,14 +74,10 @@ watch(
       height: 3rem;
       font-weight: 600;
       font-size: 0.875rem;
-      @include hover-effect($bgc: rgba(0, 0, 0, 0.04));
-
-      &:not(:last-of-type) {
-        border-bottom: 1px solid #e6e8ea;
-      }
+      border-radius: 0.5rem;
+      @include hover($bgc: rgba(0, 0, 0, 0.08));
     }
   }
-
   // PC
   @media (min-width: $device-point) {
     width: 360px;

@@ -29,7 +29,7 @@ const router = useRouter()
     display: flex;
     align-items: center;
     border-radius: 4px;
-    @include hover-effect($bgc: rgba(0, 0, 0, 0.08));
+    @include hover($bgc: rgba(0, 0, 0, 0.08));
   }
 
   .header__title {
