@@ -4,10 +4,9 @@
  */
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('render:html', (html, { event }) => {
+    html.htmlAttrs.push('lang="en"')
     // console.log('🚀🚀🚀 event.context.config: ', event.context.config)
-    html.head.push(
-      `<meta name="description" content="My custom description" />`,
-    )
+    // 设置 html 的 lang 属性
   })
   // // You can also intercept the response here.
   // nitroApp.hooks.hook('render:response', (response, { event }) => {
