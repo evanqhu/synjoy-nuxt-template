@@ -4,14 +4,22 @@
  * TODO 广告加载不成功时，不监听 iframe 点击
  * TODO 监听广告是否出现在页面中
  *  */
+
 import { onMounted } from 'vue'
+
+interface IframeObj {
+  element: HTMLIFrameElement
+  ins: HTMLElement
+  clicked: boolean
+  adSlot?: string
+}
 
 export const useAdsClickListener = () => {
   const { customEventTrack } = useFirebase()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
-  const iframeObjList: any[] = [] // iframe 对象列表
+  const iframeObjList: IframeObj[] = [] // iframe 对象列表
 
   /** 2. 监听 iframe 是否被点击 */
   const setupIframeTracking = (iframe: HTMLIFrameElement, ins: HTMLElement) => {

@@ -6,6 +6,7 @@ const { customEventTrack } = useFirebase()
 const route = useRoute()
 
 interface AdConfig {
+  index: string
   headScript?: string
   bodyScript?: string
 }
@@ -21,7 +22,7 @@ interface Props {
   customClass?: string
 }
 
-const { adsAttrs = {}, customClass = '' } = defineProps<Props>()
+const { adsAttrs = {} as AdConfig, customClass = '' } = defineProps<Props>()
 
 /** adx 广告标签模板引用 */
 const adxRef = useTemplateRef<HTMLElement>('adx')
@@ -59,7 +60,9 @@ const insertAdxScript = async () => {
     }
   }
   // $eventTrack('load_ads', 'expose')
-  customEventTrack('load_ads', 'expose')
+  customEventTrack('load_ads', 'expose', {
+    adExcahnge: adsAttrs.index,
+  })
 }
 
 onMounted(async () => {

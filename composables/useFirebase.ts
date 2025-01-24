@@ -1,20 +1,17 @@
-import { getAnalytics, logEvent } from 'firebase/analytics'
+import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 
 export const useFirebase = () => {
-  let customLogEvent: (eventName: string, eventParams?: object) => void
-  let customEventTrack: (eventName: string, method: string, eventParams?: object) => void
-
-  // 服务端不运行 firebase
-  if (import.meta.env.SSR) {
-    customLogEvent = (eventName: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Server Log: ${eventName}`, eventParams)
-    }
-    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Server Track: ${eventName}`, method, eventParams)
-    }
+  // 定义默认的 log 和 track 函数
+  let customLogEvent = (eventName: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
   }
-  else {
+  let customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
+  }
+
+  // 仅客户端运行
+  onBeforeMount(async () => {
     // 开发环境不运行 firebase
     if (process.env.NODE_ENV === 'development') {
       customLogEvent = (eventName: string, eventParams = {}) => {
@@ -37,28 +34,7 @@ export const useFirebase = () => {
         return analyticsInstance
       }
 
-      const analytics = initializeFirebase()
-
-      // 记录一个名为 "in_page" 的事件，表示用户进入页面
-      logEvent(analytics, 'in_page')
-      console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
-
-      customLogEvent = (eventName: string, eventParams = {}) => {
-        logEvent(analytics, eventName, eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-      }
-      customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        const _eventParams = {
-          time: new Date(),
-          message: eventName,
-          method,
-          ...eventParams,
-        }
-        logEvent(analytics, eventName, _eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-      }
-
-      /* try {
+      try {
         await isSupported()
         const analytics = initializeFirebase()
 
@@ -68,7 +44,7 @@ export const useFirebase = () => {
 
         customLogEvent = (eventName: string, eventParams = {}) => {
           logEvent(analytics, eventName, eventParams)
-          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
         }
         customEventTrack = (eventName: string, method: string, eventParams = {}) => {
           const _eventParams = {
@@ -78,21 +54,14 @@ export const useFirebase = () => {
             ...eventParams,
           }
           logEvent(analytics, eventName, _eventParams)
-          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
         }
       }
       catch (error) {
-        console.log('🚀🚀🚀 Firebase Analytics is not supported', error)
-
-        customLogEvent = (eventName: string, eventParams = {}) => {
-          console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-        }
-        customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-          console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams)
-        }
-      } */
+        console.error('🚀🚀🚀 Firebase Analytics is not supported', error)
+      }
     }
-  }
+  })
 
   return {
     customLogEvent,

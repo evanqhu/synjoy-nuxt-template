@@ -1,8 +1,8 @@
 <!-- 服务条款 -->
 <script setup lang="ts">
-defineRouteRules({
-  prerender: true,
-})
+// defineRouteRules({
+//   prerender: true,
+// })
 
 definePageMeta({
   layout: 'legal',

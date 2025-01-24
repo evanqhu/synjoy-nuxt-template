@@ -47,10 +47,11 @@ export default defineNuxtConfig({
   },
 
   /** 服务器路由渲染规则 */
-  routeRules: {
-    '/privacy-policy': { prerender: true },
-    '/terms-of-service': { prerender: true },
-  },
+  // 更正：这些页面中包含动态内容，比如 url 等，需要根据客户端请求的 host 来决定，因此无法在构建时生成，只能通过服务端渲染来实现。
+  // routeRules: {
+  //   '/privacy-policy': { prerender: true },
+  //   '/terms-of-service': { prerender: true },
+  // },
 
   /** 实验性配置 */
   experimental: {

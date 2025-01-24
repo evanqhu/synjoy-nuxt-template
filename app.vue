@@ -9,6 +9,8 @@ const clientId = webConfig.adSense?.clientId
 const isAdx = !!webConfig.adSense
 const globalScripts = [] // 全局脚本
 
+console.log('🚀🚀🚀 NODE_ENV: ', process.env.NODE_ENV)
+
 // 是 Google adSense 广告且是生产环境，则加载 adSense 广告脚本
 if (clientId && process.env.NODE_ENV === 'production') {
   globalScripts.push(getAdSenseScript(clientId))

@@ -55,7 +55,7 @@ const defaultConfig = {
         </script>
       </div>`,
     },
-    home_2: { headScript: '', bodyScript: '' },
+    home_2: { index: 'ad2', headScript: '', bodyScript: '' },
   },
   // TikTok Pixel
   pixelTrackKey: '1234567890',
@@ -104,7 +104,7 @@ const defaultConfig2 = {
         </script>
       </div>`,
     },
-    home_2: { headScript: '', bodyScript: '' },
+    home_2: { index: 'ad2', headScript: '', bodyScript: '' },
   },
   pixelTrackKey: '',
 }

@@ -179,7 +179,9 @@ export default defineNuxtConfig({
 > ⚠️ 默认情况下， `useAsyncData` 会阻止导航，直到其异步处理程序得到解析。这会导致路由跳转延迟，用户体验不佳。可以通过添加 `lazy: true` 选项或使用 `useLazyAsyncData`
 
 > 如果在一个组件中需要发送多个请求，且这些请求之间没有依赖关系，则不需要加 `await`，直接获取数据即可；只有当请求之间有依赖关系时，才需要加 `await`
-> 加 `await` 的作用是等待当前请求完成，这样解构拿到的 `data` 就是有数据的，如果不加，在请求完成前，拿到的 `data` 是 `null`；不过没关系，代码中会通过 `status` 判断请求是否完成，如果未完成，则显示加载动画
+> 加 `await` 的作用是等待当前请求完成，这样解构拿到的 `data` 就是有数据的，如果不加，在请求完成前，拿到的 `data` 是 `null`；不过没关系，代码中会通过 `status` 判断请求是否完成，如果未完成，则显示加载动画。同时 `await` 会阻塞代码运行，导致多个请求无法同时执行。
+> 使用 `useAsyncData` 或 `useLazyAsyncData` 时，请求会先通过服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求。这意味着必须等待服务端请求完成后，服务端的页面才算渲染完成，才会发送 HTML 到客户端，然后客户端再渲染页面。
+> 如何想要服务端以最快的速度返回 HTML 页面，可以设置 `server: false`，这样在服务端将不会发出请求，而是在客户端发出请求。
 
 Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
 
@@ -635,71 +637,77 @@ const { isMobile } = useCustomDevice();
 `composables/useFirebase.ts`
 
 ```typescript
-import { getAnalytics, logEvent } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
+import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
+import { initializeApp } from 'firebase/app'
 
 export const useFirebase = () => {
-  let customLogEvent: (eventName: string, eventParams?: object) => void;
-  let customEventTrack: (eventName: string, method: string, eventParams?: object) => void;
+  // 定义默认的 log 和 track 函数
+  let customLogEvent = (eventName: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
+  }
+  let customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
+  }
 
-  // 服务端不运行 firebase
-  if (import.meta.env.SSR) {
-    customLogEvent = (eventName: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Server Log: ${eventName}`, eventParams);
-    };
-    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Server Log: ${eventName}`, method, eventParams);
-    };
-  } else {
+  // 仅客户端运行
+  onBeforeMount(async () => {
     // 开发环境不运行 firebase
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       customLogEvent = (eventName: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams);
-      };
+        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
+      }
       customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, method, eventParams);
-      };
-    } else {
-      const { webConfig } = useAppStore();
-      const firebaseConfig = webConfig.firebase;
+        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
+      }
+    }
+    else {
+      const { webConfig } = useAppStore()
+      const firebaseConfig = webConfig.firebase
 
       /** 初始化 Firebase */
       const initializeFirebase = () => {
-        const firebaseApp = initializeApp(firebaseConfig);
+        const firebaseApp = initializeApp(firebaseConfig)
 
         // 启用 Analytics
-        const analyticsInstance = getAnalytics(firebaseApp);
-        return analyticsInstance;
-      };
+        const analyticsInstance = getAnalytics(firebaseApp)
+        return analyticsInstance
+      }
 
-      const analytics = initializeFirebase();
+      try {
+        await isSupported()
+        const analytics = initializeFirebase()
 
-      // 记录一个名为 "in_page" 的事件，表示用户进入页面
-      logEvent(analytics, "in_page");
-      console.log("🚀🚀🚀 firebase analytics: ", "in_page");
+        // 记录一个名为 "in_page" 的事件，表示用户进入页面
+        logEvent(analytics, 'in_page')
+        console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
 
-      customLogEvent = (eventName: string, eventParams = {}) => {
-        logEvent(analytics, eventName, eventParams);
+        customLogEvent = (eventName: string, eventParams = {}) => {
+          logEvent(analytics, eventName, eventParams)
         // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-      };
-      customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        const _eventParams = {
-          time: new Date(),
-          message: eventName,
-          method,
-          ...eventParams,
-        };
-        logEvent(analytics, eventName, _eventParams);
+        }
+        customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+          const _eventParams = {
+            time: new Date(),
+            message: eventName,
+            method,
+            ...eventParams,
+          }
+          logEvent(analytics, eventName, _eventParams)
         // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-      };
+        }
+      }
+      catch (error) {
+        console.error('🚀🚀🚀 Firebase Analytics is not supported', error)
+      }
     }
-  }
+  })
 
   return {
     customLogEvent,
     customEventTrack,
-  };
-};
+  }
+}
+
 ```
 
 使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
@@ -1209,6 +1217,8 @@ const { customPush, getHref } = useCustomRouting()
 ### 🎯 混合渲染
 
 对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
+
+更正：这些页面中包含动态内容，比如 url 等，需要根据客户端请求的 host 来决定，因此无法在构建时生成，只能通过服务端渲染来实现。
 
 ```typescript
 // nuxt.config.ts

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "nuxi dev --dotenv .env.development --host",
+    "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
     "build": "nuxi build --dotenv .env.production",
     "build:dev": "nuxi build --dotenv .env.development",
     "build:stage": "nuxi build --dotenv .env.stage",
