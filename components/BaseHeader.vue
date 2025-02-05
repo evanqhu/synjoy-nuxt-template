@@ -33,13 +33,15 @@ const handleMenuClick = () => {
   height: $header-height;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  // justify-content: space-between;
   padding: 0 1rem;
   background-color: var(--bg-color);
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
   z-index: 2001;
 
   &__left {
+    // margin-right: auto;
+    flex-grow: 1;
     display: flex;
     align-items: center;
     gap: 6px;
