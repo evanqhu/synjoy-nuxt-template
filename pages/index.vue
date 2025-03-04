@@ -42,6 +42,7 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => 
         刷新 Users 数据
       </el-button>
       <br>
+      <br>
       <p>{{ jokeData }}</p>
       <br>
       <div class="user-list">
