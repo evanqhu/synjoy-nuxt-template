@@ -2,6 +2,7 @@
  * Nuxt3 插件：v-loading 自定义指令
  * 用于在元素上显示加载状态的遮罩层和加载动画
  * 使用方式：v-loading="boolean"
+ * 安装了 element plus，该插件弃用
  */
 /**
  * 定义加载配置的接口

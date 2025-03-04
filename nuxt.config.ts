@@ -13,10 +13,16 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxt/icon',
     '@nuxtjs/color-mode',
+    '@element-plus/nuxt',
   ],
 
   /** 插件 */
   plugins: [],
+
+  /** 自动导入 */
+  imports: {
+    dirs: ['api'], // api 文件夹顶层路径中的资源会被自动导入
+  },
 
   /** 自动引入其他文件夹 */
   // imports: {
@@ -88,6 +94,16 @@ export default defineNuxtConfig({
         ],
       }),
     ],
+    esbuild: process.env.NODE_ENV === 'production'
+      ? {
+        // 打包时移除 console.log
+          pure: process.env.NUXT_DROP_CONSOLE === 'true' ? ['console.log'] : [],
+          // 打包时移除 debugger
+          drop: ['debugger'],
+          // 打包时移除所有注释
+          legalComments: 'none',
+        }
+      : undefined,
     css: {
       preprocessorOptions: {
         // 引入全局样式变量
@@ -112,6 +128,11 @@ export default defineNuxtConfig({
     //       file: '~/pages/detail.vue',
     //     })
     // },
+  },
+  /** Element Plus 配置 */
+  elementPlus: {
+    importStyle: 'scss',
+    // themes: ['dark'],
   },
 
   /** Nuxt ESLint 模块 */

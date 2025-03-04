@@ -1,5 +1,5 @@
 // src/types/shims-global.d.ts
-import type { WebConfig as ConfigType } from '~/configs/web-configs'
+import type { WebConfig as ConfigType } from '~/web-configs'
 
 declare global {
   interface Window {

@@ -1,3 +1,5 @@
+export const TOKEN_KEY = 'satoken'
+
 export const resourceList = [
   {
     name: 'Terms of Service',

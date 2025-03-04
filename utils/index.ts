@@ -27,18 +27,10 @@ export const getPixelTrackScript = (pixelTrackKey: string) => {
   }
 }
 
-/** 获取当前时间 */
-export const getNowTime = () => {
-  const date = new Date()
-
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+/** 谷歌登录脚本 */
+export const getGoogleLoginScript = () => {
+  return {
+    src: 'https://accounts.google.com/gsi/client',
+    async: true,
   }
-
-  return new Intl.DateTimeFormat('en-US', options).format(date)
 }

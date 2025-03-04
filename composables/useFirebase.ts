@@ -23,7 +23,7 @@ export const useFirebase = () => {
     }
     else {
       const { webConfig } = useAppStore()
-      const firebaseConfig = webConfig.firebase
+      const firebaseConfig = webConfig.firebase || {}
 
       /** 初始化 Firebase */
       const initializeFirebase = () => {

@@ -1,4 +1,6 @@
-// 自定义检测设备类型
+/**
+ * 自定义检测设备类型
+ */
 export const useCustomDevice = () => {
   // 从 Nuxt App 获取 device module 的实例
   const { $device } = useNuxtApp()

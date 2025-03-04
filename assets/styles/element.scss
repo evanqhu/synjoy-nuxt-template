@@ -1,0 +1,36 @@
+// 覆盖 element 样式
+
+// @forward 'element-plus/theme-chalk/src/common/var.scss' with (
+//   $colors: (
+//     'primary': (
+//       'base': green,
+//     ),
+//   )
+// );
+
+:root {
+  // .el-button--primary {
+  //   background: linear-gradient(135deg, #F5B919 0%, #BDF700 100%);
+  //   border: none;
+  //   color: #111;
+  //   font-size: 1rem;
+  //   font-weight: 900;
+  //   border-radius: 0.5rem;
+
+  //   &.is-disabled {
+  //     background: linear-gradient(135deg, rgba(245, 185, 25, 0.30) 0%, rgba(189, 247, 0, 0.30) 100%);
+  //   }
+  // }
+
+  // .el-avatar {
+  //   background: linear-gradient(135deg, #F5B919 0%, #BDF700 100%);
+  // }
+
+  // .el-loading-mask {
+  //   background-color: transparent;
+
+  //   .el-loading-spinner .path {
+  //     stroke: #F5B919;
+  //   }
+  // }
+}

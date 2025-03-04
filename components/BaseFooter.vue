@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { resourceList } from '~/configs/constants'
-
 const appStore = useAppStore()
 const { webConfig } = appStore
 </script>

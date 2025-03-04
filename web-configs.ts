@@ -5,6 +5,8 @@ const defaultConfig = {
   webTitle: 'App Title',
   // 网站标题模板
   webTitleTemplate: 'Title Template',
+  // 网站描述 meta description
+  webDescription: 'This is a description for the web app',
   // 网站邮箱
   webEmail: 'web-email.support@gmail.com',
   // 网站地址
@@ -28,7 +30,7 @@ const defaultConfig = {
     // 广告位信息只需要传递  slot 即可，其他的都在广告组件中给了默认值
     clientId: 'ca-google',
     ads: 'template ads.txt',
-    home_1: { 'data-ad-slot': '123456789' },
+    home_1: { },
     home_2: { 'data-ad-slot': '987654321' },
   },
   // Google Ad Exchange
@@ -37,12 +39,10 @@ const defaultConfig = {
       index: 'ad1',
       headScript: `<script>
         window.googletag = window.googletag || { cmd: [] };
-
         googletag.cmd.push(() => {
           googletag
             .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
             .addService(googletag.pubads());
-
           googletag.enableServices();
         });
       </script>`,
@@ -63,6 +63,7 @@ const defaultConfig = {
 const defaultConfig2 = {
   webTitle: 'App2 Title',
   webTitleTemplate: 'Title2 Template',
+  webDescription: 'This is a description for the web2 app',
   webEmail: 'web2-email.support@gmail.com',
   webUrl: 'templateweb2.com',
   webLogo: 'logo2',
@@ -109,7 +110,7 @@ const defaultConfig2 = {
   pixelTrackKey: '',
 }
 
-export type WebConfig = typeof defaultConfig
+export type WebConfig = Partial<typeof defaultConfig>
 
 export default {
   'localhost': defaultConfig,
@@ -117,5 +118,3 @@ export default {
 } as {
   [key: string]: WebConfig
 }
-
-export const webDescription = 'This is a description for the web app'
