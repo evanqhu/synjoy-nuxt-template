@@ -1,7 +1,6 @@
 ## 待办
 
-- [ ] 封装 ADX 组件
-- [ ] 增加广告点击追踪 hooks
+- [ ] 服务端日志
 
 ## ⚙️ 功能配置
 
@@ -9,19 +8,23 @@
 - 使用 ESLint 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module) 模块)
 - 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html) 模块)
 - 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 处理图标，封装 `SvgIcon` 组件
+- 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
+- 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
 - 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCUstomDevice()` 响应式获取设备类型
-- 封装 Firebase 插件，全局提供 `logEvent` 和 `eventTrack` 方法
+- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块
 - 封装 `AdsbyGoogle` 组件
-- 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 Pinia 中
+- 封装 `AdsbyExchange` 组件
+- 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 `Pinia` 中
 - 在服务端使用中间件上报 header
 - 使用自定义路由 `path` ，实现分渠道路由
 - 封装 `useCustomPush()` 扩展 `router.push()` 方法，实现携带渠道路径和 `query` 参数跳转
-- 封装 `useRequest()`，提供网络请求最佳实践
-- 封装 `v-loading` 自定义指令
+- 封装 `request()`，提供网络请求最佳实践
+- 封装 `useFirebase()` ，提供 `customLogEvent` 和 `customEventTrack` 方法
+- 封装 `useAdsClickListener()` 监听广告点击
 
 ## ⚙️ 目录结构
 
-```ini
+```plain text
 ├── api #【后端接口】
 │   ├── modules
 │   └── index.ts
@@ -84,6 +87,8 @@
   "scripts": {
     // 启动开发服务器
     "dev": "nuxi dev --dotenv .env.development --host",
+    // 开发环境打包并预览
+    "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
     // 生产构建
     "build": "nuxi build --dotenv .env.production",
     // 开发构建
@@ -117,8 +122,7 @@
 NUXT_APP_CDN_URL = ''
 
 # API 接口地址
-# NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
-NUXT_PUBLIC_API_BASE = 'http://test.ptc-pluto.ptc.sg2.api'
+NUXT_PUBLIC_API_BASE = '/api'
 
 # 开发服务器端口号
 NUXT_PORT = 1024
@@ -134,6 +138,9 @@ NUXT_APP_CDN_URL = 'https://static.cdns.space/nuxt-template/'
 
 # API 接口地址
 NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
+
+# 是否删除控制台输出语句
+NUXT_DROP_CONSOLE = 'false'
 ```
 
 `.env.stage`
@@ -152,9 +159,13 @@ NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 
 ### 🎯 全局样式
 
-可以在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 `<head>` 中，但是无法使用其中的变量，如果需要使用变量，可以在 vite 的 sass 中进行配置
+1. 所有样式文件存放在 `～/assets/styles` 文件夹下
+2. 在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 `<head>` 中，但是无法使用其中的变量
+3. 如果需要使用变量，可以在 vite 的 scss 中进行配置
+4. 在 `variables.scss` 中定义了一些变量和 mixin，全局可用
+5. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
 
-```javascript
+```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
   /** 全局样式文件 */
@@ -165,7 +176,6 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern-compiler", // 使用新版 sass 编译器，防止控制台警告
           additionalData: '@use "~/assets/styles/variables.scss" as *;', // 引入全局样式变量
         },
       },
@@ -174,74 +184,62 @@ export default defineNuxtConfig({
 });
 ```
 
-### 🎯 网络请求
+### 🎯 网络请求及本地开发代理
 
-> ⚠️ 默认情况下， `useAsyncData` 会阻止导航，直到其异步处理程序得到解析。这会导致路由跳转延迟，用户体验不佳。可以通过添加 `lazy: true` 选项或使用 `useLazyAsyncData`
+1️⃣ 在 `utils/request.ts` 中封装自定义的请求方法，可设置 baseURL 和响应拦截器等
 
-> 如果在一个组件中需要发送多个请求，且这些请求之间没有依赖关系，则不需要加 `await`，直接获取数据即可；只有当请求之间有依赖关系时，才需要加 `await`
-> 加 `await` 的作用是等待当前请求完成，这样解构拿到的 `data` 就是有数据的，如果不加，在请求完成前，拿到的 `data` 是 `null`；不过没关系，代码中会通过 `status` 判断请求是否完成，如果未完成，则显示加载动画。同时 `await` 会阻塞代码运行，导致多个请求无法同时执行。
-> 使用 `useAsyncData` 或 `useLazyAsyncData` 时，请求会先通过服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求。这意味着必须等待服务端请求完成后，服务端的页面才算渲染完成，才会发送 HTML 到客户端，然后客户端再渲染页面。
-> 如何想要服务端以最快的速度返回 HTML 页面，可以设置 `server: false`，这样在服务端将不会发出请求，而是在客户端发出请求。
-
-Nuxt 中使用 `$fetch` `useFetch` 和 `useAsyncData` 来请求数据
-
-其中 `useFetch` 和 `useAsyncData` 都需要写在 `setup` 顶层，请求会在服务端发出，然后通过有效负载携带到客户端，客户端不再发送请求
-
-`useFetch(url)` 几乎等同于 `useAsyncData(url, () => $fetch(url))`
-
-```html
-<script setup lang="ts">
-  const { data, status, error, refresh, clear } = useAsyncData("mountains", () =>
-    $fetch("https://api.nuxtjs.dev/mountains")
-  );
-  const { data, status, error, refresh, clear } = useFetch("/api/modules");
-  // refresh 用于重新发送请求
-</script>
-```
-
-1️⃣ 封装自定义 `_fetch()` 方法
-
-在 `composables` 中新建 `useRequest.ts` 文件，对外暴露 `useRequest` 对象
-
-```javascript
-// composables/useRequest.ts
+```typescript
 // API 接口请求 (如果有其他后端接口地址，封装其他的组合式函数)
 import type { NitroFetchOptions, NitroFetchRequest } from "nitropack";
 
-type RequestParams = NitroFetchOptions<
+export type RequestParams = NitroFetchOptions<
   NitroFetchRequest,
   "options" | "get" | "head" | "patch" | "post" | "put" | "delete" | "connect" | "trace"
 >;
 
 /** 自定义封装 $fetch 方法 */
-const _fetch = $fetch.create({
+export const customFetch = $fetch.create({
+  // 设置超时时间为 20 秒
+  timeout: 1000 * 20,
+  credentials: "include", // 携带 cookie
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径
     const runtimeConfig = useRuntimeConfig();
     options.baseURL = runtimeConfig.public.apiBase;
 
-    // 设置请求头
-    const userAuth = useCookie("token");
+    // 在服务端请求时，携带客户端的 cookie
+    const userAuth = useCookie(TOKEN_KEY); // 服务端可以读取到客户端的 cookie
     if (userAuth.value) {
+      options.headers.set("cookie", `${TOKEN_KEY}=${userAuth.value}`);
       // Add Authorization header
-      options.headers.set("Authorization", `Bearer ${userAuth.value}`);
+      // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
     }
+
+    // 也可使用 useRequestHeaders() 将客户端的 cookie 添加到服务端的请求头中
+    // const headers = useRequestHeaders(['cookie'])
+    // Object.entries(headers).forEach(([key, value]) => {
+    //   options.headers.set(key, value)
+    // })
   },
   // 响应拦截器
   onResponse({ response }) {
+    // console.log('🚀🚀🚀 response: ', response._data)
     if (!response.ok) {
-      console.error("请求失败", response.statusText);
-      throw new Error(`请求错误：${response.status}`);
+      console.error("请求失败", response._data);
+      return Promise.reject(new Error(`请求失败：${JSON.stringify(response._data)}`));
     }
-    // 与后端约定好的接口响应格式
+    // 与后端约定的数据响应格式
     const { data, code, msg, success } = response._data;
+
     if (!success) {
       console.error("接口错误：", msg);
-      throw new Error(msg || "未知错误");
+      return Promise.reject(new Error(msg || "接口错误"));
     }
+
     // 通过修改 response._data 来修改响应数据
     response._data = data;
+
     // 直接返回 data 不生效
     // return data
     // response._data = new myBusinessResponse(response._data)
@@ -255,99 +253,82 @@ const _fetch = $fetch.create({
 });
 
 /** 自动导出方法 */
-export const useRequest = {
+export const request = {
   get<T>(url: string, params?: RequestParams) {
-    return _fetch < T > (url, { method: "get", ...params });
+    return customFetch<T>(url, { method: "get", ...params });
   },
   post<T>(url: string, data?: Record<string, unknown>, params?: RequestParams) {
-    return _fetch < T > (url, { method: "post", body: data, ...params });
+    return customFetch<T>(url, { method: "post", body: data, ...params });
   },
 };
 ```
 
-2️⃣ 编写请求函数
-
-在 `api/modules` 中编写各模块的请求函数
-
-- params 处定义请求参数的类型
-- 泛型传返回值的类型
+2️⃣ 在 `api/modules/xxx.ts` 中定义各模块各接口的请求方法
 
 ```typescript
-// api/modules/blog.ts
-export const getData = async (params?: string) => {
-  return await useRequest.get<Array<IBlog>>("/posts");
+// api/modules/user.ts 登录模块接口
+/** 登录 */
+export const login = (data: { ggToken: string }) => {
+  return request.post<UserResponse>("/user/login", data);
+};
+
+/** 退出登录 */
+export const logout = async () => {
+  return request.get("/user/logout");
 };
 ```
 
-在 `api/index.ts` 中汇总各函数
+3️⃣ 在 `api/index.ts` 中汇总导出所有模块的请求方法并导出
 
-```javascript
-// api/index.ts
-import * as blogApi from "./modules/blog";
+```typescript
+// api/index.ts 汇总各模块请求函数，统一导出
+import * as defaultApi from "./modules/default";
+import * as userApi from "./modules/user";
 
-export default {
-  blogApi,
+export const api = {
+  defaultApi,
+  userApi,
 };
 ```
 
-在 `composables/index.ts` 中定义组合式函数
-
-```javascript
-// composables/index.ts
-import api from "~/api/index";
-
-/** 使用网络请求函数 */
-export const useApi = () => api;
-```
-
-3️⃣ 在组件中使用
-
-1. 通过组合式函数使用 (无需引入)
-
-```vue
-<script setup lang="ts">
-const { blogApi } = useApi();
-
-const { data: blogs, refresh } = useAsyncData("blogs", () => blogApi.getData("test params"));
-// 使用 computed 定义 blogsObj，这样在调用 refresh 后，blogsObj 会响应式更新
-const blogsObj = computed(() => blogs.map(...));
-</script>
-
-<template>
-  <button @click="refresh('test params')">click</button>
-</template>
-```
-
-2. 直接引入使用
-
-```vue
-<script setup lang="ts">
-import { getData } from "~/api/modules/blog";
-
-const { data: blogs } = useAsyncData("blogs", () => getData("test params"), { lazy: true });
-
-const { data: blogs } = useLazyAsyncData("blogs", () => getData("test params"));
-</script>
-```
-
-> 如何在 server 中定义接口，如下
+4️⃣ 在 `nuxt.config.ts` 中配置自动导入
 
 ```typescript
-// server/api/hello.ts
-// 访问 http://localhost:1024/api/hello 即可得到 { hello: "world" }
-export default defineEventHandler(() => {
-  return {
-    hello: "world",
-  };
+export default defineNuxtConfig({
+  imports: {
+    dirs: ["api"], // api 文件夹顶层路径中的资源会被自动导入
+  },
 });
 ```
 
+5️⃣ 在组件中使用
+
 ```vue
 <script setup lang="ts">
-const { data: hello } = await useFetch("/api/hello");
-const { data: hello } = await useAsyncData("hello", () => $fetch("/api/hello"));
-console.log("🚀🚀🚀  hello: ", hello.value);
+/** 获取推荐列表 */
+const { data: recommendationListData } = useLazyAsyncData(
+  "recommendationList",
+  api.defaultApi.fetchRecommendationList
+);
 </script>
+```
+
+6️⃣ 在 `server/api/[...].ts` 中配置本地开发代理
+
+```typescript
+import { joinURL } from "ufo";
+
+export default defineEventHandler(async (event) => {
+  // 1. 获取代理地址 这里只需要写开发环境的代理地址即可
+  const proxyUrl = "https://jsonplaceholder.typicode.com/";
+
+  // 2. 检查代理路径
+  const path = event.path.replace(/^\/api/, "");
+  const target = joinURL(proxyUrl, path);
+
+  // 3. 使用 proxyRequest 进行代理请求
+  return proxyRequest(event, target);
+});
 ```
 
 ### 🎯 图标
@@ -490,10 +471,6 @@ export default defineNuxtConfig({
 
 可以传 `size` `color` 等属性
 
-3️⃣ 使用 [NuxtIcons](https://nuxt.com/modules/icons) 模块
-
-不方便调整图标大小，不推荐使用
-
 ### 🎯 图片
 
 使用 [NuxtImg](https://image.nuxt.com/get-started/installation) 模块
@@ -546,27 +523,23 @@ export default defineNuxtConfig({
 
 ```typescript
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
-/** 网站图标 */
-const iconHref = ref("");
-try {
-  iconHref.value = (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default;
-} catch (error) {
-  console.error("Failed to load app logo:", error);
-  iconHref.value = ""; // 设置为默认值或留空
-}
-
 useSeoMeta({
   title: webConfig.webTitle,
-  description: "app description",
+  titleTemplate: '%s | ' + webConfig.webTitleTemplate,
+  description: webConfig.webDescription,
   ogTitle: webConfig.webTitle,
-});
+  ogDescription: webConfig.webDescription,
+})
 
-useHead(
-  {
-    link: [{ rel: "icon", href: iconHref }],
-  },
-  { mode: "client" }
-);
+useHead({
+  script: [...globalScripts],
+  link: [
+    {
+      rel: 'icon',
+      href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default,
+    },
+  ],
+}, { mode: 'client' })
 ```
 
 ### 🎯 移动端适配
@@ -628,7 +601,7 @@ const { isMobile } = useCustomDevice();
 
 ### 🎯 Firebase
 
-由于不建议将辅助函数放在全局命名空间中，因此这里不再使用插件方法，而是使用组合试函数来实现
+由于不建议将辅助函数放在全局命名空间中，因此这里不再使用插件方法，而是使用组合式函数来实现
 
 #### 组合式函数
 
@@ -712,99 +685,6 @@ export const useFirebase = () => {
 
 使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
 
-#### 插件法 (弃用)
-
-在 `plugins` 中新建 `firebase.client.ts` 文件，`firebase` 插件只能在客户端使用，插件自动注册
-
-配置文件从 `appStore` 的 `webConfig` 中读取
-
-`plugins/firebase.client.ts`
-
-```javascript
-/**
- * firebase 插件，用于提供 logEvent 和 eventTrack 方法
- * 仅在客户端运行
- */
-import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
-
-export default defineNuxtPlugin(async () => {
-  // 开发环境不运行 firebase
-  if (process.env.NODE_ENV === "development") {
-    return {
-      provide: {
-        logEvent: () => {
-          console.log("🚀🚀🚀 测试环境 firebase analytics");
-        },
-        eventTrack: () => {
-          console.log("🚀🚀🚀 测试环境 firebase analytics");
-        },
-      },
-    };
-  }
-  const { webConfig } = useAppStore();
-  const firebaseConfig = webConfig.firebase;
-
-  /** 初始化 Firebase */
-  const initializeFirebase = () => {
-    const firebaseApp = initializeApp(firebaseConfig);
-
-    // 启用 Analytics
-    const analyticsInstance = getAnalytics(firebaseApp);
-    return analyticsInstance;
-  };
-
-  let customLogEvent;
-  let customEventTrack;
-
-  try {
-    await isSupported();
-    const analytics = initializeFirebase();
-
-    // 记录一个名为 "in_page" 的事件，表示用户进入页面
-    logEvent(analytics, "in_page");
-    console.log("🚀🚀🚀 firebase analytics: ", "in_page");
-
-    customLogEvent = (eventName: string, eventParams = {}) => {
-      logEvent(analytics, eventName, eventParams);
-      // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-    };
-    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-      const _eventParams = {
-        time: new Date(),
-        message: eventName,
-        method,
-        ...eventParams,
-      };
-      logEvent(analytics, eventName, _eventParams);
-      // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-    };
-  } catch (error) {
-    console.log("🚀🚀🚀 Firebase Analytics is not supported", error);
-
-    customLogEvent = (eventName: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
-    };
-    customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-      console.log(`🚀🚀🚀 Client Log: ${eventName}`, method, eventParams);
-    };
-  }
-
-  return {
-    provide: {
-      logEvent: customLogEvent,
-      eventTrack: customEventTrack,
-    },
-  };
-
-  // 不需要将 $logEvent 和 $eventTrack 挂载到 Vue 实例上，放在 NuxtApp 上即可
-  // nuxtApp.vueApp.provide($logEvent, _logEvent)
-  // nuxtApp.vueApp.provide($eventTrack, _eventTrack)
-});
-```
-
-使用时通过 `const { $eventTrack } = useNuxtApp()` 得到相应的函数
-
 ### 🎯 AdSense
 
 1️⃣ **广告脚本**
@@ -812,32 +692,6 @@ export default defineNuxtPlugin(async () => {
 在 `app.vue` 中通过 `useHead` 加载广告脚本，配置文件存储在 appStore 中
 
 广告脚本仅在**生产环境**的**客户端**加载
-
-```html
-<script lang="ts" setup>
-  const appStore = useAppStore();
-  const { webConfig } = appStore;
-
-  // 加载谷歌广告脚本
-  useHead(
-    {
-      script: [
-        ...(webConfig.adSense?.clientId && process.env.NODE_ENV === "production"
-          ? [
-              {
-                src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${webConfig.adSense?.clientId}`,
-                crossorigin: "anonymous" as const,
-                async: true,
-              },
-            ]
-          : []),
-      ],
-      link: [{ rel: "icon", href: iconHref }],
-    },
-    { mode: "client" }
-  );
-</script>
-```
 
 2️⃣ **ads.txt**
 
@@ -1214,11 +1068,13 @@ const { customPush, getHref } = useCustomRouting()
 4. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
 5. 执行 `PORT=5000 node .output/server/index.mjs` 命令启动服务器 (或者执行 `pnpm run deploy`)
 
+目前使用 Docker 部署，项目中已添加 `Dockerfile` 和 `run.sh`
+
 ### 🎯 混合渲染
 
 对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
 
-更正：这些页面中包含动态内容，比如 url 等，需要根据客户端请求的 host 来决定，因此无法在构建时生成，只能通过服务端渲染来实现。
+**更正**：这些页面中包含动态内容，比如 url 等，需要根据客户端请求的 host 来决定，因此无法在构建时生成，只能通过服务端渲染来实现。
 
 ```typescript
 // nuxt.config.ts

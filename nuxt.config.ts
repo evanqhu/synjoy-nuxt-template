@@ -12,7 +12,6 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/device',
     '@nuxt/icon',
-    '@nuxtjs/color-mode',
     '@element-plus/nuxt',
   ],
 

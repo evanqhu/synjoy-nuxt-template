@@ -27,6 +27,7 @@ const handleMenuClick = () => {
 <style lang="scss" scoped>
 .header {
   position: fixed;
+  background: var(--bg-color);
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
   z-index: 2001;
 
