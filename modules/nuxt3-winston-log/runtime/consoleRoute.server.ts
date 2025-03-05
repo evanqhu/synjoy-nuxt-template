@@ -13,28 +13,34 @@ export default <NitroAppPlugin> function (nitroApp) {
   // 注册一个 render:html 钩子
   // 这个钩子会在每次渲染 HTML 时触发
   nitroApp.hooks.hook('render:html', (html, { event }) => {
+    // 请求的主机地址
     const host = getHeader(event, 'host')
+    // 请求的路径
     const path = event.path
-    // 获取请求的完整 URL 并转换为字符串
-    // const urlName = String(getRequestURL(event))
-    // 解析 URL，获取路径名和完整路径
-    // const { pathname, path } = url.parse(urlName)
-    // 获取请求头信息
-    const headers = event.node.req.headers
-    // 获取请求方法（GET, POST 等）
+    // 请求方法（GET, POST 等）
     const method = event.method
+    // 请求头信息
+    const headers = event.node.req.headers
 
     // 只记录非 _nuxt 路径的请求
     // _nuxt 路径通常是 Nuxt.js 的内部资源请求，不需要记录
     if (path && !path.includes('_nuxt')) {
-      // 打印请求的路径名
-      console.info(`🚀🚀🚀 host=${host}`)
-      // 打印完整的 URL 路径
-      console.info(`🚀🚀🚀 url=${path}`)
-      // 打印请求方法
-      console.info(`🚀🚀🚀 method=${method}`)
-      // 打印请求头信息（转换为 JSON 字符串）
-      console.info(`🚀🚀🚀 headers=${JSON.stringify(headers)}`)
+      const logData = {
+        host,
+        path,
+        method,
+        headers,
+        statusCode: event.node.res.statusCode,
+      }
+      console.info(`📝 Route Request: ${JSON.stringify(logData)}`)
+      // // 打印请求的路径名
+      // console.info(`📝 host=${host}`)
+      // // 打印完整的 URL 路径
+      // console.info(`📝 url=${path}`)
+      // // 打印请求方法
+      // console.info(`📝 method=${method}`)
+      // // 打印请求头信息（转换为 JSON 字符串）
+      // console.info(`📝 headers=${JSON.stringify(headers)}`)
     }
   })
 

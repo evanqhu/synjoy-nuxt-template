@@ -4,9 +4,9 @@
 import { joinURL } from 'ufo'
 
 export default defineEventHandler(async (event) => {
-  // console.log('🚀🚀🚀🚀🚀🚀 event method: ', event.method)
-  // console.log('🚀🚀🚀 event path: ', event.path)
-  // console.log('🚀🚀🚀 event headers: ', event.headers)
+  console.info('🚀🚀🚀 event method: ', event.method)
+  console.info('🚀🚀🚀 event path: ', event.path)
+  console.info('🚀🚀🚀 event headers: ', JSON.stringify(event.headers))
   // Proxy url
   const proxyUrl = 'https://jsonplaceholder.typicode.com'
 

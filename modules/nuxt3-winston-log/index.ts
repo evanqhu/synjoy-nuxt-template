@@ -29,10 +29,18 @@ function judgeIfStatus(params: any) {
 }
 
 // 模块配置选项的类型定义接口
-// export interface ModuleOptions {}
+export interface ModuleOptions {
+  maxSize?: string
+  maxFiles?: string
+  infoLogPath?: string
+  infoLogName?: string
+  errorLogPath?: string
+  errorLogName?: string
+  skipRequestMiddlewareHandler?: boolean
+}
 
 // 定义并导出 Nuxt 模块
-export default defineNuxtModule({
+export default defineNuxtModule<ModuleOptions>({
   // 模块元数据配置
   meta: {
     name: 'nuxt3WinstonLog', // 模块名称

@@ -14,24 +14,24 @@ export default defineNuxtPlugin((nuxtApp) => {
   // 使用 global._isRebuildConsole 标志位避免重复初始化
   if (!(<any>global)._isRebuildConsole) {
     // 输出初始化信息
-    console.log('🚀🚀🚀 winstonLogger rebuild console')
+    console.log('📝  winstonLogger rebuild console')
 
     // 从 Nuxt 运行时配置中获取日志配置选项
     const options = nuxtApp.$config.public.nuxt3WinstonLog
     // 创建全局日志实例
     const globalLogger = getLogger(options)
 
-    // 保存原始的 console.log 和 console.error 方法
+    // 保存原始的 console.info 和 console.error 方法
     const originInfo = console.info
     const originError = console.error
 
-    // 重写 console.log 方法
+    // 重写 console.info 方法
     console.info = function (...rest) {
       // 将所有参数转换为字符串并用空格连接
       const str = rest.join(' ')
       // 使用 Winston 记录 info 级别日志
       globalLogger.info(str)
-      // 调用原始的 console.log 方法，保持原有的控制台输出
+      // 调用原始的 console.info 方法，保持原有的控制台输出
       originInfo.apply(this, rest)
     }
 
@@ -49,4 +49,21 @@ export default defineNuxtPlugin((nuxtApp) => {
     // 设置标志位，表示已完成控制台重建
     ;(<any>global)._isRebuildConsole = true
   }
+
+  // 添加 app error 钩子
+  nuxtApp.hook('app:error', (error) => {
+    console.error('📝 App Error:', {
+      error: error.message,
+      stack: error.stack,
+    })
+  })
+
+  nuxtApp.hook('vue:error', (error: any, instance, info) => {
+    console.error('📝 Vue Error:', {
+      error: error.message,
+      component: instance?.$options.name || 'anonymous',
+      info,
+      stack: error.stack,
+    })
+  })
 })
