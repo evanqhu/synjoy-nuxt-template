@@ -1,17 +1,18 @@
-## 待办
+# Nuxt3 项目模板
 
-- [ ] 服务端日志
+## 简介
 
-## ⚙️ 功能配置
+该项目是基于 [Nuxt3](https://nuxt.com/) 的服务端渲染项目模板，集成了一些常用的功能和配置，方便快速搭建网站项目。
 
-- 基于 [Nuxt3](https://nuxt.com/) 的 SSR 项目模板
+### 功能配置
+
 - 使用 ESLint 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module) 模块)
 - 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html) 模块)
 - 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 处理图标，封装 `SvgIcon` 组件
 - 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
 - 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
 - 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCUstomDevice()` 响应式获取设备类型
-- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块
+- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块作为 UI 组件库
 - 封装 `AdsbyGoogle` 组件
 - 封装 `AdsbyExchange` 组件
 - 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 `Pinia` 中
@@ -21,66 +22,77 @@
 - 封装 `request()`，提供网络请求最佳实践
 - 封装 `useFirebase()` ，提供 `customLogEvent` 和 `customEventTrack` 方法
 - 封装 `useAdsClickListener()` 监听广告点击
+- 使用 Winston 进行服务端日志上报
 
-## ⚙️ 目录结构
+### 目录结构
 
 ```plain text
-├── api #【后端接口】
-│   ├── modules
-│   └── index.ts
-├── assets #【静态资源】
-│   ├── icons
-│   ├── images
-│   ├── logos
-│   └── styles
-├── components #【公共组件】
-│   ├── AdsbyGoogle.vue
-│   ├── SvgIcon.vue
-│   ├── BaseHeader.vue
-│   └── BaseFooter.vue
-├── composables #【组合式 API 函数】
-│   ├── index.ts
-│   ├── useCustomPush.ts
-│   ├── useCustomDevice.ts
-│   └── useRequest.ts
-├── configs #【配置文件】
-│   ├── constants.ts
-│   └── web-configs.ts # 网站配置
-├── layouts #【布局组件】
-│   ├── default.vue
-│   └── legal.vue
-├── middleware #【路由中间件】
-│   ├── auth.global.ts
-│   └── my-middleware.ts
-├── pages #【路由页面】
-│   ├── index.vue
-│   └── detail.vue
-├── plugins #【自定义插件】
-│   ├── firebase.client.ts
-│   ├── svg-icon.ts
-│   └── load-config.server.ts
-├── public #【静态资源】
-│   ├── images
-│   └── robots.txt
-├── server #【服务器相关】
-│   ├── api
-│   ├── middleware
-│   │   ├── report-headers.vue
-│   │   └── load-config.vue
-│   └── plugins
-├── stores #【状态管理器】
-│   ├── app.ts
-│   └── others.ts
-├── utils #【工具函数】
-│   └── index.ts
-├── .env
-├── app.vue
-├── app.config.ts
-├── error.vue
-└── nuxt.config.ts
+├── api                                # 后端接口
+│   ├── index.ts                       # API 统一导出
+│   └── modules/                       # API 模块
+├── assets                             # 静态资源
+│   ├── icons/                         # SVG 图标
+│   ├── images/                        # 图片资源
+│   ├── logos/                         # Logo 资源
+│   └── styles/                        # 样式文件
+├── components                         # 公共组件
+│   ├── AdsbyExchange.client.vue       # ADX 广告组件
+│   ├── AdsbyGoogle.client.vue         # AdSense 广告组件
+│   ├── BaseFooter.vue                 # 页脚组件
+│   ├── BaseHeader.vue                 # 页头组件
+│   └── BaseMenuDrawer.vue             # 菜单抽屉组件
+├── composables                        # 组合式函数
+│   ├── useCustomDevice.ts             # 设备检测
+│   ├── useCustomRouting.ts            # 路由跳转
+│   ├── useFirebase.ts                 # Firebase 相关
+│   └── useAdsClickListener.ts         # 广告点击监听
+├── layouts                            # 布局组件
+│   ├── default.vue                    # 默认布局
+│   └── legal.vue                      # 法律相关页面布局
+├── logs                               # 服务端日志
+├── middleware                         # 路由中间件
+│   ├── auth.global.ts                 # 全局认证中间件
+│   └── my-middleware.ts               # 自定义中间件
+├── modules                            # Nuxt 模块
+│   └── nuxt3-winston-log              # 服务端日志记录模块
+├── pages                              # 路由页面
+│   ├── (legal)/                       # 法律条款相关页面
+│   ├── detail.vue                     # 详情页
+│   └── index.vue                      # 首页
+├── plugins                            # 插件
+│   ├── svg-icon.ts                    # SVG 图标插件
+│   └── load-config.server.ts          # 服务端配置加载插件
+├── public                             # 公共资源
+├── server                             # 服务端
+│   ├── api/                           # 服务端 API，用于开发代理
+│   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报
+│   └── plugins/                       # 服务端插件
+├── stores                             # 状态管理
+│   ├── app.ts                         # 应用状态
+│   └── user.ts                        # 用户状态
+├── types                              # 类型定义
+├── utils                              # 工具函数
+│   ├── constants.ts                   # 常量
+│   ├── request.ts                     # 网络请求
+│   └── index.ts                       # 通用工具方法
+├── .env                               # 公共环境变量
+├── .env.development                   # 开发环境变量
+├── .env.production                    # 生产环境变量
+├── .env.stage                         # 测试环境变量
+├── app.config.ts                      # 应用配置
+├── app.vue                            # 应用入口
+├── error.vue                          # 错误页面
+├── nuxt.config.ts                     # Nuxt 配置
+├── package.json                       # 项目配置
+├── tsconfig.json                      # TypeScript 配置
+├── Dockerfile                         # Docker 配置
+├── run.sh                             # 部署脚本
+└── web-configs.ts                     # 网站配置
 ```
 
-## ⚙️ 脚本介绍
+## 快速开始
+
+### 脚本介绍
 
 ```json
 {
@@ -111,9 +123,9 @@
 }
 ```
 
-## ⚙️ 环境变量
+### 环境变量
 
-`.env.development`
+开发环境变量 `.env.development`
 
 ```ini
 # 开发环境
@@ -128,7 +140,7 @@ NUXT_PUBLIC_API_BASE = '/api'
 NUXT_PORT = 1024
 ```
 
-`.env.production`
+生产环境变量 `.env.production`
 
 ```ini
 # 生产环境
@@ -143,7 +155,7 @@ NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 NUXT_DROP_CONSOLE = 'false'
 ```
 
-`.env.stage`
+测试环境变量 `.env.stage`
 
 ```ini
 # 测试环境
@@ -155,7 +167,7 @@ NUXT_APP_CDN_URL = 'https://static-test.cdns.space/nuxt-template/'
 NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 ```
 
-## ⚙️ 最佳实践
+## 开发指南
 
 ### 🎯 全局样式
 
@@ -306,10 +318,7 @@ export default defineNuxtConfig({
 ```vue
 <script setup lang="ts">
 /** 获取推荐列表 */
-const { data: recommendationListData } = useLazyAsyncData(
-  "recommendationList",
-  api.defaultApi.fetchRecommendationList
-);
+const { data: recommendationListData } = useLazyAsyncData("recommendationList", api.defaultApi.fetchRecommendationList);
 </script>
 ```
 
@@ -513,7 +522,7 @@ export default defineNuxtConfig({
 
 - src 必须是**绝对路径**
 - 图片必须放在 **public** 文件夹下
-- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
+- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片，因此不建议使用
 
 如果不把图片放在 public 下，建议直接使用 img 标签即可
 
@@ -525,26 +534,47 @@ export default defineNuxtConfig({
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
 useSeoMeta({
   title: webConfig.webTitle,
-  titleTemplate: '%s | ' + webConfig.webTitleTemplate,
+  titleTemplate: "%s | " + webConfig.webTitleTemplate,
   description: webConfig.webDescription,
   ogTitle: webConfig.webTitle,
   ogDescription: webConfig.webDescription,
-})
+});
 
-useHead({
-  script: [...globalScripts],
-  link: [
-    {
-      rel: 'icon',
-      href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default,
-    },
-  ],
-}, { mode: 'client' })
+useHead(
+  {
+    script: [...globalScripts],
+    link: [
+      {
+        rel: "icon",
+        href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default,
+      },
+    ],
+  },
+  { mode: "client" }
+);
 ```
 
 ### 🎯 移动端适配
 
 移动端和 PC 端还是写在一起，用媒体查询写不同的样式，尽量使用 rem 单位，同时也提供了 `rem()` 函数，将 px 单位转换为 rem 单位
+
+移动端和 PC 端 分界点为 768px
+
+```vue
+<style lang="scss" scoped>
+// PC 端样式
+.home {
+  width: 100%;
+}
+
+// 移动端样式
+@media (max-width: 768px) {
+  .home {
+    width: 200px;
+  }
+}
+</style>
+```
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块配合自定义的 `useCustomDevice()` 来处理
 
@@ -603,84 +633,79 @@ const { isMobile } = useCustomDevice();
 
 由于不建议将辅助函数放在全局命名空间中，因此这里不再使用插件方法，而是使用组合式函数来实现
 
-#### 组合式函数
-
 在 `composables` 中新建 `useFirebase.ts` 文件
 
 `composables/useFirebase.ts`
 
 ```typescript
-import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
-import { initializeApp } from 'firebase/app'
+import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
 
 export const useFirebase = () => {
   // 定义默认的 log 和 track 函数
   let customLogEvent = (eventName: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-  }
+    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
+  };
   let customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
-  }
+    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams);
+  };
 
   // 仅客户端运行
   onBeforeMount(async () => {
     // 开发环境不运行 firebase
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       customLogEvent = (eventName: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
-      }
+        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams);
+      };
       customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
-      }
-    }
-    else {
-      const { webConfig } = useAppStore()
-      const firebaseConfig = webConfig.firebase
+        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams);
+      };
+    } else {
+      const { webConfig } = useAppStore();
+      const firebaseConfig = webConfig.firebase;
 
       /** 初始化 Firebase */
       const initializeFirebase = () => {
-        const firebaseApp = initializeApp(firebaseConfig)
+        const firebaseApp = initializeApp(firebaseConfig);
 
         // 启用 Analytics
-        const analyticsInstance = getAnalytics(firebaseApp)
-        return analyticsInstance
-      }
+        const analyticsInstance = getAnalytics(firebaseApp);
+        return analyticsInstance;
+      };
 
       try {
-        await isSupported()
-        const analytics = initializeFirebase()
+        await isSupported();
+        const analytics = initializeFirebase();
 
         // 记录一个名为 "in_page" 的事件，表示用户进入页面
-        logEvent(analytics, 'in_page')
-        console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
+        logEvent(analytics, "in_page");
+        console.log("🚀🚀🚀 firebase analytics: ", "in_page");
 
         customLogEvent = (eventName: string, eventParams = {}) => {
-          logEvent(analytics, eventName, eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        }
+          logEvent(analytics, eventName, eventParams);
+          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        };
         customEventTrack = (eventName: string, method: string, eventParams = {}) => {
           const _eventParams = {
             time: new Date(),
             message: eventName,
             method,
             ...eventParams,
-          }
-          logEvent(analytics, eventName, _eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        }
-      }
-      catch (error) {
-        console.error('🚀🚀🚀 Firebase Analytics is not supported', error)
+          };
+          logEvent(analytics, eventName, _eventParams);
+          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        };
+      } catch (error) {
+        console.error("🚀🚀🚀 Firebase Analytics is not supported", error);
       }
     }
-  })
+  });
 
   return {
     customLogEvent,
     customEventTrack,
-  }
-}
-
+  };
+};
 ```
 
 使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
@@ -689,7 +714,7 @@ export const useFirebase = () => {
 
 1️⃣ **广告脚本**
 
-在 `app.vue` 中通过 `useHead` 加载广告脚本，配置文件存储在 appStore 中
+在 `app.vue` 中通过 `useHead()` 加载广告脚本，配置文件存储在 appStore 中
 
 广告脚本仅在**生产环境**的**客户端**加载
 
@@ -1058,7 +1083,11 @@ const { customPush, getHref } = useCustomRouting()
 </template>
 ```
 
-### 🎯 项目部署
+### 🎯 服务端日志
+
+使用 Winston 进行日志记录，在项目中封装 nuxt3-winston-log 模块，重写 Node.js 的 `console` 方法，将日志记录到文件中
+
+## 项目部署
 
 1️⃣ **Node 服务器部署**
 
@@ -1070,7 +1099,9 @@ const { customPush, getHref } = useCustomRouting()
 
 目前使用 Docker 部署，项目中已添加 `Dockerfile` 和 `run.sh`
 
-### 🎯 混合渲染
+## 其它
+
+### 混合渲染
 
 对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
 
