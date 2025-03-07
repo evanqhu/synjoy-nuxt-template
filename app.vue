@@ -1,6 +1,8 @@
 <!-- 入口组件 -->
 <script lang="ts" setup>
 console.log('🚀🚀🚀 NODE_ENV: ', process.env.NODE_ENV)
+/** 启用 Firebase */
+useFirebase()
 /** 监听广告点击 */
 // useAdsClickListener()
 
