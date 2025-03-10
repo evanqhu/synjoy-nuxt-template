@@ -6,6 +6,8 @@ declare global {
     JSCallAndroid: any
     adsbygoogle: any
     ttq: any
+    google: any
+    googleCallback: any
   }
 
   type WebConfig = ConfigType

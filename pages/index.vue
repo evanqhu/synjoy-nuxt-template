@@ -1,7 +1,7 @@
 <!-- 首页 home -->
 <script setup lang="ts">
 definePageMeta({
-  path: '/:channel(channel[1-9]\\d?)?',
+  // path: '/:channel(channel[1-9]\\d?)?',
 })
 
 useSeoMeta({

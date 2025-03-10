@@ -10,7 +10,7 @@ const appStore = useAppStore()
 const { webConfig } = appStore
 const clientId = webConfig.adSense?.clientId
 const isAdx = !!webConfig.adExchange
-const globalScripts = [] // 全局脚本
+const globalScripts: Array<object> = [] // 全局脚本
 
 // 1. 是 Google adSense 广告且是生产环境，则加载 adSense 广告脚本
 if (clientId && process.env.NODE_ENV === 'production') {
@@ -25,6 +25,7 @@ if (webConfig.pixelTrackKey) {
   globalScripts.push(getPixelTrackScript(webConfig.pixelTrackKey))
 }
 // 4. 谷歌登录脚本
+globalScripts.push(getGoogleLoginScript())
 
 useSeoMeta({
   title: webConfig.webTitle,

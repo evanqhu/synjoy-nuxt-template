@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 
 definePageMeta({
-  path: '/:channel(channel[1-9]\\d?)?/detail',
+  // path: '/:channel(channel[1-9]\\d?)?/detail',
 })
 
 // 防止出现水合错误
