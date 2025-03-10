@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const appStore = useAppStore()
 const { webConfig, toggleMenuDrawer } = appStore
-const { customPush, getHref } = useCustomRouting()
+const { smartNavigate, getHref } = useCustomRouting()
 
 /** 点击菜单 */
 const handleMenuClick = () => {

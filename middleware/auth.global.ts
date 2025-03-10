@@ -1,13 +1,13 @@
 // 全局路由中间件，在路由变化时执行
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  // const { customPush } = useCustomRouting()
+  // const { smartNavigate } = useCustomRouting()
   // const token = useCookie(TOKEN_KEY)
   // const userStore = useUserStore()
 
   // // 有 token
   // if (token.value) {
   //   if (to.name === 'login') {
-  //     return customPush('/')
+  //     return smartNavigate('/')
   //   }
   //   else {
   //     // 判断是否获取用户信息
@@ -28,7 +28,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   //           type: 'error',
   //         })
   //         token.value = null
-  //         return customPush('/login')
+  //         return smartNavigate('/login')
   //       }
   //     }
   //   }
@@ -38,6 +38,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   //   // 如果页面不需要登录，则直接跳转
   //   if (!to.meta.requireAuth) return
   //   // 否则跳转到登录页
-  //   else return customPush('/login')
+  //   else return smartNavigate('/login')
   // }
 })

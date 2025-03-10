@@ -1,9 +1,5 @@
 <!-- 隐私协议 -->
 <script setup lang="ts">
-// defineRouteRules({
-//   prerender: true,
-// })
-
 definePageMeta({
   layout: 'legal',
   title: 'Privacy Policy',

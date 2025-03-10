@@ -18,7 +18,7 @@
 - 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 `Pinia` 中
 - 在服务端使用中间件上报 header
 - 使用自定义路由 `path` ，实现分渠道路由
-- 封装 `useCustomPush()` 扩展 `router.push()` 方法，实现携带渠道路径和 `query` 参数跳转
+- 封装 `useCustomRouting()` 扩展 `navigateTo()` 方法，实现携带渠道路径 `params` 参数和 `query` 参数跳转
 - 封装 `request()`，提供网络请求最佳实践
 - 封装 `useFirebase()` ，提供 `customLogEvent` 和 `customEventTrack` 方法
 - 封装 `useAdsClickListener()` 监听广告点击
@@ -1016,6 +1016,33 @@ export default defineEventHandler(async (event) => {
 
 1️⃣ **实现路由**
 
+最新方案：在 `app/router.options.ts` 中配置路由
+
+```typescript
+/**
+ * 自定义路由
+ * 为所有路由添加可选的 channel1～99 前缀
+ * 无需在每个路由组件中使用 definePageMeta 来重新定义路由了
+ */
+import type { RouterConfig } from "@nuxt/schema";
+
+export default <RouterConfig>{
+  routes: (_routes) => {
+    const routes = [..._routes];
+
+    // 为所有路由添加可选的 channel 前缀
+    routes.forEach((route) => {
+      // 检查路径中是否已经包含 channel 参数
+      if (!route.path.includes(":channel(channel[1-9]")) {
+        route.path = `/:channel(channel[1-9]\\d?)?${route.path}`;
+      }
+    });
+
+    return routes;
+  },
+};
+```
+
 在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
 
 ```vue
@@ -1050,6 +1077,14 @@ export default defineNuxtConfig({
 
 ```typescript
 // composables/useCustomRouting.ts
+/**
+ * 自定义路由跳转方法，用于在路由跳转时保留当前 channel 参数和查询参数
+ */
+// 定义路由参数类型
+type CustomRouteOptions = {
+  path: string;
+  [key: string]: any;
+};
 export const useCustomRouting = () => {
   const router = useRouter();
   const { params, query } = router.currentRoute.value;
@@ -1058,26 +1093,46 @@ export const useCustomRouting = () => {
   const fullChannel = channel ? `/${channel}` : "";
   const fullQueryString = queryString ? `?${queryString}` : "";
 
-  const customPush = (path: string) => {
-    navigateTo(`${fullChannel}${path}${fullQueryString}`);
+  /** 路由跳转时携带 channel params 和 query 参数 */
+  const smartNavigate = (to: string | CustomRouteOptions, options?: Record<string, any>) => {
+    const basePath = typeof to === "string" ? to : to.path;
+    const fullPath = `${fullChannel}${basePath}${fullQueryString}`;
+
+    if (typeof to === "string") {
+      return navigateTo(
+        {
+          path: fullPath,
+        },
+        options
+      );
+    } else {
+      return navigateTo(
+        {
+          ...to,
+          path: fullPath,
+        },
+        options
+      );
+    }
   };
 
+  /** 获取包含 channel params 和 query 参数的跳转链接 */
   const getHref = (path: string) => {
     return `${fullChannel}${path}${fullQueryString}`;
   };
 
-  return { customPush, getHref };
+  return { smartNavigate, getHref };
 };
 ```
 
 ```vue
 <script setup lang="ts">
-const { customPush, getHref } = useCustomRouting()
+const { smartNavigate, getHref } = useCustomRouting()
 </script>
 
 <template>
   <header class="header">
-    <div class="header__left" @click="customPush('/')">
+    <div class="header__left" @click="smartNavigate('/')">
     <NuxtLink :href="getHref('/detail')">to detail</NuxtLink>
   </header>
 </template>

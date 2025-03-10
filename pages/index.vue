@@ -19,7 +19,7 @@ const { webConfig } = appStore
 const { adSense, adExchange } = webConfig
 
 const { isMobile } = useCustomDevice()
-const { customPush } = useCustomRouting()
+const { smartNavigate } = useCustomRouting()
 
 const { data: userList, refresh: refreshUsers } = useLazyAsyncData('topMovers', api.defaultApi.requestUsers)
 
@@ -56,7 +56,7 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => 
         </div>
       </div>
       <br>
-      <button @click="customPush('/detail')">
+      <button @click="smartNavigate('/detail')">
         to detail
       </button>
       <br>
