@@ -9,6 +9,9 @@ useSeoMeta({
   description: 'My home page description',
 })
 
+// const router = useRouter()
+// console.log('🚀🚀🚀 router: ', router.options.routes)
+
 const appStore = useAppStore()
 const { webConfig } = appStore
 const { adSense, adExchange } = webConfig
@@ -36,7 +39,9 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => 
       <br>
       <p>{{ jokeData }}</p>
       <br>
-      <button @click="smartNavigate('/detail')">
+      <button
+        @click="smartNavigate('/detail')"
+      >
         to detail
       </button>
       <br>
