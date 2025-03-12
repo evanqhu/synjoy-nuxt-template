@@ -8,24 +8,7 @@ useFirebase()
 
 const appStore = useAppStore()
 const { webConfig } = appStore
-const clientId = webConfig.adSense?.clientId
-const isAdx = !!webConfig.adExchange
-const globalScripts: Array<object> = [] // 全局脚本
-
-// 1. 是 Google adSense 广告且是生产环境，则加载 adSense 广告脚本
-if (clientId && process.env.NODE_ENV === 'production') {
-  globalScripts.push(getAdSenseScript(clientId))
-}
-// 2. 是 Google adx 广告则加载 adx 广告脚本
-if (isAdx) {
-  globalScripts.push(getAdxScript())
-}
-// 3. TikTok Pixel 追踪
-if (webConfig.pixelTrackKey) {
-  globalScripts.push(getPixelTrackScript(webConfig.pixelTrackKey))
-}
-// 4. 谷歌登录脚本
-globalScripts.push(getGoogleLoginScript())
+const globalScripts = loadGlobalScripts(webConfig) // 全局脚本
 
 useSeoMeta({
   title: webConfig.webTitle,
