@@ -32,7 +32,7 @@ export default <NitroAppPlugin> function (nitroApp) {
         headers,
         statusCode: event.node.res.statusCode,
       }
-      console.info(`📝 Route Request: ${JSON.stringify(logData)}`)
+      // console.info(`📝 Route Request: ${JSON.stringify(logData)}`)
       // // 打印请求的路径名
       // console.info(`📝 host=${host}`)
       // // 打印完整的 URL 路径

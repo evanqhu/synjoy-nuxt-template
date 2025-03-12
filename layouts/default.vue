@@ -1,8 +1,6 @@
 <!-- 默认布局 -->
 <template>
   <div>
-    <BaseMenuDrawer />
-
     <div class="default-layout">
       <BaseHeader />
       <div class="app-main">

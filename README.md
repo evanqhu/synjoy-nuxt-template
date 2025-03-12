@@ -11,13 +11,13 @@
 - 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 处理图标，封装 `SvgIcon` 组件
 - 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
 - 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
-- 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCUstomDevice()` 响应式获取设备类型
+- 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCustomDevice()` 响应式获取设备类型
 - 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块作为 UI 组件库
 - 封装 `AdsbyGoogle` 组件
 - 封装 `AdsbyExchange` 组件
 - 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 `Pinia` 中
 - 在服务端使用中间件上报 header
-- 使用自定义路由 `path` ，实现分渠道路由
+- 在 `app/router.options.ts` 中使用自定义路由 `path` ，实现分渠道路由
 - 封装 `useCustomRouting()` 扩展 `navigateTo()` 方法，实现携带渠道路径 `params` 参数和 `query` 参数跳转
 - 封装 `request()`，提供网络请求最佳实践
 - 封装 `useFirebase()` ，提供 `customLogEvent` 和 `customEventTrack` 方法
@@ -30,6 +30,8 @@
 ├── api                                # 后端接口
 │   ├── index.ts                       # API 统一导出
 │   └── modules/                       # API 模块
+├── app                                # 项目配置
+│   └── router.options.ts              # 路由配置
 ├── assets                             # 静态资源
 │   ├── icons/                         # SVG 图标
 │   ├── images/                        # 图片资源
@@ -40,21 +42,20 @@
 │   ├── AdsbyGoogle.client.vue         # AdSense 广告组件
 │   ├── BaseFooter.vue                 # 页脚组件
 │   ├── BaseHeader.vue                 # 页头组件
-│   └── BaseMenuDrawer.vue             # 菜单抽屉组件
+│   └── SvgIcon.vue                    # 图标组件
 ├── composables                        # 组合式函数
 │   ├── useCustomDevice.ts             # 设备检测
 │   ├── useCustomRouting.ts            # 路由跳转
 │   ├── useFirebase.ts                 # Firebase 相关
 │   └── useAdsClickListener.ts         # 广告点击监听
 ├── layouts                            # 布局组件
-│   ├── default.vue                    # 默认布局
-│   └── legal.vue                      # 法律相关页面布局
+│   └── default.vue                    # 默认布局
 ├── logs                               # 服务端日志
 ├── middleware                         # 路由中间件
 │   ├── auth.global.ts                 # 全局认证中间件
 │   └── my-middleware.ts               # 自定义中间件
 ├── modules                            # Nuxt 模块
-│   └── nuxt3-winston-log              # 服务端日志记录模块
+│   └── nuxt3-winston-log/             # 服务端日志记录模块
 ├── pages                              # 路由页面
 │   ├── (legal)/                       # 法律条款相关页面
 │   ├── detail.vue                     # 详情页
@@ -136,6 +137,9 @@ NUXT_APP_CDN_URL = ''
 # API 接口地址
 NUXT_PUBLIC_API_BASE = '/api'
 
+# 本地开发环境接口代理地址
+DEV_PROXY_URL = 'http://test.ptc-jupiter.ptc.sg2.api'
+
 # 开发服务器端口号
 NUXT_PORT = 1024
 ```
@@ -176,6 +180,7 @@ NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 3. 如果需要使用变量，可以在 vite 的 scss 中进行配置
 4. 在 `variables.scss` 中定义了一些变量和 mixin，全局可用
 5. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
+6. 全局公共样式写在 `main.scss` 中；公共 scss 变量写在 `variables.scss` 中；element ui 的样式覆盖写在 `element.scss` 中；字体引入写在 `fonts.scss` 中
 
 ```typescript
 // nuxt.config.ts
@@ -224,15 +229,7 @@ export const customFetch = $fetch.create({
     const userAuth = useCookie(TOKEN_KEY); // 服务端可以读取到客户端的 cookie
     if (userAuth.value) {
       options.headers.set("cookie", `${TOKEN_KEY}=${userAuth.value}`);
-      // Add Authorization header
-      // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
     }
-
-    // 也可使用 useRequestHeaders() 将客户端的 cookie 添加到服务端的请求头中
-    // const headers = useRequestHeaders(['cookie'])
-    // Object.entries(headers).forEach(([key, value]) => {
-    //   options.headers.set(key, value)
-    // })
   },
   // 响应拦截器
   onResponse({ response }) {
@@ -246,15 +243,15 @@ export const customFetch = $fetch.create({
 
     if (!success) {
       console.error("接口错误：", msg);
-      return Promise.reject(new Error(msg || "接口错误"));
+      // 创建一个包含完整错误信息的错误对象
+      const error = new Error(msg || "接口错误");
+      // 将接口返回的所有信息附加到错误对象上
+      Object.assign(error, { code, data, success });
+      throw error;
     }
 
     // 通过修改 response._data 来修改响应数据
     response._data = data;
-
-    // 直接返回 data 不生效
-    // return data
-    // response._data = new myBusinessResponse(response._data)
   },
   // 响应错误拦截器
   onResponseError({ response }) {
@@ -329,7 +326,7 @@ import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event) => {
   // 1. 获取代理地址 这里只需要写开发环境的代理地址即可
-  const proxyUrl = "https://jsonplaceholder.typicode.com/";
+  const proxyUrl = process.env.DEV_PROXY_URL || "";
 
   // 2. 检查代理路径
   const path = event.path.replace(/^\/api/, "");
@@ -516,13 +513,14 @@ export default defineNuxtConfig({
 />
 
 <NuxtImg src="/demo.jpg" />
+<NuxtImg src="https://image.lexica.art/xxx" loading="lazy" />
 ```
 
 > 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
 
-- src 必须是**绝对路径**
-- 图片必须放在 **public** 文件夹下
-- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片，因此不建议使用
+- src 必须是**绝对路径** (因此可以使用外部 url 图片地址)
+- 如果是相对路径，图片必须放在 **public** 文件夹下
+- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片，因此不建议在渲染本地图片时使用 `<NuxtImg/>`
 
 如果不把图片放在 public 下，建议直接使用 img 标签即可
 
@@ -1043,7 +1041,7 @@ export default <RouterConfig>{
 };
 ```
 
-在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
+旧方案：在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
 
 ```vue
 <!-- pages/detail.vue -->

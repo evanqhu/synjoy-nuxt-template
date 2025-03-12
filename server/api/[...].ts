@@ -4,11 +4,11 @@
 import { joinURL } from 'ufo'
 
 export default defineEventHandler(async (event) => {
-  console.info('🚀🚀🚀 event method: ', event.method)
-  console.info('🚀🚀🚀 event path: ', event.path)
-  console.info('🚀🚀🚀 event headers: ', JSON.stringify(event.headers))
+  // console.info('🚀🚀🚀 event method: ', event.method)
+  // console.info('🚀🚀🚀 event path: ', event.path)
+  // console.info('🚀🚀🚀 event headers: ', JSON.stringify(event.headers))
   // Proxy url
-  const proxyUrl = 'https://jsonplaceholder.typicode.com'
+  const proxyUrl = process.env.DEV_PROXY_URL || ''
 
   // check the path
   // 替换开头 的/api，用 正则表达式

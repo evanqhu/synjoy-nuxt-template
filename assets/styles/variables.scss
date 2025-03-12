@@ -12,9 +12,11 @@ $header-height: 4rem;
 // 移动端和 PC 端分界点
 $device-point: 768px;
 
-
 // 版心宽度
 $container-width: 1200px;
+
+// 主题色
+$theme-color: #3d00b7;
 
 // 渐变色
 $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%);
@@ -49,12 +51,6 @@ $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%);
 
 // 省略号
 @mixin ellipsis {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

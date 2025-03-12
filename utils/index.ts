@@ -34,3 +34,9 @@ export const getGoogleLoginScript = () => {
     async: true,
   }
 }
+
+/** 字符串首字母大写 */
+export const capitalizeFirstLetter = (str?: string) => {
+  if (!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

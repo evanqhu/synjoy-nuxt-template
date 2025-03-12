@@ -34,6 +34,7 @@ useSeoMeta({
   ogTitle: webConfig.webTitle,
   ogDescription: webConfig.webDescription,
 })
+
 useHead({
   script: [...globalScripts],
   link: [
@@ -54,36 +55,4 @@ useHead({
 </template>
 
 <style lang="scss">
-// 0. __nuxt 容器
-#__nuxt {
-  height: 100vh;
-  width: 100vw;
-}
-
-// 1. 布局容器
-.default-layout,
-.legal-layout {
-  width: 100%;
-  height: 100%;
-}
-
-// 2. 网页主体容器 (header 和 footer 中间部分)
-.app-main {
-  width: 100%;
-  height: 100%;
-  padding-top: $header-height;
-}
-
-// 3. 网页内容容器 (设置左右 padding，防止内容贴边，但不影响设置背景图)
-.app-content-wrapper {
-  width: 100%;
-  padding: 0 1rem;
-}
-
-// 4. 网页内容 (设置版心宽度，水平居中)
-.app-content {
-  width: 100%;
-  max-width: $container-width;
-  margin: 0 auto;
-}
 </style>

@@ -23,11 +23,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   //       catch (error) {
   //         // 移除 token 并跳转到登录页重新登录
   //         console.error('获取用户信息失败', error)
+  //         token.value = null
   //         ElMessage({
   //           message: 'Get user info failed, please login again.',
   //           type: 'error',
   //         })
-  //         token.value = null
   //         return smartNavigate('/login')
   //       }
   //     }

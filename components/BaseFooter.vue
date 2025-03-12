@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const appStore = useAppStore()
 const { webConfig } = appStore
+const { getHref } = useCustomRouting()
 </script>
 
 <template>
@@ -20,9 +21,9 @@ const { webConfig } = appStore
           RESOURCE
         </h2>
         <a
-          v-for="(item, index) in resourceList"
+          v-for="(item, index) in resourcesList"
           :key="index"
-          :href="item.path"
+          :href="getHref(item.path)"
           class="footer__section__content"
         >
           {{ item.name }}

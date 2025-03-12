@@ -1,12 +1,10 @@
+<!-- 嵌套路由示例 -->
 <script setup lang="ts">
-definePageMeta({
-  path: '/:channel(channel[1-9]\\d?)?/parent',
-})
 </script>
 
 <template>
   <div>
-    <div>parent</div>
+    <!-- <div>parent</div> -->
     <NuxtPage />
   </div>
 </template>

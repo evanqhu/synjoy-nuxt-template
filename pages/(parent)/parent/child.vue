@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// definePageMeta({
-//   path: '/:channel(channel[1-9]\\d?)?/parent/child',
-// })
 </script>
 
 <template>
