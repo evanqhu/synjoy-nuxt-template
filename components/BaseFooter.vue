@@ -20,14 +20,14 @@ const { getHref } = useCustomRouting()
         <h2 class="footer__section__title">
           RESOURCE
         </h2>
-        <a
+        <NuxtLink
           v-for="(item, index) in resourcesList"
           :key="index"
           :href="getHref(item.path)"
           class="footer__section__content"
         >
           {{ item.name }}
-        </a>
+        </NuxtLink>
       </div>
 
       <div class="footer__section contact">
