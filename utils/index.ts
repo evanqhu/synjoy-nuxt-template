@@ -1,3 +1,4 @@
+/** 加载全局脚本 */
 export const loadGlobalScripts = (webConfig: WebConfig) => {
   const clientId = webConfig.adSense?.clientId
   const isAdx = !!webConfig.adExchange
