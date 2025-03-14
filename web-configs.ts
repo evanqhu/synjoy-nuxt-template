@@ -13,6 +13,8 @@ const defaultConfig = {
   webUrl: 'templateweb.com',
   // 网站 logo
   webLogo: 'logo1',
+  // Reuqest header
+  homeTemplate: '1',
   // 关于我们
   aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   firebase: {
@@ -67,6 +69,7 @@ const defaultConfig2 = {
   webEmail: 'web2-email.support@gmail.com',
   webUrl: 'templateweb2.com',
   webLogo: 'logo2',
+  homeTemplate: '1',
   aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   firebase: {
     apiKey: '',

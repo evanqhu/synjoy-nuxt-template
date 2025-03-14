@@ -15,6 +15,10 @@ export const customFetch = $fetch.create({
     const runtimeConfig = useRuntimeConfig()
     options.baseURL = runtimeConfig.public.apiBase
 
+    // 设置后端要求的请求头
+    const appStore = useAppStore()
+    options.headers.set('home_template', appStore.webConfig.homeTemplate || '')
+
     // 在服务端请求时，携带客户端的 cookie
     const userAuth = useCookie(TOKEN_KEY)
     if (userAuth.value) {

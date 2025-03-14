@@ -45,12 +45,14 @@ body {
 
   // 3. 网页内容容器 (设置左右 padding 1rem，防止内容贴边，但不影响设置背景图)
   .app-content-wrapper {
+    overflow: hidden;
     width: 100%;
     padding: 0 1rem;
   }
 
   // 4. 网页内容 (设置版心宽度，水平居中)
   .app-content {
+    overflow: hidden;
     width: 100%;
     max-width: $container-width;
     margin: 0 auto;

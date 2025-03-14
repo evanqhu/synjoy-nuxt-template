@@ -20,9 +20,14 @@ const { isMobile } = useCustomDevice()
 const { smartNavigate } = useCustomRouting()
 
 /** 初始化服务端获取推荐列表 */
-const { data: recommendedList } = useLazyAsyncData('recommendedList', () => api.defaultApi.requestRecommendedPhotos())
+const { data: recommendedList, refresh: refreshRecommendedList } = useLazyAsyncData('recommendedList', () => api.defaultApi.requestRecommendedPhotos(), {
+  transform: data => data.list || [],
+})
+if (recommendedList.value) {
+  console.log('🚀🚀🚀 recommendedList: ', recommendedList.value[0].userName)
+}
 
-const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => $fetch('http://hmajax.itheima.net/api/randjoke'), {
+const { data: jokeData, status, refresh: refreshJoke } = useLazyAsyncData('joke', () => $fetch('http://hmajax.itheima.net/api/randjoke'), {
   watch: [isMobile],
   transform: data => (data as any).data || '', // 使用 transform 函数来更改查询的结果
 })
@@ -37,11 +42,18 @@ const { data: jokeData, refresh: refreshJoke } = useLazyAsyncData('joke', () => 
         刷新 joke 数据
       </el-button>
       <br>
-      <p>{{ jokeData }}</p>
+      <p v-loading="status === 'pending'">
+        {{ jokeData }}
+      </p>
       <br>
-      <button
-        @click="smartNavigate('/detail')"
-      >
+      <el-button @click="refreshRecommendedList()">
+        刷新 recommendedList 数据
+      </el-button>
+      <br>
+      <div class="demo">
+        <span v-for="item in recommendedList || []" :key="item.userName"> {{ item.userName }}</span>
+      </div>
+      <button @click="smartNavigate('/detail')">
         to detail
       </button>
       <br>
