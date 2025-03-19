@@ -60,7 +60,7 @@ const insertAdxScript = async () => {
     }
   }
   // $eventTrack('load_ads', 'expose')
-  customEventTrack('load_ads', 'expose', {
+  customEventTrack.value('load_ads', 'expose', {
     adExcahnge: adsAttrs.index,
   })
 }

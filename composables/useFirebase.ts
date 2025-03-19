@@ -3,21 +3,21 @@ import { initializeApp } from 'firebase/app'
 
 export const useFirebase = () => {
   // 定义默认的 log 和 track 函数
-  let customLogEvent = (eventName: string, eventParams = {}) => {
+  const customLogEvent = shallowRef((eventName: string, eventParams = {}) => {
     console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-  }
-  let customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+  })
+  const customEventTrack = shallowRef((eventName: string, method: string, eventParams = {}) => {
     console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
-  }
-
+  },
+  )
   // 仅客户端运行
   onBeforeMount(async () => {
     // 开发环境不运行 firebase
     if (process.env.NODE_ENV === 'development') {
-      customLogEvent = (eventName: string, eventParams = {}) => {
+      customLogEvent.value = (eventName: string, eventParams = {}) => {
         console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
       }
-      customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+      customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
         console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
       }
     }
@@ -42,11 +42,11 @@ export const useFirebase = () => {
         logEvent(analytics, 'in_page')
         console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
 
-        customLogEvent = (eventName: string, eventParams = {}) => {
+        customLogEvent.value = (eventName: string, eventParams = {}) => {
           logEvent(analytics, eventName, eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+          console.log('🚀🚀🚀 firebase analytics: ', eventName)
         }
-        customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+        customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
           const _eventParams = {
             time: new Date(),
             message: eventName,
@@ -54,7 +54,7 @@ export const useFirebase = () => {
             ...eventParams,
           }
           logEvent(analytics, eventName, _eventParams)
-        // console.log('🚀🚀🚀 firebase analytics: ', eventName)
+          console.log('🚀🚀🚀 firebase analytics: ', eventName)
         }
       }
       catch (error) {

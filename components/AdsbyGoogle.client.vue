@@ -15,16 +15,25 @@ interface Props {
    * 自定义样式
    */
   customClass?: string
+  /**
+   * 仅在某一端显示
+   */
+  only?: 'pc' | 'mobile'
 }
 
-const { adsAttrs = {}, customClass = '' } = defineProps<Props>()
+const { adsAttrs = {}, customClass = '', only } = defineProps<Props>()
+
+/** 设备类型 */
+const { isMobile } = useCustomDevice()
 
 /** ins 标签模板引用 */
 const adsenseRef = useTemplateRef<HTMLElement>('adsense')
 
 /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
 const isShowAd = computed(() => {
-  return Object.keys(adsAttrs).includes('data-ad-slot')
+  const isOnlyPc = only === 'pc' && !isMobile.value
+  const isOnlyMobile = only === 'mobile' && isMobile.value
+  return Object.keys(adsAttrs).includes('data-ad-slot') && (isOnlyPc || isOnlyMobile || !only)
 })
 /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
 const isAdFilled = ref(true)
@@ -81,7 +90,7 @@ const showAd = async () => {
   await nextTick()
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
-    customEventTrack('load_ads', 'expose')
+    customEventTrack.value('load_ads', 'expose')
     // $eventTrack('load_ads', 'expose')
   }
   catch (error) {
@@ -123,6 +132,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .ads-item {
+  margin: 1rem 0;
   display: flex;
   flex-direction: column;
   width: 100%;

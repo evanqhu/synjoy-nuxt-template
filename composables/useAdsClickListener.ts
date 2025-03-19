@@ -16,6 +16,7 @@ interface IframeObj {
 
 export const useAdsClickListener = () => {
   const { customEventTrack } = useFirebase()
+  const ttTrack = useTikTokTrack()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
@@ -60,16 +61,16 @@ export const useAdsClickListener = () => {
               window.JSCallAndroid.adClick(JSON.stringify(transformData))
             }
             else {
-              console.log('🚀🚀🚀 transformData: ', transformData)
+              // console.log('🚀🚀🚀 transformData: ', transformData)
             }
 
             // 2. firebase 上报
-            customEventTrack('ad_click', 'click', {
+            customEventTrack.value('ad_click', 'click', {
               'data-ad-slot': iframeObj.adSlot,
             })
-            // $eventTrack('ad_click', 'click', {
-            //   'data-ad-slot': iframeObj.adSlot,
-            // })
+
+            // 3. TikTok 上报
+            ttTrack(iframeObj.adSlot || '0000', 'click', 'ad_iframe_click')
           }
         })
       }
@@ -86,14 +87,14 @@ export const useAdsClickListener = () => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
           if (
-            node instanceof Element
-            && node.tagName === 'IFRAME'
+            node instanceof HTMLIFrameElement
             && node.closest('ins.adsbygoogle')
+            && node.style.display !== 'none'
           ) {
             console.log('🚀🚀🚀 有广告 iframe 插入', node, node.closest('ins.adsbygoogle'))
             // 2. 在检测到广告 iframe 插入后，调用 setupIframeTracking
             setupIframeTracking(
-              node as HTMLIFrameElement,
+              node,
               node.closest('ins.adsbygoogle') as HTMLElement,
             )
           }
