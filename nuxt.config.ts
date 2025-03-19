@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxt/icon',
     '@element-plus/nuxt',
-    '@nuxtjs/google-fonts',
   ],
 
   /** 插件 */
@@ -139,15 +138,6 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       stylistic: true, // 启用样式校验
-    },
-  },
-
-  /** 谷歌字体 */
-  googleFonts: {
-    families: {
-      // 'DM Sans': {
-      //   wght: [400, 700, 900],
-      // },
     },
   },
 
