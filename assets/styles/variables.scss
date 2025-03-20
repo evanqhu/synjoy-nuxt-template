@@ -22,7 +22,7 @@ $theme-color: #3d00b7;
 $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%);
 
 // 鼠标悬浮样式
-@mixin hover($opacity: null, $color: null, $bg: null, $scale: null) {
+@mixin hover($opacity: null, $color: null, $bg: null, $scale: null, $transform: null) {
   @media (pointer: fine) {
     cursor: pointer; // 鼠标变成小手
     -webkit-tap-highlight-color: transparent; // 取消移动端点击样式
@@ -44,6 +44,10 @@ $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%);
 
       @if $scale != null {
         transform: scale($scale); // 鼠标悬浮时放大
+      }
+
+      @if $transform != null {
+        transform: $transform; // 鼠标悬浮时改变样式
       }
     }
   }

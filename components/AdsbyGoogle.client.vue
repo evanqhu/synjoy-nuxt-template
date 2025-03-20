@@ -166,6 +166,10 @@ onBeforeUnmount(() => {
       margin-left: 15px;
     }
   }
+
+  .adsbygoogle {
+    text-align: center;
+  }
 }
 
 .ads-debug {
