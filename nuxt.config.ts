@@ -48,6 +48,8 @@ export default defineNuxtConfig({
     public: {
       // API 接口地址
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      // 谷歌登录 ID
+      googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID,
     },
   },
 

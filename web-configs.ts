@@ -26,7 +26,7 @@ const defaultConfig = {
     appId: '',
     measurementId: '',
   },
-  // Google AdSense
+  // Google AdSense (不存在时值设为 null)
   adSense: {
     // NOTE 这里的 client 只需要写 script 中 client= 后面的内容（如：ca-pub-8158555231596181），千万不要写成全部的 URL
     // 广告位信息只需要传递  slot 即可，其他的都在广告组件中给了默认值
@@ -35,7 +35,7 @@ const defaultConfig = {
     home_1: { },
     home_2: { 'data-ad-slot': '987654321' },
   },
-  // Google Ad Exchange
+  // Google Ad Exchange (不存在时值设为 null)
   adExchange: {
     home_1: {
       index: 'ad1',
@@ -59,9 +59,10 @@ const defaultConfig = {
     },
     home_2: { index: 'ad2', headScript: '', bodyScript: '' },
   },
-  // TikTok Pixel
+  // TikTok Pixel (不存在时值设为空字符串)
   pixelTrackKey: '1234567890',
 }
+
 const defaultConfig2 = {
   webTitle: 'App2 Title',
   webTitleTemplate: 'Title2 Template',
@@ -113,11 +114,11 @@ const defaultConfig2 = {
   pixelTrackKey: '',
 }
 
-export type WebConfig = Partial<typeof defaultConfig>
-
 export default {
   'localhost': defaultConfig,
   '127.0.0.1': defaultConfig2,
 } as {
   [key: string]: WebConfig
 }
+
+export type WebConfig = typeof defaultConfig

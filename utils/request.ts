@@ -7,8 +7,8 @@ export type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'ge
 export const customFetch = $fetch.create({
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
-  // 携带客户端的 cookie
-  credentials: 'include',
+  // 默认 omit 不发送，与后端商量好了，不通过 cookie 携带 token，而是通过其他的 header
+  // credentials: 'include',
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径
@@ -16,8 +16,8 @@ export const customFetch = $fetch.create({
     options.baseURL = runtimeConfig.public.apiBase
 
     // 设置后端要求的请求头
-    const appStore = useAppStore()
-    options.headers.set('home_template', appStore.webConfig.homeTemplate || '')
+    // const appStore = useAppStore()
+    // options.headers.set('home_template', appStore.webConfig.homeTemplate || '')
 
     // 在服务端请求时，携带客户端的 cookie
     const userAuth = useCookie(TOKEN_KEY)

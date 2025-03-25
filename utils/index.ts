@@ -1,5 +1,6 @@
 /** 加载全局脚本 */
 export const loadGlobalScripts = (webConfig: WebConfig) => {
+  const runtimeConfig = useRuntimeConfig()
   const clientId = webConfig.adSense?.clientId
   const isAdx = !!webConfig.adExchange
 
@@ -18,7 +19,7 @@ export const loadGlobalScripts = (webConfig: WebConfig) => {
     globalScripts.push(getPixelTrackScript(webConfig.pixelTrackKey))
   }
   // 4. 谷歌登录脚本
-  if (GOOGLE_CLIENT_ID) {
+  if (runtimeConfig.public.googleClientId) {
     globalScripts.push(getGoogleLoginScript())
   }
 
