@@ -95,30 +95,30 @@
 
 ### 脚本介绍
 
-```json
+```yaml
 {
   "scripts": {
-    // 启动开发服务器
+    # 启动开发服务器
     "dev": "nuxi dev --dotenv .env.development --host",
-    // 开发环境打包并预览
+    # 开发环境打包并预览
     "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
-    // 生产构建
+    # 生产构建
     "build": "nuxi build --dotenv .env.production",
-    // 开发构建
+    # 开发构建
     "build:dev": "nuxi build --dotenv .env.development",
-    // 测试构建
+    # 测试构建
     "build:stage": "nuxi build --dotenv .env.stage",
-    // 生成 .nuxt 文件夹
+    # 生成 .nuxt 文件夹
     "prepare": "nuxi prepare",
-    // 预览 (需在打包后执行)
+    # 预览 (需在打包后执行)
     "preview": "nuxi preview",
-    // 生成静态文件 dist，用于部署在静态托管服务上
+    # 生成静态文件 dist，用于部署在静态托管服务上
     "generate": "nuxi generate",
-    // 服务器部署
+    # 服务器部署
     "deploy": "PORT=5000 node .output/server/index.mjs",
     "postinstall": "nuxi prepare",
     "lint": "eslint .",
-    // 语法校验
+    # 语法校验
     "lint-fix": "eslint . --fix"
   }
 }
@@ -218,7 +218,8 @@ export type RequestParams = NitroFetchOptions<
 export const customFetch = $fetch.create({
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
-  credentials: "include", // 携带 cookie
+  // 默认 omit 不发送，与后端商量好了，不通过 cookie 携带 token，而是通过其他的 header
+  // credentials: 'include',
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径
@@ -636,74 +637,77 @@ const { isMobile } = useCustomDevice();
 `composables/useFirebase.ts`
 
 ```typescript
-import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
+import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
+import { initializeApp } from 'firebase/app'
 
 export const useFirebase = () => {
   // 定义默认的 log 和 track 函数
-  let customLogEvent = (eventName: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
-  };
-  let customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams);
-  };
-
+  const customLogEvent = shallowRef((eventName: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
+  })
+  const customEventTrack = shallowRef((eventName: string, method: string, eventParams = {}) => {
+    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
+  },
+  )
   // 仅客户端运行
   onBeforeMount(async () => {
     // 开发环境不运行 firebase
-    if (process.env.NODE_ENV === "development") {
-      customLogEvent = (eventName: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams);
-      };
-      customEventTrack = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams);
-      };
-    } else {
-      const { webConfig } = useAppStore();
-      const firebaseConfig = webConfig.firebase;
+    if (process.env.NODE_ENV === 'development') {
+      customLogEvent.value = (eventName: string, eventParams = {}) => {
+        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
+      }
+      customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
+        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
+      }
+    }
+    else {
+      const { webConfig } = useAppStore()
+      const firebaseConfig = webConfig.firebase || {}
 
       /** 初始化 Firebase */
       const initializeFirebase = () => {
-        const firebaseApp = initializeApp(firebaseConfig);
+        const firebaseApp = initializeApp(firebaseConfig)
 
         // 启用 Analytics
-        const analyticsInstance = getAnalytics(firebaseApp);
-        return analyticsInstance;
-      };
+        const analyticsInstance = getAnalytics(firebaseApp)
+        return analyticsInstance
+      }
 
       try {
-        await isSupported();
-        const analytics = initializeFirebase();
+        await isSupported()
+        const analytics = initializeFirebase()
 
         // 记录一个名为 "in_page" 的事件，表示用户进入页面
-        logEvent(analytics, "in_page");
-        console.log("🚀🚀🚀 firebase analytics: ", "in_page");
+        logEvent(analytics, 'in_page')
+        console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
 
-        customLogEvent = (eventName: string, eventParams = {}) => {
-          logEvent(analytics, eventName, eventParams);
-          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        };
-        customEventTrack = (eventName: string, method: string, eventParams = {}) => {
+        customLogEvent.value = (eventName: string, eventParams = {}) => {
+          logEvent(analytics, eventName, eventParams)
+          console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        }
+        customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
           const _eventParams = {
             time: new Date(),
             message: eventName,
             method,
             ...eventParams,
-          };
-          logEvent(analytics, eventName, _eventParams);
-          // console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        };
-      } catch (error) {
-        console.error("🚀🚀🚀 Firebase Analytics is not supported", error);
+          }
+          logEvent(analytics, eventName, _eventParams)
+          console.log('🚀🚀🚀 firebase analytics: ', eventName)
+        }
+      }
+      catch (error) {
+        console.error('🚀🚀🚀 Firebase Analytics is not supported', error)
       }
     }
-  });
+  })
 
   return {
     customLogEvent,
     customEventTrack,
-  };
-};
+  }
+}
+
 ```
 
 使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
