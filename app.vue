@@ -23,7 +23,7 @@ useHead({
   link: [
     {
       rel: 'icon',
-      href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default,
+      href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`))?.default,
     },
   ],
 }, { mode: 'client' })

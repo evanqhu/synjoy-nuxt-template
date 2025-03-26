@@ -3,9 +3,9 @@
   <div>
     <div class="default-layout">
       <AppHeader />
-      <div class="app-main">
+      <main class="app-main">
         <slot />
-      </div>
+      </main>
       <AppFooter />
     </div>
   </div>

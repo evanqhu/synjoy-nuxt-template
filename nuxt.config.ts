@@ -111,6 +111,9 @@ export default defineNuxtConfig({
         scss: { additionalData: '@use "~/assets/styles/variables.scss" as *;' },
       },
     },
+    server: {
+      allowedHosts: ['.ngrok-free.app'], // 允许访问 ngrok 内网穿透代理的域名
+    },
   },
 
   /** 钩子 */
