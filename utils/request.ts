@@ -15,14 +15,12 @@ export const customFetch = $fetch.create({
     const runtimeConfig = useRuntimeConfig()
     options.baseURL = runtimeConfig.public.apiBase
 
-    // 设置后端要求的请求头
-    // const appStore = useAppStore()
-    // options.headers.set('home_template', appStore.webConfig.homeTemplate || '')
-
-    // 在服务端请求时，携带客户端的 cookie
+    // 在服务端请求时，通过自定义 header 传递 token
+    const { TOKEN_KEY } = useUserStore()
     const userAuth = useCookie(TOKEN_KEY)
     if (userAuth.value) {
-      options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
+      options.headers.set(TOKEN_KEY, userAuth.value)
+      // options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
       // Add Authorization header
       // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
     }

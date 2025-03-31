@@ -1,8 +1,8 @@
 // 全局路由中间件，在路由变化时执行
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // const { smartNavigate } = useCustomRouting()
-  // const token = useCookie(TOKEN_KEY)
   // const userStore = useUserStore()
+  // const token = useCookie(userStore.TOKEN_KEY)
 
   // // 有 token
   // if (token.value) {

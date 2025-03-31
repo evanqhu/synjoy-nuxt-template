@@ -1,5 +1,3 @@
-export const TOKEN_KEY = 'satoken'
-
 /** 充值链接 */
 export const chargeLink = 'https://aitopupex.com/products/recharge-your-creativity-with-pixel-ai-lab'
 

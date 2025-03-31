@@ -121,4 +121,6 @@ export default {
   [key: string]: WebConfig
 }
 
-export type WebConfig = typeof defaultConfig
+export type WebConfig = typeof defaultConfig & {
+  pixelTrackKey?: string
+}

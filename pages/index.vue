@@ -50,9 +50,9 @@ const { data: jokeData, status, refresh: refreshJoke } = useLazyAsyncData('joke'
       </button>
       <br>
       <div>isMobile: {{ isMobile }}</div>
-      <SvgIcon name="nuxt" size="2rem" />
+      <!-- <SvgIcon name="nuxt" size="2rem" /> -->
       <br>
-      <!-- <Icon name="local:nuxt" size="2rem" /> -->
+      <Icon name="icon:nuxt" size="2rem" />
       <!-- <br> -->
       <AdsbyGoogle :ads-attrs="adSense?.home_1" />
       <AdsbyGoogle :ads-attrs="adSense?.home_2" />
