@@ -8,14 +8,13 @@
 
 - 使用 ESLint 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module) 模块)
 - 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html) 模块)
-- 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 处理图标，封装 `SvgIcon` 组件
 - 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
 - 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
 - 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCustomDevice()` 响应式获取设备类型
 - 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块作为 UI 组件库
 - 封装 `AdsbyGoogle` 组件
 - 封装 `AdsbyExchange` 组件
-- 在服务器上使用中间件加载 `web-configs`，根据请求的 `host` 返回不同的网站配置，在服务端渲染时使用中间件加载网站配置，存储到 `Pinia` 中
+- 在服务器上使用中间件加载 `web-configs`，实现多域名适配
 - 在服务端使用中间件上报 header
 - 在 `app/router.options.ts` 中使用自定义路由 `path` ，实现分渠道路由
 - 封装 `useCustomRouting()` 扩展 `navigateTo()` 方法，实现携带渠道路径 `params` 参数和 `query` 参数跳转
@@ -38,15 +37,13 @@
 │   ├── logos/                         # Logo 资源
 │   └── styles/                        # 样式文件
 ├── components                         # 公共组件
-│   ├── AdsbyExchange.client.vue       # ADX 广告组件
-│   ├── AdsbyGoogle.client.vue         # AdSense 广告组件
-│   ├── BaseFooter.vue                 # 页脚组件
-│   ├── BaseHeader.vue                 # 页头组件
-│   └── SvgIcon.vue                    # 图标组件
+│   ├── Adsby/                         # 广告组件
+│   └── App/                           # 公共 Header 和 Footer 组件
 ├── composables                        # 组合式函数
 │   ├── useCustomDevice.ts             # 设备检测
 │   ├── useCustomRouting.ts            # 路由跳转
 │   ├── useFirebase.ts                 # Firebase 相关
+│   ├── useTikTokTrack.ts              # TikTok 统计
 │   └── useAdsClickListener.ts         # 广告点击监听
 ├── layouts                            # 布局组件
 │   └── default.vue                    # 默认布局
@@ -61,7 +58,6 @@
 │   ├── detail.vue                     # 详情页
 │   └── index.vue                      # 首页
 ├── plugins                            # 插件
-│   ├── svg-icon.ts                    # SVG 图标插件
 │   └── load-config.server.ts          # 服务端配置加载插件
 ├── public                             # 公共资源
 ├── server                             # 服务端
@@ -80,7 +76,6 @@
 ├── .env.development                   # 开发环境变量
 ├── .env.production                    # 生产环境变量
 ├── .env.stage                         # 测试环境变量
-├── app.config.ts                      # 应用配置
 ├── app.vue                            # 应用入口
 ├── error.vue                          # 错误页面
 ├── nuxt.config.ts                     # Nuxt 配置
@@ -96,35 +91,42 @@
 ### 脚本介绍
 
 ```yaml
-{
-  "scripts": {
-    # 启动开发服务器
-    "dev": "nuxi dev --dotenv .env.development --host",
-    # 开发环境打包并预览
-    "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
-    # 生产构建
-    "build": "nuxi build --dotenv .env.production",
-    # 开发构建
-    "build:dev": "nuxi build --dotenv .env.development",
-    # 测试构建
-    "build:stage": "nuxi build --dotenv .env.stage",
-    # 生成 .nuxt 文件夹
-    "prepare": "nuxi prepare",
-    # 预览 (需在打包后执行)
-    "preview": "nuxi preview",
-    # 生成静态文件 dist，用于部署在静态托管服务上
-    "generate": "nuxi generate",
-    # 服务器部署
-    "deploy": "PORT=5000 node .output/server/index.mjs",
-    "postinstall": "nuxi prepare",
-    "lint": "eslint .",
-    # 语法校验
-    "lint-fix": "eslint . --fix"
-  }
-}
+{ "scripts": {
+      # 启动开发服务器
+      "dev": "nuxi dev --dotenv .env.development --host",
+      # 开发环境打包并预览
+      "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
+      # 生产构建
+      "build": "nuxi build --dotenv .env.production",
+      # 开发构建
+      "build:dev": "nuxi build --dotenv .env.development",
+      # 测试构建
+      "build:stage": "nuxi build --dotenv .env.stage",
+      # 生成 .nuxt 文件夹
+      "prepare": "nuxi prepare",
+      # 预览 (需在打包后执行)
+      "preview": "nuxi preview",
+      # 生成静态文件 dist，用于部署在静态托管服务上
+      "generate": "nuxi generate",
+      # 服务器部署
+      "deploy": "PORT=5000 node .output/server/index.mjs",
+      # 语法校验
+      "lint": "eslint .",
+      # 语法校验并修复
+      "lint-fix": "eslint . --fix",
+    } }
 ```
 
 ### 环境变量
+
+公共环境变量 `.env`
+
+```ini
+# 公共环境变量
+
+# Google Client ID
+NUXT_GOOGLE_CLIENT_ID = '293705446569-aab2s9qtaue9022bvu4ddb45kgdpp0ml.apps.googleusercontent.com'
+```
 
 开发环境变量 `.env.development`
 
@@ -226,19 +228,23 @@ export const customFetch = $fetch.create({
     const runtimeConfig = useRuntimeConfig();
     options.baseURL = runtimeConfig.public.apiBase;
 
-    // 在服务端请求时，携带客户端的 cookie
-    const userAuth = useCookie(TOKEN_KEY); // 服务端可以读取到客户端的 cookie
+    // 在服务端请求时，通过自定义 header 传递 token
+    const { TOKEN_KEY } = useUserStore();
+    const userAuth = useCookie(TOKEN_KEY);
     if (userAuth.value) {
-      options.headers.set("cookie", `${TOKEN_KEY}=${userAuth.value}`);
+      options.headers.set(TOKEN_KEY, userAuth.value);
+      // options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
+      // Add Authorization header
+      // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
     }
   },
   // 响应拦截器
   onResponse({ response }) {
-    // console.log('🚀🚀🚀 response: ', response._data)
     if (!response.ok) {
-      console.error("请求失败", response._data);
-      return Promise.reject(new Error(`请求失败：${JSON.stringify(response._data)}`));
+      console.error("请求失败", response.statusText);
+      throw new Error(`请求错误：${response.status}`);
     }
+
     // 与后端约定的数据响应格式
     const { data, code, msg, success } = response._data;
 
@@ -253,6 +259,10 @@ export const customFetch = $fetch.create({
 
     // 通过修改 response._data 来修改响应数据
     response._data = data;
+
+    // 直接返回 data 不生效
+    // return data
+    // response._data = new myBusinessResponse(response._data)
   },
   // 响应错误拦截器
   onResponseError({ response }) {
@@ -340,7 +350,7 @@ export default defineEventHandler(async (event) => {
 
 ### 🎯 图标
 
-1️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件
+1️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (弃用 ⚠)
 
 参考：https://juejin.cn/post/7311895107530883081
 
@@ -438,9 +448,9 @@ const svgStyle = computed(() => {
 <SvgIcon name="nuxt" size="30" />
 ```
 
-2️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块
+2️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
 
-官方的 icon 解决方案，也比较推荐
+官方的 icon 解决方案
 
 1. 安装模块
 
@@ -452,9 +462,6 @@ npx nuxi module add icon
 
 ```typescript
 // nuxt.config.ts
-import path from "path";
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-
 export default defineNuxtConfig({
   /** 模块 */
   modules: ["@nuxt/icon"],
@@ -462,8 +469,12 @@ export default defineNuxtConfig({
   icon: {
     customCollections: [
       {
-        prefix: "local", // 配置本地 svg 的前缀
-        dir: "./assets/icons", // 配置本地 svg 的文件夹
+        prefix: "local",
+        dir: "./assets/icons",
+      },
+      {
+        prefix: "logo",
+        dir: "./assets/logos",
       },
     ],
   },
@@ -577,7 +588,7 @@ useHead(
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块配合自定义的 `useCustomDevice()` 来处理
 
-**自定义 useCustomDevice() **
+** 自定义 useCustomDevice() **
 
 原生的 [NuxtDevice](https://nuxt.com/modules/device) 模块返回的值不是响应式的，这里进行封装，增加响应式
 
@@ -637,77 +648,73 @@ const { isMobile } = useCustomDevice();
 `composables/useFirebase.ts`
 
 ```typescript
-import { getAnalytics, isSupported, logEvent } from 'firebase/analytics'
-import { initializeApp } from 'firebase/app'
+import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
 
 export const useFirebase = () => {
   // 定义默认的 log 和 track 函数
   const customLogEvent = shallowRef((eventName: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams)
-  })
+    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
+  });
   const customEventTrack = shallowRef((eventName: string, method: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams)
-  },
-  )
+    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams);
+  });
   // 仅客户端运行
   onBeforeMount(async () => {
     // 开发环境不运行 firebase
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       customLogEvent.value = (eventName: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams)
-      }
+        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams);
+      };
       customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams)
-      }
-    }
-    else {
-      const { webConfig } = useAppStore()
-      const firebaseConfig = webConfig.firebase || {}
+        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams);
+      };
+    } else {
+      const { webConfig } = useAppStore();
+      const firebaseConfig = webConfig.firebase || {};
 
       /** 初始化 Firebase */
       const initializeFirebase = () => {
-        const firebaseApp = initializeApp(firebaseConfig)
+        const firebaseApp = initializeApp(firebaseConfig);
 
         // 启用 Analytics
-        const analyticsInstance = getAnalytics(firebaseApp)
-        return analyticsInstance
-      }
+        const analyticsInstance = getAnalytics(firebaseApp);
+        return analyticsInstance;
+      };
 
       try {
-        await isSupported()
-        const analytics = initializeFirebase()
+        await isSupported();
+        const analytics = initializeFirebase();
 
         // 记录一个名为 "in_page" 的事件，表示用户进入页面
-        logEvent(analytics, 'in_page')
-        console.log('🚀🚀🚀 firebase analytics: ', 'in_page')
+        logEvent(analytics, "in_page");
+        console.log("🚀🚀🚀 firebase analytics: ", "in_page");
 
         customLogEvent.value = (eventName: string, eventParams = {}) => {
-          logEvent(analytics, eventName, eventParams)
-          console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        }
+          logEvent(analytics, eventName, eventParams);
+          console.log("🚀🚀🚀 firebase analytics: ", eventName);
+        };
         customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
           const _eventParams = {
             time: new Date(),
             message: eventName,
             method,
             ...eventParams,
-          }
-          logEvent(analytics, eventName, _eventParams)
-          console.log('🚀🚀🚀 firebase analytics: ', eventName)
-        }
-      }
-      catch (error) {
-        console.error('🚀🚀🚀 Firebase Analytics is not supported', error)
+          };
+          logEvent(analytics, eventName, _eventParams);
+          console.log("🚀🚀🚀 firebase analytics: ", eventName);
+        };
+      } catch (error) {
+        console.error("🚀🚀🚀 Firebase Analytics is not supported", error);
       }
     }
-  })
+  });
 
   return {
     customLogEvent,
     customEventTrack,
-  }
-}
-
+  };
+};
 ```
 
 使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
@@ -768,8 +775,10 @@ export default defineEventHandler((event) => {
 
 ```vue
 <!-- components/AdsbyGoogle.client.vue -->
+<!-- AdSense -->
+<!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
-const { $eventTrack } = useNuxtApp();
+const { customEventTrack } = useFirebase();
 const route = useRoute();
 const { webConfig } = useAppStore();
 
@@ -782,18 +791,25 @@ interface Props {
    * 自定义样式
    */
   customClass?: string;
+  /**
+   * 仅在某一端显示
+   */
+  only?: "pc" | "mobile";
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  adsAttrs: () => ({}),
-  customClass: "",
-});
+const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
+
+/** 设备类型 */
+const { isMobile } = useCustomDevice();
 
 /** ins 标签模板引用 */
-const adsenseRef = ref<HTMLElement>();
+const adsenseRef = useTemplateRef<HTMLElement>("adsense");
+
 /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
 const isShowAd = computed(() => {
-  return Object.keys(props.adsAttrs).includes("data-ad-slot");
+  const isOnlyPc = only === "pc" && !isMobile.value;
+  const isOnlyMobile = only === "mobile" && isMobile.value;
+  return Object.keys(adsAttrs).includes("data-ad-slot") && (isOnlyPc || isOnlyMobile || !only);
 });
 /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
 const isAdFilled = ref(true);
@@ -810,7 +826,7 @@ const adsAttrsFull = computed(() => {
       "data-full-width-responsive": "true",
       "data-ad-client": webConfig.adSense?.clientId,
     },
-    props.adsAttrs
+    adsAttrs
   );
 });
 
@@ -850,7 +866,7 @@ const showAd = async () => {
   await nextTick();
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
-    $eventTrack("load_ads", "expose");
+    customEventTrack.value("load_ads", "expose");
   } catch (error) {
     console.error(error);
   }
@@ -878,7 +894,7 @@ onBeforeUnmount(() => {
   <div v-if="isShowAd" class="ads-item">
     <div v-show="isAdFilled" class="ads-content" :class="customClass">
       <div class="ads-content-title">Advertisement</div>
-      <ins ref="adsenseRef" v-bind="adsAttrsFull" />
+      <ins ref="adsense" v-bind="adsAttrsFull" />
     </div>
     <div v-if="isShowDebug" class="ads-debug">
       {{ adsAttrsFull }}
@@ -888,6 +904,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .ads-item {
+  margin: 1rem 0;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -920,6 +937,10 @@ onBeforeUnmount(() => {
     &::after {
       margin-left: 15px;
     }
+  }
+
+  .adsbygoogle {
+    text-align: center;
   }
 }
 
@@ -1083,59 +1104,67 @@ export default defineNuxtConfig({
  * 自定义路由跳转方法，用于在路由跳转时保留当前 channel 参数和查询参数
  */
 // 定义路由参数类型
-import type { RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw } from "vue-router";
 
 export const useCustomRouting = () => {
-  const router = useRouter()
-  const { params, query } = router.currentRoute.value
-  const { channel } = params
-  const queryString = new URLSearchParams(query as Record<string, string>).toString()
-  const fullChannel = channel ? `/${channel}` : '' // /channel12
-  const fullQueryString = queryString ? `?${queryString}` : '' // ?db=1
+  const router = useRouter();
+  const { params, query } = router.currentRoute.value;
+  const { channel } = params;
+  const queryString = new URLSearchParams(query as Record<string, string>).toString();
+  const fullChannel = channel ? `/${channel}` : ""; // /channel12
+  const fullQueryString = queryString ? `?${queryString}` : ""; // ?db=1
 
   /** 路由跳转时携带 channel params 和 query 参数 */
   const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
     // 如果是字符串，则直接跳转
-    if (typeof to === 'string') {
-      const fullPath = `${fullChannel}${to}`
-      return navigateTo({
-        path: fullPath,
-        query,
-      }, options)
+    if (typeof to === "string") {
+      const fullPath = `${fullChannel}${to}`;
+      return navigateTo(
+        {
+          path: fullPath,
+          query,
+        },
+        options
+      );
     }
     // 如果是对象
     else {
-      if ('name' in to) {
-        return navigateTo({
-          ...to,
-          params,
-          query: {
-            ...to?.query,
-            ...query,
+      if ("name" in to) {
+        return navigateTo(
+          {
+            ...to,
+            params,
+            query: {
+              ...to?.query,
+              ...query,
+            },
           },
-        }, options)
-      }
-      else {
-        const fullPath = `${fullChannel}${to?.path}`
-        return navigateTo({
-          ...to,
-          path: fullPath,
-          query: {
-            ...to?.query,
-            ...query,
+          options
+        );
+      } else {
+        const fullPath = `${fullChannel}${to?.path}`;
+        return navigateTo(
+          {
+            ...to,
+            path: fullPath,
+            query: {
+              ...to?.query,
+              ...query,
+            },
           },
-        }, options)
+          options
+        );
       }
     }
-  }
+  };
 
   /** 获取包含 channel params 和 query 参数的跳转链接 */
   const getHref = (path: string) => {
-    return `${fullChannel}${path}${fullQueryString}`
-  }
+    return `${fullChannel}${path}${fullQueryString}`;
+  };
 
-  return { smartNavigate, getHref }
-}
+  return { smartNavigate, getHref };
+};
 ```
 
 ```vue
