@@ -5,6 +5,7 @@
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('render:html', (html, { event }) => {
     html.htmlAttrs.push('lang="en"')
+    // html.htmlAttrs.push('class="dark"')
     // console.log('🚀🚀🚀 event.context.config: ', event.context.config)
     // 设置 html 的 lang 属性
   })
