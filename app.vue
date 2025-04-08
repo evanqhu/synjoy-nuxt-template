@@ -12,10 +12,10 @@ const globalScripts = loadGlobalScripts(webConfig) // 全局脚本
 
 useSeoMeta({
   title: webConfig.webTitle,
-  titleTemplate: '%s | ' + webConfig.webTitleTemplate,
-  description: webConfig.webDescription,
+  titleTemplate: '%s | ' + webConfig.metaTitleTemplate,
+  description: webConfig.metaDescription,
   ogTitle: webConfig.webTitle,
-  ogDescription: webConfig.webDescription,
+  ogDescription: webConfig.metaDescription,
 })
 
 useHead({

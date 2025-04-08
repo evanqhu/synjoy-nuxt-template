@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-definePageMeta({
-  // path: '/:channel(channel[1-9]\\d?)?/detail',
+useSeoMeta({
+  title: 'Detail',
 })
 
 // 防止出现水合错误

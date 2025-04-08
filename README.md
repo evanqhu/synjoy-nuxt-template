@@ -544,10 +544,10 @@ export default defineNuxtConfig({
 /** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
 useSeoMeta({
   title: webConfig.webTitle,
-  titleTemplate: "%s | " + webConfig.webTitleTemplate,
-  description: webConfig.webDescription,
+  titleTemplate: "%s | " + webConfig.metaTitleTemplate,
+  description: webConfig.metaDescription,
   ogTitle: webConfig.webTitle,
-  ogDescription: webConfig.webDescription,
+  ogDescription: webConfig.metaDescription,
 });
 
 useHead(

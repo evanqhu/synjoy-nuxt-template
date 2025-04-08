@@ -4,9 +4,9 @@ const defaultConfig = {
   // 网站标题
   webTitle: 'App Title',
   // 网站标题模板
-  webTitleTemplate: 'Title Template',
+  metaTitleTemplate: 'Title Template',
   // 网站描述 meta description
-  webDescription: 'This is a description for the web app',
+  metaDescription: 'This is a description for the web app',
   // 网站邮箱
   webEmail: 'web-email.support@gmail.com',
   // 网站地址
@@ -65,8 +65,8 @@ const defaultConfig = {
 
 const defaultConfig2 = {
   webTitle: 'App2 Title',
-  webTitleTemplate: 'Title2 Template',
-  webDescription: 'This is a description for the web2 app',
+  metaTitleTemplate: 'Title2 Template',
+  metaDescription: 'This is a description for the web2 app',
   webEmail: 'web2-email.support@gmail.com',
   webUrl: 'templateweb2.com',
   webLogo: 'logo2',
