@@ -62,31 +62,17 @@ body {
   // 法律相关页面样式
   .legal-page {
     .app-content {
-      padding: 2rem;
+      padding: 2rem 0;
       display: flex;
       flex-direction: column;
 
-      .legal-title {
-        font-size: 1.5rem;
-        font-weight: 700;
+      h2 {
         margin-bottom: 1rem;
-        line-height: 1;
       }
 
-      .term-list {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-
-        .term-item {
-          .term-title {
-            margin-bottom: 0.5rem;
-          }
-
-          ul {
-            padding-inline-start: 2rem;
-          }
-        }
+      h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
       }
     }
 
