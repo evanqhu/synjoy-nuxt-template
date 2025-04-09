@@ -8,9 +8,9 @@ useSeoMeta({
 })
 
 const { webConfig } = useAppStore()
-// {{ webConfig.webUrl }}
-// {{ capitalizeFirstLetter(webConfig.webUrl) }}
-// <a :href="`mailto:${webConfig.webEmail}`" class="mail">{{ webConfig.webEmail }}</a>
+// ${webConfig.webUrl}
+// ${capitalizeFirstLetter(webConfig.webUrl)}
+// [${webConfig.webEmail}](mailto:${webConfig.webEmail})
 const content = ref(`
 ## Privacy Policy
 Welcome to ${webConfig.webUrl}. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions.
