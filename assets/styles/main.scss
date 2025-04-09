@@ -74,11 +74,11 @@ body {
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
       }
-    }
 
-    .mail {
-      text-decoration: underline;
-      color: $theme-color;
+      a {
+        text-decoration: underline;
+        color: $theme-color;
+      }
     }
 
     @media screen and (max-width: 768px) {
