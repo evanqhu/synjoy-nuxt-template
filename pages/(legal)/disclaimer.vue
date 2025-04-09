@@ -8,35 +8,22 @@ useSeoMeta({
 })
 
 const { webConfig } = useAppStore()
-// ${webConfig.webUrl}
-// ${capitalizeFirstLetter(webConfig.webUrl)}
-// [${webConfig.webEmail}](mailto:${webConfig.webEmail})
+
 const content = ref(`
 ## Disclaimer
-Welcome to ${webConfig.webUrl}. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions.
+Welcome to ${webConfig.webUrl}. Please read this disclaimer carefully.
 
-### 1. Acceptance of Terms
-By accessing our site, you agree to these Terms of Service. If you do not agree, please do not use our services.
+### 1. Third-Party Data
+The data and information provided on our site come from third-party services. We strive for accuracy but cannot guarantee the completeness or reliability of third-party content.
 
-### 2. Use of the Site
-You agree to use the site for lawful purposes only and in a way that does not infringe the rights of others or restrict their use and enjoyment of the site.
+### 2. No Downloads
+We do not offer downloads of any games. Our site serves as a platform for information and entertainment purposes only.
 
-### 3. User Accounts
-You may need to create an account to access certain features. You are responsible for maintaining the confidentiality of your account information.
+### 3. No Infringement
+We do not support or facilitate any infringement of intellectual property rights. If you believe your rights have been violated, please contact us immediately.
 
-### 4. Content Ownership
-All content on the site, including games and graphics, is owned by GamesFunPlay.com or our licensors. Unauthorized use is prohibited.
-
-### 5. Limitation of Liability
-GamesFunPlay.com is not liable for any damages arising from the use of our site or services.
-
-### 6. Changes to Terms
-We reserve the right to modify these terms at any time. Continued use of the site signifies acceptance of any changes.
-
-### 7. Contact Us
-- lorem lorem
-- lorem lorem
-- lorem lorem
+### 4. Contact Us
+For any concerns or issues, please reach out to us at [${webConfig.webEmail}](mailto:${webConfig.webEmail}).
 `)
 
 const compiledMarkdown = computed(() => {

@@ -1,4 +1,4 @@
-<!-- 隐私协议 -->
+<!-- 服务条款 -->
 <script setup lang="ts">
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
@@ -8,35 +8,31 @@ useSeoMeta({
 })
 
 const { webConfig } = useAppStore()
-// ${webConfig.webUrl}
-// ${capitalizeFirstLetter(webConfig.webUrl)}
-// [${webConfig.webEmail}](mailto:${webConfig.webEmail})
+
 const content = ref(`
 ## Privacy Policy
-Welcome to ${webConfig.webUrl}. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions.
+Welcome to ${webConfig.webUrl}. Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information.
 
-### 1. Acceptance of Terms
-By accessing our site, you agree to these Terms of Service. If you do not agree, please do not use our services.
+### 1. Information We Collect
+We only collect information that you voluntarily provide when creating an account or contacting us. This may include your name and email address.
 
-### 2. Use of the Site
-You agree to use the site for lawful purposes only and in a way that does not infringe the rights of others or restrict their use and enjoyment of the site.
+### 2. Use of Information
+We use your information to enhance your experience on our site, respond to inquiries, and provide customer support.
 
-### 3. User Accounts
-You may need to create an account to access certain features. You are responsible for maintaining the confidentiality of your account information.
+### 3. No Cookies
+We do not use cookies or any tracking technologies to collect information about your browsing activities.
 
-### 4. Content Ownership
-All content on the site, including games and graphics, is owned by GamesFunPlay.com or our licensors. Unauthorized use is prohibited.
+### 4. Data Security
+We implement security measures to protect your personal information from unauthorized access or disclosure.
 
-### 5. Limitation of Liability
-GamesFunPlay.com is not liable for any damages arising from the use of our site or services.
+### 5. Third-Party Services
+We do not share your information with third parties except as required by law.
 
-### 6. Changes to Terms
-We reserve the right to modify these terms at any time. Continued use of the site signifies acceptance of any changes.
+### 6. Changes to This Policy
+We may update this Privacy Policy from time to time. Any changes will be posted on this page.
 
 ### 7. Contact Us
-- lorem lorem
-- lorem lorem
-- lorem lorem
+If you have questions about this Privacy Policy, please contact us at [${webConfig.webEmail}](mailto:${webConfig.webEmail}).
 `)
 
 const compiledMarkdown = computed(() => {
