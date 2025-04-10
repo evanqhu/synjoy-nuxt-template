@@ -195,7 +195,9 @@ const handleLogout = async () => {
       align-items: center;
       gap: 1.25rem;
       border-radius: 1rem;
-      @include hover($bg: #ebe5f7);
+      @include hover {
+        background: #ebe5f7;
+      };
 
       &.active {
         color: #fff;

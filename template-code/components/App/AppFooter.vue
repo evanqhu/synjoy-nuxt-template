@@ -93,7 +93,9 @@ $pc-margin: calc((100% - $container-width) / 2);
   .resource,
   .contact {
     .footer__section__content {
-      @include hover($color: $text-color);
+      @include hover {
+        color: $text-color;
+      };
     }
   }
 
