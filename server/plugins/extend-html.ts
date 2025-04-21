@@ -4,10 +4,15 @@
  */
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('render:html', (html, { event }) => {
+    // 设置 html 的 lang 属性
     html.htmlAttrs.push('lang="en"')
     // html.htmlAttrs.push('class="dark"')
     // console.log('🚀🚀🚀 event.context.config: ', event.context.config)
-    // 设置 html 的 lang 属性
+    // 注入 adScore 脚本
+    const config = event.context.config
+    if (config?.adScore) {
+      html.head.push(config.adScore)
+    }
   })
   // // You can also intercept the response here.
   // nitroApp.hooks.hook('render:response', (response, { event }) => {
