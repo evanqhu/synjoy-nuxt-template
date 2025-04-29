@@ -27,22 +27,25 @@ export const useCustomRouting = () => {
       if ('name' in to) {
         return navigateTo({
           ...to,
-          params,
+          params: {
+            ...params,
+            ...to?.params,
+          },
           query: {
-            ...to?.query,
             ...query,
+            ...to?.query,
           },
         }, options)
       }
       else {
         const fullPath = `${fullChannel}${to?.path}`
         return navigateTo({
-          ...to,
           path: fullPath,
           query: {
             ...to?.query,
             ...query,
           },
+          ...to,
         }, options)
       }
     }

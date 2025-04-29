@@ -61,6 +61,14 @@ const defaultConfig = {
   },
   // TikTok Pixel (不存在时值设为空字符串)
   pixelTrackKey: '1234567890',
+  adScore: `
+    <script 
+      async 
+      src="//c.adsco.re" 
+      type="text/javascript" 
+      onload='AdscoreInit("QiU9AwAAAAAAp492dOvJyheQIhXKZEU1pnhHoro", 
+      {sub_id: "pixeltripai.com",async_callback: 1});'>
+    </script>`,
 }
 
 const defaultConfig2 = {
@@ -121,6 +129,7 @@ export default {
   [key: string]: WebConfig
 }
 
-export type WebConfig = typeof defaultConfig & {
+export type WebConfig = Omit<typeof defaultConfig, 'adScore' | 'pixelTrackKey'> & {
   pixelTrackKey?: string
+  adScore?: string
 }
