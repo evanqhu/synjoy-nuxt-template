@@ -8,6 +8,7 @@ declare global {
     ttq: any
     google: any
     googleCallback: any
+    fbq: any
   }
 
   type WebConfig = ConfigType

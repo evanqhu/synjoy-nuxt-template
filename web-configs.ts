@@ -61,6 +61,7 @@ const defaultConfig = {
   },
   // TikTok Pixel (不存在时值设为空字符串)
   pixelTrackKey: '1234567890',
+  fbq: '',
   adScore: `
     <script 
       async 
@@ -129,7 +130,8 @@ export default {
   [key: string]: WebConfig
 }
 
-export type WebConfig = Omit<typeof defaultConfig, 'adScore' | 'pixelTrackKey'> & {
+export type WebConfig = Omit<typeof defaultConfig, 'adScore' | 'pixelTrackKey' | 'fbq'> & {
   pixelTrackKey?: string
   adScore?: string
+  fbq?: string
 }

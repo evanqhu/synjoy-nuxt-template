@@ -8,6 +8,7 @@ export const useTikTokTrack = () => {
     console.log('🚀🚀🚀 TikTok Track')
     if (!window.ttq) {
       console.error('TikTok Pixel Track is not supported.')
+      return
     }
     window.ttq.track('ClickButton', {
       value: '100', // number. Value of the order or items sold. Example: 100.

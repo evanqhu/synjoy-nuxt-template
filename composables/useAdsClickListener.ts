@@ -17,6 +17,7 @@ interface IframeObj {
 export const useAdsClickListener = () => {
   const { customEventTrack } = useFirebase()
   const ttTrack = useTikTokTrack()
+  const fbTrack = useFBTrack()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
@@ -71,6 +72,7 @@ export const useAdsClickListener = () => {
 
             // 3. TikTok 上报
             ttTrack(iframeObj.adSlot || '0000', 'click', 'ad_iframe_click')
+            fbTrack(iframeObj.adSlot || '0000')
           }
         })
       }
