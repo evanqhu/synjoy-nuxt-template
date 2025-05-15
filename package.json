@@ -45,5 +45,10 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^2.2.0"
   },
-  "packageManager": "pnpm@10.6.5"
+  "packageManager": "pnpm@10.6.5",
+  "pnpm": {
+    "overrides": {
+      "ipx": "^3.0.0"
+    }
+  }
 }
