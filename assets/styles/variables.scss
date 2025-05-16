@@ -1,5 +1,6 @@
 // 全局样式变量
 @use "./element.scss" as *;
+@use "sass:map";
 
 // px 转 rem
 @function rem($px, $base-font-size: 16) {
@@ -60,9 +61,9 @@ $breakPoints: (
 );
 
 @mixin responseTo($device: "mobile") {
-  $config: map-get($breakPoints, $device);
+  $config: map.get($breakPoints, $device);
   @if $config == null {
-    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map-keys($breakPoints)}";
+    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
   }
   @media screen and (max-width: $config) {
     @content;
