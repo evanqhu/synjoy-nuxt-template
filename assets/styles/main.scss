@@ -53,7 +53,7 @@ body {
 
   // 4. 网页内容 (设置版心宽度，水平居中)
   .app-content {
-    overflow: hidden;
+    // overflow: hidden;
     width: 100%;
     max-width: $container-width;
     margin: 0 auto;
