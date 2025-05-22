@@ -8,7 +8,9 @@ export default defineEventHandler(async (event) => {
   // console.info('🚀🚀🚀 event path: ', event.path)
   // console.info('🚀🚀🚀 event headers: ', JSON.stringify(event.headers))
   // Proxy url
-  const proxyUrl = process.env.DEV_PROXY_URL || ''
+  const runtimeConfig = useRuntimeConfig()
+  const proxyUrl = runtimeConfig.public.apiBase || ''
+  // console.log('🚀🚀🚀 proxyUrl: ', proxyUrl)
 
   // check the path
   // 替换开头 的/api，用 正则表达式

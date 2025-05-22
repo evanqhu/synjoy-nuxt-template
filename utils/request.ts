@@ -12,8 +12,9 @@ export const customFetch = $fetch.create({
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径
-    const runtimeConfig = useRuntimeConfig()
-    options.baseURL = runtimeConfig.public.apiBase
+    // const runtimeConfig = useRuntimeConfig()
+    // options.baseURL = runtimeConfig.public.apiBase
+    options.baseURL = '/api'
 
     // 在服务端请求时，通过自定义 header 传递 token
     const { TOKEN_KEY } = useUserStore()

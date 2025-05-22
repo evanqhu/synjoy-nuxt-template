@@ -1,4 +1,4 @@
-FROM swr.ap-southeast-3.myhuaweicloud.com/shareit-common/nodejs-builder:v20.17.0
+FROM tencnet-ptc.tencentcloudcr.com/tencent-ptc/nodejs-builder:v20.17.0
 # 设置工程目录名称
 
 WORKDIR /data/code
