@@ -1,14 +1,14 @@
 export const useTikTokTrack = () => {
   // 如果是服务端，则不执行
   if (import.meta.server) {
-    return () => { }
+    return () => {}
   }
 
   const ttTrack = (id?: number | string, type: string = 'expose', name: string = 'ad') => {
-    console.log('🚀🚀🚀 TikTok Track')
+    console.log('🚀🚀🚀 TikTok Track', id)
     if (!window.ttq) {
       console.error('TikTok Pixel Track is not supported.')
-      return
+      return () => {}
     }
     window.ttq.track('ClickButton', {
       value: '100', // number. Value of the order or items sold. Example: 100.
