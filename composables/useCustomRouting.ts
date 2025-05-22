@@ -52,8 +52,9 @@ export const useCustomRouting = () => {
   /** 获取包含 channel params 和 query 参数的跳转链接 */
   const getHref = (path: string) => {
     const fullChannel = route.params.channel ? `/${route.params.channel}` : '' // /channel12
-    const fullQueryString = new URLSearchParams(route.query as Record<string, string>).toString()
-    return `${fullChannel}${path}?${fullQueryString}`
+    const queryString = new URLSearchParams(route.query as Record<string, string>).toString()
+    const fullQueryString = queryString ? `?${queryString}` : ''
+    return `${fullChannel}${path}${fullQueryString}`
   }
 
   return { smartNavigate, getHref }
