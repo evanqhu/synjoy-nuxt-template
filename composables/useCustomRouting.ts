@@ -5,21 +5,18 @@
 import type { RouteLocationRaw } from 'vue-router'
 
 export const useCustomRouting = () => {
-  const router = useRouter()
-  const { params, query } = router.currentRoute.value
-  const { channel } = params
-  const queryString = new URLSearchParams(query as Record<string, string>).toString()
-  const fullChannel = channel ? `/${channel}` : '' // /channel12
-  const fullQueryString = queryString ? `?${queryString}` : '' // ?db=1
+  const route = useRoute()
 
   /** 路由跳转时携带 channel params 和 query 参数 */
   const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : '' // /channel12
+
     // 如果是字符串，则直接跳转
     if (typeof to === 'string') {
       const fullPath = `${fullChannel}${to}`
       return navigateTo({
         path: fullPath,
-        query,
+        query: route.query,
       }, options)
     }
     // 如果是对象
@@ -28,24 +25,25 @@ export const useCustomRouting = () => {
         return navigateTo({
           ...to,
           params: {
-            ...params,
+            ...route.params,
             ...to?.params,
           },
           query: {
-            ...query,
+            ...route.query,
             ...to?.query,
           },
         }, options)
       }
       else {
-        const fullPath = `${fullChannel}${to?.path}`
+        const { path, query, ...rest } = to
+        const fullPath = `${fullChannel}${path}`
         return navigateTo({
           path: fullPath,
           query: {
-            ...to?.query,
             ...query,
+            ...route.query,
           },
-          ...to,
+          ...rest,
         }, options)
       }
     }
@@ -53,7 +51,9 @@ export const useCustomRouting = () => {
 
   /** 获取包含 channel params 和 query 参数的跳转链接 */
   const getHref = (path: string) => {
-    return `${fullChannel}${path}${fullQueryString}`
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : '' // /channel12
+    const fullQueryString = new URLSearchParams(route.query as Record<string, string>).toString()
+    return `${fullChannel}${path}?${fullQueryString}`
   }
 
   return { smartNavigate, getHref }
