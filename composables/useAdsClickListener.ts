@@ -93,7 +93,7 @@ export const useAdsClickListener = () => {
             && node.closest('ins.adsbygoogle')
             && node.style.display !== 'none'
           ) {
-            console.log('🚀🚀🚀 有广告 iframe 插入', node, node.closest('ins.adsbygoogle'))
+            // console.log('🚀🚀🚀 有广告 iframe 插入', node, node.closest('ins.adsbygoogle'))
             // 2. 在检测到广告 iframe 插入后，调用 setupIframeTracking
             setupIframeTracking(
               node,
