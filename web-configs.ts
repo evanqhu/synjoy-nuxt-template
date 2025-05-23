@@ -75,60 +75,8 @@ const defaultConfig = {
     </script>`,
 }
 
-const defaultConfig2 = {
-  webTitle: 'App2 Title',
-  metaTitleTemplate: 'Title2 Template',
-  metaDescription: 'This is a description for the web2 app',
-  webEmail: 'web2-email.support@gmail.com',
-  webUrl: 'templateweb2.com',
-  webLogo: 'logo2',
-  homeTemplate: '1',
-  aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
-  firebase: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-    measurementId: '',
-  },
-  adSense: {
-    clientId: 'ca-google',
-    ads: 'template ads.txt',
-    home_1: { 'data-ad-slot': '123456789' },
-    home_2: { 'data-ad-slot': '987654321' },
-  },
-  adExchange: {
-    home_1: {
-      index: 'ad1',
-      headScript: `<script>
-        window.googletag = window.googletag || { cmd: [] };
-
-        googletag.cmd.push(() => {
-          googletag
-            .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
-            .addService(googletag.pubads());
-
-          googletag.enableServices();
-        });
-      </script>`,
-      bodyScript: `<div id="banner-ad" style="width: 300px; height: 250px">
-        <script>
-          googletag.cmd.push(() => {
-            googletag.display("banner-ad");
-          });
-        </script>
-      </div>`,
-    },
-    home_2: { index: 'ad2', headScript: '', bodyScript: '' },
-  },
-  pixelTrackKey: '',
-}
-
 export default {
-  'localhost': defaultConfig,
-  '127.0.0.1': defaultConfig2,
+  localhost: defaultConfig,
 } as {
   [key: string]: WebConfig
 }

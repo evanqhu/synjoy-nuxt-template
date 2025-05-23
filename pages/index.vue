@@ -45,7 +45,6 @@ const { data: jokeData, status, refresh: refreshJoke } = useLazyAsyncData('joke'
       <AdsbyExchange :ads-attrs="adExchange?.home_1" />
       <!-- <br> -->
       <NuxtImg src="https://image.lexica.art/sm2_webp/58cd23b6-723a-4451-91c0-b88456f72a88" loading="lazy" />
-      <img src="~/assets/images/vite.jpg" alt="">
       <NuxtImg src="/images/vite.jpg" loading="lazy" />
     </div>
   </div>
