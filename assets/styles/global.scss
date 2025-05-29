@@ -1,0 +1,159 @@
+@use "./element.scss" as *;
+@use "./reset.css" as *;
+@use "./fonts.scss" as *;
+@use "sass:map";
+
+// 全局变量
+$theme-color: #3d00b7; // 主题色
+$header-height: 4rem; // header 高度
+$device-point: 768px; // 移动端和 PC 端分界点
+$container-width: 1200px; // 版心宽度
+$gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%); // 渐变色
+
+// 鼠标悬浮样式
+@mixin hover {
+  @media (pointer: fine) {
+    cursor: pointer; // 鼠标变成小手
+    -webkit-tap-highlight-color: transparent; // 取消移动端点击样式
+    transition: all 0.3s ease; // 添加平滑过渡
+
+    &:hover {
+      @content; // 插入自定义样式内容，相当于"插槽"机制
+    }
+  }
+}
+
+// 省略号
+@mixin ellipsis($lines: 1) {
+  @if $lines == 1 {
+    // 单行省略号
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  } @else {
+    // 多行省略号
+    display: -webkit-box;
+    line-clamp: $lines;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// 媒体查询
+$breakPoints: (
+  "mobile": $device-point,
+  // 'tablet': 992px,
+  // 'desktop': 1200px,,,,,,,
+);
+
+@mixin responseTo($device: "mobile") {
+  $config: map.get($breakPoints, $device);
+  @if $config == null {
+    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
+  }
+  @media screen and (max-width: $config) {
+    @content;
+  }
+}
+
+:root {
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    // font-family: 'DM Sans';
+  }
+
+  // 0. __nuxt 容器
+  #__nuxt {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  // 1. 布局容器
+  // .default-layout {
+  //   width: 100%;
+  //   // height: 100%;
+  // }
+
+  // 2. 网页主体容器 (header 和 footer 中间部分)
+  // .app-main {
+  //   width: 100%;
+  //   height: 100%;
+  //   padding-top: $header-height;
+  // }
+
+  // 3. 网页内容容器 (设置左右 padding 1rem，防止内容贴边，但不影响设置背景图)
+  .app-content-wrapper {
+    // overflow: hidden;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  // 4. 网页内容 (设置版心宽度，水平居中)
+  .app-content {
+    // overflow: hidden;
+    width: 100%;
+    max-width: $container-width;
+    margin: 0 auto;
+  }
+
+  // 法律相关页面样式
+  .legal-page {
+    .app-content {
+      padding: 2rem 0;
+      display: flex;
+      flex-direction: column;
+
+      h2 {
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      a {
+        text-decoration: underline;
+        color: $theme-color;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+    }
+  }
+
+  // 对于内容较少的页面，内容高度铺不满网页高度，可以进行如下的处理
+  .full-height {
+    min-height: calc(100vh - $header-height);
+    display: flex;
+    flex-direction: column;
+  }
+
+  // 省略号
+  .ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+:root {
+  --bg-color: #fff;
+  --text-color: #213547;
+}
+
+.dark-mode {
+  --bg-color: #1a1a1a;
+  --text-color: #e2e8f0;
+}
+
+// 隐藏滚动条
+*,
+*::before,
+*::after {
+  scrollbar-width: none;
+}

@@ -230,7 +230,7 @@ const handleLogout = async () => {
 
       .list-item {
         height: 3rem;
-        font-size: rem(14);
+        font-size: 14px;
         padding-left: 0.75rem;
         border-radius: 0.5rem;
       }

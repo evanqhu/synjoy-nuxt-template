@@ -1,13 +1,28 @@
 // 覆盖 element 样式
 
-// @forward 'element-plus/theme-chalk/src/common/var.scss' with (
-//   $colors: (
-//     'primary': (
-//       'base': #3D00B7,
-//     ),
-//   )
-// );
+// SCSS 变量
+$theme-color: #00599d;
+
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      "base": $theme-color,
+    ),
+  )
+);
 
 :root {
+  .el-rate {
+    height: 0.875rem;
+    .el-rate__icon {
+      margin-right: 0;
+      svg {
+        max-width: none;
+      }
+    }
+  }
 
+  .el-button + .el-button {
+    margin-left: 0;
+  }
 }

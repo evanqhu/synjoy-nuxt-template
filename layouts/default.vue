@@ -1,6 +1,6 @@
 <!-- 默认布局 -->
 <template>
-  <div class="default-layout">
+  <div>
     <AppHeader />
     <main class="app-main">
       <slot />
@@ -10,4 +10,7 @@
 </template>
 
 <style lang="scss" scoped>
+.app-main {
+  padding-top: $header-height;
+}
 </style>
