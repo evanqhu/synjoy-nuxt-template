@@ -30,11 +30,8 @@ useHead({
 </script>
 
 <template>
-  <NuxtLoadingIndicator />
+  <NuxtLoadingIndicator color="var(--theme-color)" />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>
-
-<style lang="scss">
-</style>

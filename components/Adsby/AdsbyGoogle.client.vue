@@ -115,14 +115,27 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="isShowAd" class="ads-item">
-    <div v-show="isAdFilled" class="ads-content" :class="customClass">
+  <div
+    v-if="isShowAd"
+    class="ads-item"
+  >
+    <div
+      v-show="isAdFilled"
+      class="ads-content"
+      :class="customClass"
+    >
       <div class="ads-content-title">
         Advertisement
       </div>
-      <ins ref="adsense" v-bind="adsAttrsFull" />
+      <ins
+        ref="adsense"
+        v-bind="adsAttrsFull"
+      />
     </div>
-    <div v-if="isShowDebug" class="ads-debug">
+    <div
+      v-if="isShowDebug"
+      class="ads-debug"
+    >
       {{ adsAttrsFull }}
     </div>
   </div>

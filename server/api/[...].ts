@@ -1,12 +1,9 @@
 /**
- * 用于本地开发环境代理
+ * 所有请求都通过服务端进行转发
  */
 import { joinURL } from 'ufo'
 
 export default defineEventHandler(async (event) => {
-  // console.info('🚀🚀🚀 event method: ', event.method)
-  // console.info('🚀🚀🚀 event path: ', event.path)
-  // console.info('🚀🚀🚀 event headers: ', JSON.stringify(event.headers))
   // Proxy url
   const runtimeConfig = useRuntimeConfig()
   const proxyUrl = runtimeConfig.public.apiBase || ''

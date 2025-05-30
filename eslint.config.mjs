@@ -17,7 +17,7 @@ export default withNuxt(
       // Vue 属性换行
       'vue/max-attributes-per-line': ['warn', {
         singleline: {
-          max: 3,
+          max: 1,
         },
         multiline: {
           max: 1,

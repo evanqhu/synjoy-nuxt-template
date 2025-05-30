@@ -45,15 +45,12 @@ const compiledMarkdown = computed(() => {
 </script>
 
 <template>
-  <div class="legal-page">
-    <div class="app-content-wrapper">
-      <div class="app-content">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="compiledMarkdown" />
-      </div>
+  <div class="app-wrapper">
+    <div class="app-content py-8">
+      <div
+        class="legal-content"
+        v-html="compiledMarkdown"
+      />
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-</style>
