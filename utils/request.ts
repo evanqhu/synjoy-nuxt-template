@@ -5,33 +5,16 @@ export type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'ge
 
 /** 自定义封装 $fetch 方法 */
 export const customFetch = $fetch.create({
+  // 设置请求根路径
+  baseURL: '/api',
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
-  // 默认 omit 不发送，与后端商量好了，不通过 cookie 携带 token，而是通过其他的 header
-  // credentials: 'include',
   // 请求拦截器
-  onRequest({ options }) {
-    // 设置请求根路径
-    // const runtimeConfig = useRuntimeConfig()
-    // options.baseURL = runtimeConfig.public.apiBase
-    options.baseURL = '/api'
-
-    // 在服务端请求时，通过自定义 header 传递 token
-    const { TOKEN_KEY } = useUserStore()
-    const userAuth = useCookie(TOKEN_KEY)
-    if (userAuth.value) {
-      options.headers.set(TOKEN_KEY, userAuth.value)
-      // options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
-      // Add Authorization header
-      // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
-    }
-
-    // 也可使用 useRequestHeaders() 将客户端的 cookie 添加到服务端的请求头中
-    // const headers = useRequestHeaders(['cookie'])
-    // Object.entries(headers).forEach(([key, value]) => {
-    //   options.headers.set(key, value)
-    // })
-  },
+  // onRequest({ options }) {
+  //   const { webConfig } = useAppStore()
+  //   options.headers.set('home_template', '2')
+  //   options.headers.set('novel_template', webConfig.novelTemplate.toString())
+  // },
   // 响应拦截器
   onResponse({ response }) {
     if (!response.ok) {
@@ -53,10 +36,6 @@ export const customFetch = $fetch.create({
 
     // 通过修改 response._data 来修改响应数据
     response._data = data
-
-    // 直接返回 data 不生效
-    // return data
-    // response._data = new myBusinessResponse(response._data)
   },
   // 响应错误拦截器
   onResponseError({ response }) {

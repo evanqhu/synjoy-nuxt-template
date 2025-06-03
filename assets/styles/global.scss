@@ -10,54 +10,17 @@ $device-point: 768px; // 移动端和 PC 端分界点
 $container-width: 1200px; // 版心宽度
 $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%); // 渐变色
 
-// 鼠标悬浮样式
-@mixin hover {
-  @media (pointer: fine) {
-    cursor: pointer; // 鼠标变成小手
-    -webkit-tap-highlight-color: transparent; // 取消移动端点击样式
-    transition: all 0.3s ease; // 添加平滑过渡
-
-    &:hover {
-      @content; // 插入自定义样式内容，相当于"插槽"机制
-    }
-  }
+:root {
+  --bg-color: #fff;
+  --text-color: #213547;
 }
 
-// 省略号
-@mixin ellipsis($lines: 1) {
-  @if $lines == 1 {
-    // 单行省略号
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  } @else {
-    // 多行省略号
-    display: -webkit-box;
-    line-clamp: $lines;
-    -webkit-line-clamp: $lines;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.dark-mode {
+  --bg-color: #1a1a1a;
+  --text-color: #e2e8f0;
 }
 
-// 媒体查询
-$breakPoints: (
-  "mobile": $device-point,
-  // 'tablet': 992px,
-  // 'desktop': 1200px,,,,,,,
-);
-
-@mixin responseTo($device: "mobile") {
-  $config: map.get($breakPoints, $device);
-  @if $config == null {
-    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
-  }
-  @media screen and (max-width: $config) {
-    @content;
-  }
-}
-
+// 全局样式
 :root {
   body {
     background-color: var(--bg-color);
@@ -141,19 +104,55 @@ $breakPoints: (
   }
 }
 
-:root {
-  --bg-color: #fff;
-  --text-color: #213547;
-}
-
-.dark-mode {
-  --bg-color: #1a1a1a;
-  --text-color: #e2e8f0;
-}
-
 // 隐藏滚动条
 *,
 *::before,
 *::after {
   scrollbar-width: none;
+}
+
+// 鼠标悬浮样式
+@mixin hover {
+  @media (pointer: fine) {
+    cursor: pointer; // 鼠标变成小手
+    -webkit-tap-highlight-color: transparent; // 取消移动端点击样式
+    transition: all 0.3s ease; // 添加平滑过渡
+
+    &:hover {
+      @content; // 插入自定义样式内容，相当于"插槽"机制
+    }
+  }
+}
+
+// 省略号
+@mixin ellipsis($lines: 1) {
+  @if $lines == 1 {
+    // 单行省略号
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  } @else {
+    // 多行省略号
+    display: -webkit-box;
+    line-clamp: $lines;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// 媒体查询 (移动端优先)
+$breakPoints: (
+  "pc": $device-point,
+);
+
+@mixin responseTo($device: "pc") {
+  $config: map.get($breakPoints, $device);
+  @if $config == null {
+    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
+  }
+  @media screen and (min-width: $config) {
+    @content;
+  }
 }
