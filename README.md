@@ -1,4 +1,4 @@
-# Nuxt3 项目模板
+# Nuxt3 项目模板 (tailwindcss)
 
 ## 简介
 
@@ -6,16 +6,14 @@
 
 ### 功能配置
 
-- 使用 ESLint 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module) 模块)
-- 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html) 模块)
+- 使用 ESLint 和 Stylistic 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module))
+- 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html))
 - 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
 - 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
 - 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCustomDevice()` 响应式获取设备类型
-- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 模块作为 UI 组件库
-- 封装 `AdsbyGoogle` 组件
-- 封装 `AdsbyExchange` 组件
-- 在服务器上使用中间件加载 `web-configs`，实现多域名适配
-- 在服务端使用中间件上报 header
+- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 作为 UI 组件库
+- 封装 `AdsbyGoogle` 和 `AdsbyExchange` 组件
+- 在服务器使用中间件加载 `web-configs.ts`，实现多域名适配；实现上报 `Header` 和 `www` 重定向
 - 在 `app/router.options.ts` 中使用自定义路由 `path` ，实现分渠道路由
 - 封装 `useCustomRouting()` 扩展 `navigateTo()` 方法，实现携带渠道路径 `params` 参数和 `query` 参数跳转
 - 封装 `request()`，提供网络请求最佳实践
@@ -33,7 +31,6 @@
 │   └── router.options.ts              # 路由配置
 ├── assets                             # 静态资源
 │   ├── icons/                         # SVG 图标
-│   ├── images/                        # 图片资源
 │   ├── logos/                         # Logo 资源
 │   └── styles/                        # 样式文件
 ├── components                         # 公共组件
@@ -44,6 +41,7 @@
 │   ├── useCustomRouting.ts            # 路由跳转
 │   ├── useFirebase.ts                 # Firebase 相关
 │   ├── useTikTokTrack.ts              # TikTok 统计
+│   ├── useFBTrack.ts                  # Facebook 统计
 │   └── useAdsClickListener.ts         # 广告点击监听
 ├── layouts                            # 布局组件
 │   └── default.vue                    # 默认布局
@@ -58,12 +56,12 @@
 │   ├── detail.vue                     # 详情页
 │   └── index.vue                      # 首页
 ├── plugins                            # 插件
-│   └── load-config.server.ts          # 服务端配置加载插件
+│   └── load-config.server.ts          # 服务端的配置加载插件
 ├── public                             # 公共资源
 ├── server                             # 服务端
-│   ├── api/                           # 服务端 API，用于开发代理
-│   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报
-│   └── plugins/                       # 服务端插件
+│   ├── api/                           # 服务端 API，代理所有接口请求
+│   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报，www 重定向
+│   └── plugins/                       # 服务端插件，扩展 html
 ├── stores                             # 状态管理
 │   ├── app.ts                         # 应用状态
 │   └── user.ts                        # 用户状态
@@ -125,7 +123,7 @@
 # 公共环境变量
 
 # Google Client ID
-NUXT_GOOGLE_CLIENT_ID = '293705446569-aab2s9qtaue9022bvu4ddb45kgdpp0ml.apps.googleusercontent.com'
+NUXT_GOOGLE_CLIENT_ID = 'xxx.apps.googleusercontent.com'
 ```
 
 开发环境变量 `.env.development`
@@ -133,14 +131,8 @@ NUXT_GOOGLE_CLIENT_ID = '293705446569-aab2s9qtaue9022bvu4ddb45kgdpp0ml.apps.goog
 ```ini
 # 开发环境
 
-# 静态资源路径
-NUXT_APP_CDN_URL = ''
-
 # API 接口地址
-NUXT_PUBLIC_API_BASE = '/api'
-
-# 本地开发环境接口代理地址
-DEV_PROXY_URL = 'http://test.ptc-jupiter.ptc.sg2.api'
+NUXT_PUBLIC_API_BASE = 'https://api.test.com/'
 
 # 开发服务器端口号
 NUXT_PORT = 1024
@@ -151,26 +143,11 @@ NUXT_PORT = 1024
 ```ini
 # 生产环境
 
-# 静态资源路径
-NUXT_APP_CDN_URL = 'https://static.cdns.space/nuxt-template/'
-
 # API 接口地址
-NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
+NUXT_PUBLIC_API_BASE = 'https://api.prod.com/'
 
 # 是否删除控制台输出语句
 NUXT_DROP_CONSOLE = 'false'
-```
-
-测试环境变量 `.env.stage`
-
-```ini
-# 测试环境
-
-# 静态资源路径
-NUXT_APP_CDN_URL = 'https://static-test.cdns.space/nuxt-template/'
-
-# API 接口地址
-NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 ```
 
 ## 开发指南
@@ -179,23 +156,24 @@ NUXT_PUBLIC_API_BASE = 'https://jsonplaceholder.typicode.com'
 
 1. 所有样式文件存放在 `～/assets/styles` 文件夹下
 2. 在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 `<head>` 中，但是无法使用其中的变量
-3. 如果需要使用变量，可以在 vite 的 scss 中进行配置
-4. 在 `variables.scss` 中定义了一些变量和 mixin，全局可用
-5. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
-6. 全局公共样式写在 `main.scss` 中；公共 scss 变量写在 `variables.scss` 中；element ui 的样式覆盖写在 `element.scss` 中；字体引入写在 `fonts.scss` 中
+3. 如果需要使用变量，可以在 Vite 的 `scss` 中进行配置
+4. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
+5. 全局公共样式和变量写在 `global.scss` 中；Element UI 的样式覆盖写在 `element.scss` 中；字体引入写在 `fonts.scss` 中
+6. 该项目需要在 `nuxt.config.ts` 中通过 Vite 的 scss 配置引入 `element.scss`，再通过 css 配置引入 `global.scss`
+7. 在 `tailwind.config.ts` 中自定义样式配置
 
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
   /** 全局样式文件 */
-  css: ["~/assets/styles/main.scss"],
+  // css: ["~/assets/styles/main.scss"],
 
   /** Vite 配置 */
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "~/assets/styles/variables.scss" as *;', // 引入全局样式变量
+          additionalData: '@use "~/assets/styles/global.scss" as *;', // 引入全局样式
         },
       },
     },
@@ -204,6 +182,8 @@ export default defineNuxtConfig({
 ```
 
 ### 🎯 网络请求及本地开发代理
+
+> 项目统一要求，所有的接口请求都通过服务端进行代理转发
 
 1️⃣ 在 `utils/request.ts` 中封装自定义的请求方法，可设置 baseURL 和响应拦截器等
 
@@ -218,26 +198,16 @@ export type RequestParams = NitroFetchOptions<
 
 /** 自定义封装 $fetch 方法 */
 export const customFetch = $fetch.create({
+  // 设置请求根路径
+  baseURL: "/api",
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
-  // 默认 omit 不发送，与后端商量好了，不通过 cookie 携带 token，而是通过其他的 header
-  // credentials: 'include',
   // 请求拦截器
-  onRequest({ options }) {
-    // 设置请求根路径
-    const runtimeConfig = useRuntimeConfig();
-    options.baseURL = runtimeConfig.public.apiBase;
-
-    // 在服务端请求时，通过自定义 header 传递 token
-    const { TOKEN_KEY } = useUserStore();
-    const userAuth = useCookie(TOKEN_KEY);
-    if (userAuth.value) {
-      options.headers.set(TOKEN_KEY, userAuth.value);
-      // options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
-      // Add Authorization header
-      // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
-    }
-  },
+  // onRequest({ options }) {
+  //   const { webConfig } = useAppStore()
+  //   options.headers.set('home_template', '2')
+  //   options.headers.set('novel_template', webConfig.novelTemplate.toString())
+  // },
   // 响应拦截器
   onResponse({ response }) {
     if (!response.ok) {
@@ -323,10 +293,13 @@ export default defineNuxtConfig({
 
 5️⃣ 在组件中使用
 
-```vue
+```html
 <script setup lang="ts">
-/** 获取推荐列表 */
-const { data: recommendationListData } = useLazyAsyncData("recommendationList", api.defaultApi.fetchRecommendationList);
+  /** 获取推荐列表 */
+  const { data: recommendationListData } = useLazyAsyncData(
+    "recommendationList",
+    api.defaultApi.fetchRecommendationList
+  );
 </script>
 ```
 
@@ -336,119 +309,25 @@ const { data: recommendationListData } = useLazyAsyncData("recommendationList", 
 import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event) => {
-  // 1. 获取代理地址 这里只需要写开发环境的代理地址即可
-  const proxyUrl = process.env.DEV_PROXY_URL || "";
+  // Proxy url
+  const runtimeConfig = useRuntimeConfig();
+  const proxyUrl = runtimeConfig.public.apiBase || "";
+  // console.log('🚀🚀🚀 proxyUrl: ', proxyUrl)
 
-  // 2. 检查代理路径
+  // check the path
+  // 替换开头 的/api，用 正则表达式
   const path = event.path.replace(/^\/api/, "");
   const target = joinURL(proxyUrl, path);
+  // console.log('🚀🚀🚀 target: ', target)
 
-  // 3. 使用 proxyRequest 进行代理请求
+  // proxy it
   return proxyRequest(event, target);
 });
 ```
 
 ### 🎯 图标
 
-1️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (弃用 ⚠)
-
-参考：https://juejin.cn/post/7311895107530883081
-
-项目中推荐使用 `vite-plugin-svg-icons` 这个 vite 插件来实现 svg 雪碧图
-
-1. 安装插件
-
-```sh
-pnpm i vite-plugin-svg-icons -D
-```
-
-2. 在 `nuxt.config.ts` 中新增配置
-
-```typescript
-import path from "path";
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-
-export default defineNuxtConfig({
-  /** Vite 配置 */
-  vite: {
-    plugins: [
-      createSvgIconsPlugin({
-        // 指定需要缓存的图标文件夹
-        iconDirs: [path.resolve(process.cwd(), "assets/icons"), path.resolve(process.cwd(), "assets/logos")],
-      }),
-    ],
-  },
-});
-```
-
-3. 新建 nuxt 插件
-
-`plugins/svg-icon.ts`
-
-```typescript
-import SvgIcon from "~/components/SvgIcon/index.vue";
-import "virtual:svg-icons-register";
-
-export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.component("svg-icon", SvgIcon);
-});
-```
-
-4. 创建 `SvgIcon` 组件
-
-`components/SvgIcon.vue`
-
-```typescript
-<script lang="ts" setup>
-interface Props {
-  prefix?: string
-  name: string
-  size?: string | number
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  prefix: 'icon',
-})
-
-const symbolId = computed(() => `#${props.prefix}-${props.name}`)
-
-// 动态计算 size 样式
-const svgStyle = computed(() => {
-  if (!props.size) return {}
-
-  // 如果是 number，自动添加 'px' 单位；如果是 string，按用户输入解析
-  const sizeValue = typeof props.size === 'number' || /^[0-9]+$/.test(props.size) ? `${props.size}px` : props.size
-
-  return {
-    width: sizeValue,
-    height: sizeValue,
-  }
-})
-</script>
-
-<template>
-  <svg class="svg-icon" aria-hidden="true" :style="svgStyle">
-    <use :href="symbolId" />
-  </svg>
-</template>
-
-<style lang="scss" scoped>
-.svg-icon {
-  fill: currentColor;
-  overflow: hidden;
-}
-</style>
-```
-
-5. 使用
-
-```html
-<SvgIcon name="nuxt" size="2rem" />
-
-<SvgIcon name="nuxt" size="30" />
-```
-
-2️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
+1️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
 
 官方的 icon 解决方案
 
@@ -484,10 +363,14 @@ export default defineNuxtConfig({
 3. 使用
 
 ```html
-<Icon name="local:nuxt" size="2rem" />
+<Icon name="local:nuxt" size="2rem" /> <Icon name="logo:nuxt" size="2rem" />
 ```
 
 可以传 `size` `color` 等属性
+
+2️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (已弃用 ⚠)
+
+参考：https://juejin.cn/post/7311895107530883081
 
 ### 🎯 图片
 
@@ -530,11 +413,11 @@ export default defineNuxtConfig({
 
 > 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
 
-- src 必须是**绝对路径** (因此可以使用外部 url 图片地址)
-- 如果是相对路径，图片必须放在 **public** 文件夹下
-- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片，因此不建议在渲染本地图片时使用 `<NuxtImg/>`
+- `src` 必须是**绝对路径** (因此可以使用外部 `url` 图片地址)
+- 如果是相对路径，图片必须放在 `public` 文件夹下
+- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
 
-如果不把图片放在 public 下，建议直接使用 img 标签即可
+如果不把图片放在 `public` 下，建议直接使用 `img` 标签即可
 
 ### 🎯 元信息
 
@@ -566,29 +449,37 @@ useHead(
 
 ### 🎯 移动端适配
 
-移动端和 PC 端还是写在一起，用媒体查询写不同的样式，尽量使用 rem 单位，同时也提供了 `rem()` 函数，将 px 单位转换为 rem 单位
+使用媒体查询来区分 PC 端和移动端的样式；移动端和 PC 端分界点为 `768px`；样式移动端优先
 
-移动端和 PC 端 分界点为 768px
+```scss
+// 媒体查询 (移动端优先)
+$breakPoints: (
+  "pc": $device-point,
+);
 
-```vue
-<style lang="scss" scoped>
-// PC 端样式
-.home {
-  width: 100%;
-}
-
-// 移动端样式
-@media (max-width: 768px) {
-  .home {
-    width: 200px;
+@mixin responseTo($device: "pc") {
+  $config: map.get($breakPoints, $device);
+  @if $config == null {
+    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
+  }
+  @media screen and (min-width: $config) {
+    @content;
   }
 }
-</style>
+```
+
+```scss
+.home {
+  width: 200px;
+  @include responseTo("pc") {
+    width: 100%;
+  }
+}
 ```
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块配合自定义的 `useCustomDevice()` 来处理
 
-** 自定义 useCustomDevice() **
+** 自定义 `useCustomDevice()` **
 
 原生的 [NuxtDevice](https://nuxt.com/modules/device) 模块返回的值不是响应式的，这里进行封装，增加响应式
 
@@ -629,9 +520,9 @@ export const useCustomDevice = () => {
 
 使用 `useCustomDevice()` 返回的值是响应式的，切换页面大小时这个值会自动改变
 
-```vue
+```html
 <script setup lang="ts">
-const { isMobile } = useCustomDevice();
+  const { isMobile } = useCustomDevice();
 </script>
 
 <template>
@@ -773,121 +664,121 @@ export default defineEventHandler((event) => {
 
 封装一个 `AdsbyGoogle` 组件，在组件内的 `onMounted` 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
 
-```vue
+```html
 <!-- components/AdsbyGoogle.client.vue -->
 <!-- AdSense -->
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
-const { customEventTrack } = useFirebase();
-const route = useRoute();
-const { webConfig } = useAppStore();
+  const { customEventTrack } = useFirebase();
+  const route = useRoute();
+  const { webConfig } = useAppStore();
 
-interface Props {
-  /**
-   * 广告配置对象 data-ad-client data-ad-slot 等
-   */
-  adsAttrs?: object;
-  /**
-   * 自定义样式
-   */
-  customClass?: string;
-  /**
-   * 仅在某一端显示
-   */
-  only?: "pc" | "mobile";
-}
+  interface Props {
+    /**
+     * 广告配置对象 data-ad-client data-ad-slot 等
+     */
+    adsAttrs?: object;
+    /**
+     * 自定义样式
+     */
+    customClass?: string;
+    /**
+     * 仅在某一端显示
+     */
+    only?: "pc" | "mobile";
+  }
 
-const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
+  const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
 
-/** 设备类型 */
-const { isMobile } = useCustomDevice();
+  /** 设备类型 */
+  const { isMobile } = useCustomDevice();
 
-/** ins 标签模板引用 */
-const adsenseRef = useTemplateRef<HTMLElement>("adsense");
+  /** ins 标签模板引用 */
+  const adsenseRef = useTemplateRef<HTMLElement>("adsense");
 
-/** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
-const isShowAd = computed(() => {
-  const isOnlyPc = only === "pc" && !isMobile.value;
-  const isOnlyMobile = only === "mobile" && isMobile.value;
-  return Object.keys(adsAttrs).includes("data-ad-slot") && (isOnlyPc || isOnlyMobile || !only);
-});
-/** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
-const isAdFilled = ref(true);
-/** 是否进入调试模式 */
-const isShowDebug = ref(false);
+  /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
+  const isShowAd = computed(() => {
+    const isOnlyPc = only === "pc" && !isMobile.value;
+    const isOnlyMobile = only === "mobile" && isMobile.value;
+    return Object.keys(adsAttrs).includes("data-ad-slot") && (isOnlyPc || isOnlyMobile || !only);
+  });
+  /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
+  const isAdFilled = ref(true);
+  /** 是否进入调试模式 */
+  const isShowDebug = ref(false);
 
-/** 完整的广告位配置对象 */
-const adsAttrsFull = computed(() => {
-  return Object.assign(
-    {
-      class: "adsbygoogle",
-      style: "display:block",
-      "data-ad-format": "auto",
-      "data-full-width-responsive": "true",
-      "data-ad-client": webConfig.adSense?.clientId,
-    },
-    adsAttrs
-  );
-});
+  /** 完整的广告位配置对象 */
+  const adsAttrsFull = computed(() => {
+    return Object.assign(
+      {
+        class: "adsbygoogle",
+        style: "display:block",
+        "data-ad-format": "auto",
+        "data-full-width-responsive": "true",
+        "data-ad-client": webConfig.adSense?.clientId,
+      },
+      adsAttrs
+    );
+  });
 
-/** 创建一个 DOM 树变动观察器 */
-const observer = new MutationObserver((mutations) => {
-  // 遍历监听到的 DOM 变化
-  mutations.forEach((mutation) => {
-    const target = mutation.target as Element;
-    if (mutation.attributeName === "data-ad-status") {
-      console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
-      isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
+  /** 创建一个 DOM 树变动观察器 */
+  const observer = new MutationObserver((mutations) => {
+    // 遍历监听到的 DOM 变化
+    mutations.forEach((mutation) => {
+      const target = mutation.target as Element;
+      if (mutation.attributeName === "data-ad-status") {
+        console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
+        isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
+      }
+    });
+  });
+
+  /** 监视广告是否加载成功，来控制是否显示广告内容区 */
+  const observeAdStatus = async () => {
+    await nextTick();
+    /** ins 标签 DOM */
+    const ads = adsenseRef.value;
+    if (!ads) return;
+
+    // 观察 ins 标签的 data-ad-status 属性变化
+    observer.observe(ads, {
+      attributes: true, // 监听属性变动
+      attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
+    });
+
+    // 初始化检查
+    isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
+  };
+
+  /** 展示广告 */
+  const showAd = async () => {
+    if (!isShowAd.value) return;
+    // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
+    await nextTick();
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      customEventTrack.value("load_ads", "expose");
+    } catch (error) {
+      console.error(error);
     }
-  });
-});
+  };
 
-/** 监视广告是否加载成功，来控制是否显示广告内容区 */
-const observeAdStatus = async () => {
-  await nextTick();
-  /** ins 标签 DOM */
-  const ads = adsenseRef.value;
-  if (!ads) return;
-
-  // 观察 ins 标签的 data-ad-status 属性变化
-  observer.observe(ads, {
-    attributes: true, // 监听属性变动
-    attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
+  onMounted(async () => {
+    // 开启广告调试模式
+    if (route.query.db) {
+      isShowDebug.value = true;
+    }
+    observeAdStatus();
+    showAd();
   });
 
-  // 初始化检查
-  isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
-};
+  onActivated(() => {
+    showAd();
+  });
 
-/** 展示广告 */
-const showAd = async () => {
-  if (!isShowAd.value) return;
-  // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-  await nextTick();
-  try {
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
-    customEventTrack.value("load_ads", "expose");
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-onMounted(async () => {
-  // 开启广告调试模式
-  if (route.query.db) {
-    isShowDebug.value = true;
-  }
-  observeAdStatus();
-  showAd();
-});
-
-onActivated(() => {
-  showAd();
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-});
+  onBeforeUnmount(() => {
+    observer?.disconnect();
+  });
 </script>
 
 <template>
@@ -896,60 +787,58 @@ onBeforeUnmount(() => {
       <div class="ads-content-title">Advertisement</div>
       <ins ref="adsense" v-bind="adsAttrsFull" />
     </div>
-    <div v-if="isShowDebug" class="ads-debug">
-      {{ adsAttrsFull }}
-    </div>
+    <div v-if="isShowDebug" class="ads-debug">{{ adsAttrsFull }}</div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.ads-item {
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-weight: 400;
-  font-size: 16px;
-}
-
-.ads-content {
-  border-bottom: 1px solid #c6c6c6;
-  height: fit-content;
-
-  .ads-content-title {
+  .ads-item {
+    margin: 1rem 0;
     display: flex;
-    place-items: center;
-    font-size: 10px;
-    color: #999;
-    line-height: normal;
+    flex-direction: column;
+    width: 100%;
+    font-weight: 400;
+    font-size: 16px;
+  }
 
-    &::before,
-    &::after {
-      content: "";
-      flex: 1;
-      border-bottom: 1px solid #c6c6c6;
+  .ads-content {
+    border-bottom: 1px solid #c6c6c6;
+    height: fit-content;
+
+    .ads-content-title {
+      display: flex;
+      place-items: center;
+      font-size: 10px;
+      color: #999;
+      line-height: normal;
+
+      &::before,
+      &::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #c6c6c6;
+      }
+
+      &::before {
+        margin-right: 15px;
+      }
+
+      &::after {
+        margin-left: 15px;
+      }
     }
 
-    &::before {
-      margin-right: 15px;
-    }
-
-    &::after {
-      margin-left: 15px;
+    .adsbygoogle {
+      text-align: center;
     }
   }
 
-  .adsbygoogle {
-    text-align: center;
+  .ads-debug {
+    border: 2px solid red;
+    margin-bottom: 2px;
+    background-color: #ffe786;
+    color: #000;
   }
-}
-
-.ads-debug {
-  border: 2px solid red;
-  margin-bottom: 2px;
-  background-color: #ffe786;
-  color: #000;
-}
 </style>
 ```
 
@@ -1068,12 +957,12 @@ export default <RouterConfig>{
 
 旧方案：在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
 
-```vue
+```html
 <!-- pages/detail.vue -->
 <script setup lang="ts">
-definePageMeta({
-  path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
-});
+  definePageMeta({
+    path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
+  });
 </script>
 ```
 
@@ -1107,22 +996,19 @@ export default defineNuxtConfig({
 import type { RouteLocationRaw } from "vue-router";
 
 export const useCustomRouting = () => {
-  const router = useRouter();
-  const { params, query } = router.currentRoute.value;
-  const { channel } = params;
-  const queryString = new URLSearchParams(query as Record<string, string>).toString();
-  const fullChannel = channel ? `/${channel}` : ""; // /channel12
-  const fullQueryString = queryString ? `?${queryString}` : ""; // ?db=1
+  const route = useRoute();
 
   /** 路由跳转时携带 channel params 和 query 参数 */
   const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
+
     // 如果是字符串，则直接跳转
     if (typeof to === "string") {
       const fullPath = `${fullChannel}${to}`;
       return navigateTo(
         {
           path: fullPath,
-          query,
+          query: route.query,
         },
         options
       );
@@ -1133,24 +1019,28 @@ export const useCustomRouting = () => {
         return navigateTo(
           {
             ...to,
-            params,
+            params: {
+              ...route.params,
+              ...to?.params,
+            },
             query: {
+              ...route.query,
               ...to?.query,
-              ...query,
             },
           },
           options
         );
       } else {
-        const fullPath = `${fullChannel}${to?.path}`;
+        const { path, query, ...rest } = to;
+        const fullPath = `${fullChannel}${path}`;
         return navigateTo(
           {
-            ...to,
             path: fullPath,
             query: {
-              ...to?.query,
               ...query,
+              ...route.query,
             },
+            ...rest,
           },
           options
         );
@@ -1160,6 +1050,9 @@ export const useCustomRouting = () => {
 
   /** 获取包含 channel params 和 query 参数的跳转链接 */
   const getHref = (path: string) => {
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
+    const queryString = new URLSearchParams(route.query as Record<string, string>).toString();
+    const fullQueryString = queryString ? `?${queryString}` : "";
     return `${fullChannel}${path}${fullQueryString}`;
   };
 
@@ -1167,7 +1060,7 @@ export const useCustomRouting = () => {
 };
 ```
 
-```vue
+```html
 <script setup lang="ts">
 const { smartNavigate, getHref } = useCustomRouting()
 </script>
@@ -1219,7 +1112,7 @@ export default defineNuxtConfig({
 });
 ```
 
-```vue
+```html
 <!-- pages/privacy-policy.vue -->
 <script setup lang="ts">
 defineRouteRules({
