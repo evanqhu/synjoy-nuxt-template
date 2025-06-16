@@ -1,4 +1,3 @@
-/** 重定向 www 域名 */
 export default eventHandler((event) => {
   const host = getRequestHeader(event, 'host') || ''
 

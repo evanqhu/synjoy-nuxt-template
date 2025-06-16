@@ -1,16 +1,10 @@
 <!-- 默认布局 -->
 <template>
-  <div>
+  <div class="w-full">
     <AppHeader />
-    <main class="app-main">
+    <main class="w-full h-full pt-header">
       <slot />
     </main>
     <AppFooter />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.app-main {
-  padding-top: $header-height;
-}
-</style>

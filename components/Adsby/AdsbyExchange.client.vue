@@ -78,14 +78,26 @@ onActivated(() => {
 </script>
 
 <template>
-  <div v-if="isShowAd" class="ads-item">
-    <div class="ads-content" :class="customClass">
+  <div
+    v-if="isShowAd"
+    class="ads-item"
+  >
+    <div
+      class="ads-content"
+      :class="customClass"
+    >
       <div class="ads-content-title">
         Advertisement
       </div>
-      <div ref="adx" class="adsbyexchange" />
+      <div
+        ref="adx"
+        class="adsbyexchange"
+      />
     </div>
-    <div v-if="isShowDebug" class="ads-debug">
+    <div
+      v-if="isShowDebug"
+      class="ads-debug"
+    >
       {{ adsAttrs }}
     </div>
   </div>

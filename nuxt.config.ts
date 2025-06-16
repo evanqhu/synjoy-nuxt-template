@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxt/icon',
     '@element-plus/nuxt',
+    '@nuxtjs/tailwindcss',
+    'vue3-carousel-nuxt',
   ],
   /** 自动导入 */
   imports: {
@@ -21,7 +23,7 @@ export default defineNuxtConfig({
     cdnURL: process.env.NUXT_APP_CDN_URL, // 静态资源路径
   },
   /** 全局样式文件 */
-  // css: ['~/assets/styles/global.scss'],
+  css: ['~/assets/styles/global.scss'],
   /** 运行时变量 */
   runtimeConfig: {
     public: {
@@ -45,7 +47,9 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         // 引入全局样式变量
-        scss: { additionalData: '@use "~/assets/styles/global.scss" as *;' },
+        scss: {
+          additionalData: '@use "~/assets/styles/element.scss" as element;',
+        },
       },
     },
     server: {

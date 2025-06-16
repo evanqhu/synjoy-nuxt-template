@@ -1,6 +1,8 @@
 // 网站配置
 
 const defaultConfig = {
+  novelTemplate: 26,
+  homeSectionOrderIndex: 0,
   // 网站标题
   webTitle: 'App Title',
   // 网站标题模板
@@ -14,7 +16,6 @@ const defaultConfig = {
   // 网站 logo
   webLogo: 'logo1',
   // Reuqest header
-  homeTemplate: '1',
   // 关于我们
   aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
   // Firebase
@@ -29,12 +30,16 @@ const defaultConfig = {
   },
   // Google AdSense
   adSense: {
-    // NOTE 这里的 client 只需要写 script 中 client= 后面的内容（如：ca-pub-8158555231596181），千万不要写成全部的 URL
-    // 广告位信息只需要传递  slot 即可，其他的都在广告组件中给了默认值
     clientId: 'ca-google',
     ads: 'template ads.txt',
-    home_1: {},
-    home_2: { 'data-ad-slot': '987654321' },
+    home_1: { 'data-ad-slot': 'home_1' },
+    home_2: { 'data-ad-slot': 'home_2' },
+    home_3: { 'data-ad-slot': 'home_3' },
+    detail_1: { 'data-ad-slot': 'detail_1' },
+    detail_2: { 'data-ad-slot': 'detail_2' },
+    read_1: { 'data-ad-slot': 'read_1' },
+    list_1: { 'data-ad-slot': 'list_1' },
+    list_2: { 'data-ad-slot': 'list_2' },
   },
   // Google Ad Exchange
   adExchange: {
@@ -65,14 +70,14 @@ const defaultConfig = {
   // Facebook Track
   fbq: '',
   // AdScore
-  adScore: `
-    <script 
-      async 
-      src="//c.adsco.re" 
-      type="text/javascript" 
-      onload='AdscoreInit("QiU9AwAAAAAAp492dOvJyheQIhXKZEU1pnhHoro", 
-      {sub_id: "pixeltripai.com",async_callback: 1});'>
-    </script>`,
+  // adScore: `
+  //   <script
+  //     async
+  //     src="//c.adsco.re"
+  //     type="text/javascript"
+  //     onload='AdscoreInit("QiU9AwAAAAAAp492dOvJyheQIhXKZEU1pnhHoro",
+  //     {sub_id: "pixeltripai.com",async_callback: 1});'>
+  //   </script>`,
 }
 
 export default {
