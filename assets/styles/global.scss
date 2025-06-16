@@ -30,7 +30,7 @@ $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%); // 渐变色
 
   // 0. __nuxt 容器
   #__nuxt {
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
   }
 
@@ -91,7 +91,7 @@ $gradient: linear-gradient(135deg, #f5b919 0%, #bdf700 100%); // 渐变色
 
   // 对于内容较少的页面，内容高度铺不满网页高度，可以进行如下的处理
   .full-height {
-    min-height: calc(100vh - $header-height);
+    min-height: calc(100dvh - $header-height);
     display: flex;
     flex-direction: column;
   }
