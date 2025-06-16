@@ -23,6 +23,7 @@ export default withNuxt(
           max: 1,
         },
       }],
+      'vue/multi-word-component-names': 'off',
     },
   },
 )

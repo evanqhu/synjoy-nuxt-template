@@ -30,6 +30,9 @@ export default defineNuxtConfig({
       // googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID, // 谷歌登录 ID
     },
   },
+  future: {
+    compatibilityVersion: 4,
+  },
   compatibilityDate: '2024-11-01',
   /** Vite 配置 */
   vite: {
@@ -71,11 +74,11 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'local',
-        dir: './assets/icons',
+        dir: './app/assets/icons',
       },
       {
         prefix: 'logo',
-        dir: './assets/logos',
+        dir: './app/assets/logos',
       },
     ],
   },

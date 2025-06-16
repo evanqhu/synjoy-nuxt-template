@@ -1,5 +1,3 @@
-import type { Chapter } from '~/api/modules/default'
-
 // App Store
 export const useAppStore = defineStore('app', () => {
   /** 网站配置 */
@@ -10,12 +8,10 @@ export const useAppStore = defineStore('app', () => {
 
   /** 章节列表 */
   const chapterListData = ref<{
-    list: Chapter[]
     hasNextPage: boolean
     pageNum: number
     total: number
   }>({
-    list: [],
     hasNextPage: true,
     pageNum: 2,
     total: 0,
