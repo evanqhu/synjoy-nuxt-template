@@ -11,7 +11,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@element-plus/nuxt',
     '@nuxtjs/tailwindcss',
-    'vue3-carousel-nuxt',
   ],
   /** 自动导入 */
   imports: {
@@ -28,7 +27,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE, // API 接口地址
-      googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID, // 谷歌登录 ID
+      // googleClientId: process.env.NUXT_GOOGLE_CLIENT_ID, // 谷歌登录 ID
     },
   },
   compatibilityDate: '2024-11-01',

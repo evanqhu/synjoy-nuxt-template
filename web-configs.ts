@@ -86,9 +86,12 @@ export default {
   [key: string]: WebConfig
 }
 
-export type WebConfig = Omit<typeof defaultConfig, 'adExchange' | 'pixelTrackKey' | 'fbq' | 'adScore'> & {
+type DefaultConfig = typeof defaultConfig
+
+export type WebConfig = Omit<DefaultConfig, 'adExchange' | 'pixelTrackKey' | 'fbq' | 'adScore' | 'adSense'> & {
   adExchange?: any
   pixelTrackKey?: string
   adScore?: string
   fbq?: string
+  adSense?: Partial<DefaultConfig['adSense']>
 }

@@ -11,28 +11,21 @@ const { webConfig } = useAppStore()
 
 const content = ref(`
 ## Privacy Policy
-Welcome to ${webConfig.webUrl}. Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information.
-
-### 1. Information We Collect
-We only collect information that you voluntarily provide when creating an account or contacting us. This may include your name and email address.
-
-### 2. Use of Information
-We use your information to enhance your experience on our site, respond to inquiries, and provide customer support.
-
-### 3. No Cookies
-We do not use cookies or any tracking technologies to collect information about your browsing activities.
-
-### 4. Data Security
-We implement security measures to protect your personal information from unauthorized access or disclosure.
-
-### 5. Third-Party Services
-We do not share your information with third parties except as required by law.
-
-### 6. Changes to This Policy
-We may update this Privacy Policy from time to time. Any changes will be posted on this page.
-
-### 7. Contact Us
-If you have questions about this Privacy Policy, please contact us at [${webConfig.webEmail}](mailto:${webConfig.webEmail}).
+Protecting your personal information is important to us. This notice outlines how we gather, use, and safeguard your data when you engage with this website.
+### 1. What We Collect
+When you access the site or interact with its features, we may collect details such as your name, email address, and browsing activity.
+### 2. How We Use Your Information
+We may use your data to enhance site functionality, communicate updates, or occasionally provide marketing messages relevant to your interests.
+### 3. Cookies & Tracking Tools
+To better understand user behavior and improve site performance, we use cookies and similar technologies. You can manage or disable these through your browser settings.
+### 4. AI Personalization
+Your input may be used to tailor AI-generated content—like images or quotes—to suit your preferences. Unless clearly stated otherwise, we do not retain the AI output linked to individual users.
+### 5. Data Sharing with Partners
+In some cases, trusted third-party services help us operate this site. These partners may receive access to necessary data under strict confidentiality obligations.
+### 6. Your Control Over Your Data
+You have the right to access, correct, or request the deletion of your personal information. Feel free to reach out if you wish to exercise these rights.
+### 7. Information Security
+We use standard industry practices to protect your data. However, no digital system is completely immune to breaches, and we cannot offer absolute guarantees.
 `)
 
 const compiledMarkdown = computed(() => {

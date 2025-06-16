@@ -12,29 +12,12 @@ export const customFetch = $fetch.create({
   // 请求拦截器
   onRequest({ options }) {
     // 设置请求根路径
-    // const runtimeConfig = useRuntimeConfig()
     options.baseURL = '/api'
 
     // const { webConfig } = useAppStore()
 
     // options.headers.set('home_template', '2')
     // options.headers.set('novel_template', webConfig.novelTemplate.toString())
-
-    // 在服务端请求时，通过自定义 header 传递 token
-    // const { TOKEN_KEY } = useUserStore()
-    // const userAuth = useCookie(TOKEN_KEY)
-    // if (userAuth.value) {
-    //   options.headers.set(TOKEN_KEY, userAuth.value)
-    // options.headers.set('cookie', `${TOKEN_KEY}=${userAuth.value}`)
-    // Add Authorization header
-    // options.headers.set('Authorization', `Bearer ${userAuth.value}`)
-    // }
-
-    // 也可使用 useRequestHeaders() 将客户端的 cookie 添加到服务端的请求头中
-    // const headers = useRequestHeaders(['cookie'])
-    // Object.entries(headers).forEach(([key, value]) => {
-    //   options.headers.set(key, value)
-    // })
   },
   // 响应拦截器
   onResponse({ response }) {

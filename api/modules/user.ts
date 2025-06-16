@@ -1,12 +1,12 @@
 // 用户相关接口
 
-// export interface LoginResponse {
-//   userId: number
-//   name: string
-//   avatar: string
-//   tokenName: string
-//   tokenValue: string
-// }
+export interface LoginResponse {
+  userId: number
+  name: string
+  avatar: string
+  tokenName: string
+  tokenValue: string
+}
 
 // /** 登录 */
 // export const login = (data: { ggToken: string }) => {
