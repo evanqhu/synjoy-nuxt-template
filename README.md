@@ -1,4 +1,4 @@
-# Nuxt3 项目模板
+# Nuxt3 项目模板 (tailwindcss)
 
 ## 简介
 
@@ -8,9 +8,14 @@
 
 - 使用 ESLint 和 Stylistic 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module))
 - 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html))
+- 使用 ESLint 和 Stylistic 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module))
+- 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html))
 - 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
 - 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
 - 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCustomDevice()` 响应式获取设备类型
+- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 作为 UI 组件库
+- 封装 `AdsbyGoogle` 和 `AdsbyExchange` 组件
+- 在服务器使用中间件加载 `web-configs.ts`，实现多域名适配；实现上报 `Header` 和 `www` 重定向
 - 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 作为 UI 组件库
 - 封装 `AdsbyGoogle` 和 `AdsbyExchange` 组件
 - 在服务器使用中间件加载 `web-configs.ts`，实现多域名适配；实现上报 `Header` 和 `www` 重定向
@@ -42,6 +47,7 @@
 │   ├── useFirebase.ts                 # Firebase 相关
 │   ├── useTikTokTrack.ts              # TikTok 统计
 │   ├── useFBTrack.ts                  # Facebook 统计
+│   ├── useFBTrack.ts                  # Facebook 统计
 │   └── useAdsClickListener.ts         # 广告点击监听
 ├── layouts                            # 布局组件
 │   └── default.vue                    # 默认布局
@@ -57,8 +63,12 @@
 │   └── index.vue                      # 首页
 ├── plugins                            # 插件
 │   └── load-config.server.ts          # 服务端的配置加载插件
+│   └── load-config.server.ts          # 服务端的配置加载插件
 ├── public                             # 公共资源
 ├── server                             # 服务端
+│   ├── api/                           # 服务端 API，代理所有接口请求
+│   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报，www 重定向
+│   └── plugins/                       # 服务端插件，扩展 html
 │   ├── api/                           # 服务端 API，代理所有接口请求
 │   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报，www 重定向
 │   └── plugins/                       # 服务端插件，扩展 html
@@ -124,6 +134,7 @@
 
 # Google Client ID
 NUXT_GOOGLE_CLIENT_ID = 'xxx.apps.googleusercontent.com'
+NUXT_GOOGLE_CLIENT_ID = 'xxx.apps.googleusercontent.com'
 ```
 
 开发环境变量 `.env.development`
@@ -132,6 +143,7 @@ NUXT_GOOGLE_CLIENT_ID = 'xxx.apps.googleusercontent.com'
 # 开发环境
 
 # API 接口地址
+NUXT_PUBLIC_API_BASE = 'https://api.test.com/'
 NUXT_PUBLIC_API_BASE = 'https://api.test.com/'
 
 # 开发服务器端口号
@@ -144,6 +156,7 @@ NUXT_PORT = 1024
 # 生产环境
 
 # API 接口地址
+NUXT_PUBLIC_API_BASE = 'https://api.prod.com/'
 NUXT_PUBLIC_API_BASE = 'https://api.prod.com/'
 
 # 是否删除控制台输出语句
@@ -159,12 +172,14 @@ NUXT_DROP_CONSOLE = 'false'
 3. 如果需要使用变量，可以在 Vite 的 `scss` 中进行配置
 4. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
 5. 全局公共样式和变量写在 `global.scss` 中；Element UI 的样式覆盖写在 `element.scss` 中；字体引入写在 `fonts.scss` 中
-6. 该项目仅需要在 `nuxt.config.ts` 中通过 Vite 的 scss 配置引入 `global.scss` 即可
+6. 该项目需要在 `nuxt.config.ts` 中通过 Vite 的 scss 配置引入 `element.scss`，再通过 css 配置引入 `global.scss`
+7. 在 `tailwind.config.ts` 中自定义样式配置
 
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
   /** 全局样式文件 */
+  // css: ["~/assets/styles/main.scss"],
   // css: ["~/assets/styles/main.scss"],
 
   /** Vite 配置 */
@@ -172,6 +187,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
+          additionalData: '@use "~/assets/styles/global.scss" as *;', // 引入全局样式
           additionalData: '@use "~/assets/styles/global.scss" as *;', // 引入全局样式
         },
       },
@@ -181,6 +197,8 @@ export default defineNuxtConfig({
 ```
 
 ### 🎯 网络请求及本地开发代理
+
+> 项目统一要求，所有的接口请求都通过服务端进行代理转发
 
 > 项目统一要求，所有的接口请求都通过服务端进行代理转发
 
@@ -199,9 +217,16 @@ export type RequestParams = NitroFetchOptions<
 export const customFetch = $fetch.create({
   // 设置请求根路径
   baseURL: "/api",
+  // 设置请求根路径
+  baseURL: "/api",
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
   // 请求拦截器
+  // onRequest({ options }) {
+  //   const { webConfig } = useAppStore()
+  //   options.headers.set('home_template', '2')
+  //   options.headers.set('novel_template', webConfig.novelTemplate.toString())
+  // },
   // onRequest({ options }) {
   //   const { webConfig } = useAppStore()
   //   options.headers.set('home_template', '2')
@@ -293,7 +318,13 @@ export default defineNuxtConfig({
 5️⃣ 在组件中使用
 
 ```html
+```html
 <script setup lang="ts">
+  /** 获取推荐列表 */
+  const { data: recommendationListData } = useLazyAsyncData(
+    "recommendationList",
+    api.defaultApi.fetchRecommendationList
+  );
   /** 获取推荐列表 */
   const { data: recommendationListData } = useLazyAsyncData(
     "recommendationList",
@@ -315,10 +346,19 @@ export default defineEventHandler(async (event) => {
 
   // check the path
   // 替换开头 的/api，用 正则表达式
+  // Proxy url
+  const runtimeConfig = useRuntimeConfig();
+  const proxyUrl = runtimeConfig.public.apiBase || "";
+  // console.log('🚀🚀🚀 proxyUrl: ', proxyUrl)
+
+  // check the path
+  // 替换开头 的/api，用 正则表达式
   const path = event.path.replace(/^\/api/, "");
   const target = joinURL(proxyUrl, path);
   // console.log('🚀🚀🚀 target: ', target)
+  // console.log('🚀🚀🚀 target: ', target)
 
+  // proxy it
   // proxy it
   return proxyRequest(event, target);
 });
@@ -326,6 +366,7 @@ export default defineEventHandler(async (event) => {
 
 ### 🎯 图标
 
+1️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
 1️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
 
 官方的 icon 解决方案
@@ -363,9 +404,14 @@ export default defineNuxtConfig({
 
 ```html
 <Icon name="local:nuxt" size="2rem" /> <Icon name="logo:nuxt" size="2rem" />
+<Icon name="local:nuxt" size="2rem" /> <Icon name="logo:nuxt" size="2rem" />
 ```
 
 可以传 `size` `color` 等属性
+
+2️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (已弃用 ⚠)
+
+参考：https://juejin.cn/post/7311895107530883081
 
 2️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (已弃用 ⚠)
 
@@ -415,7 +461,11 @@ export default defineNuxtConfig({
 - `src` 必须是**绝对路径** (因此可以使用外部 `url` 图片地址)
 - 如果是相对路径，图片必须放在 `public` 文件夹下
 - 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
+- `src` 必须是**绝对路径** (因此可以使用外部 `url` 图片地址)
+- 如果是相对路径，图片必须放在 `public` 文件夹下
+- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
 
+如果不把图片放在 `public` 下，建议直接使用 `img` 标签即可
 如果不把图片放在 `public` 下，建议直接使用 `img` 标签即可
 
 ### 🎯 元信息
@@ -472,12 +522,37 @@ $breakPoints: (
   width: 200px;
   @include responseTo("pc") {
     width: 100%;
+使用媒体查询来区分 PC 端和移动端的样式；移动端和 PC 端分界点为 `768px`；样式移动端优先
+
+```scss
+// 媒体查询 (移动端优先)
+$breakPoints: (
+  "pc": $device-point,
+);
+
+@mixin responseTo($device: "pc") {
+  $config: map.get($breakPoints, $device);
+  @if $config == null {
+    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
+  }
+  @media screen and (min-width: $config) {
+    @content;
+  }
+}
+```
+
+```scss
+.home {
+  width: 200px;
+  @include responseTo("pc") {
+    width: 100%;
   }
 }
 ```
 
 PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块配合自定义的 `useCustomDevice()` 来处理
 
+** 自定义 `useCustomDevice()` **
 ** 自定义 `useCustomDevice()` **
 
 原生的 [NuxtDevice](https://nuxt.com/modules/device) 模块返回的值不是响应式的，这里进行封装，增加响应式
@@ -520,7 +595,9 @@ export const useCustomDevice = () => {
 使用 `useCustomDevice()` 返回的值是响应式的，切换页面大小时这个值会自动改变
 
 ```html
+```html
 <script setup lang="ts">
+  const { isMobile } = useCustomDevice();
   const { isMobile } = useCustomDevice();
 </script>
 
@@ -664,10 +741,14 @@ export default defineEventHandler((event) => {
 封装一个 `AdsbyGoogle` 组件，在组件内的 `onMounted` 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
 
 ```html
+```html
 <!-- components/AdsbyGoogle.client.vue -->
 <!-- AdSense -->
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
+  const { customEventTrack } = useFirebase();
+  const route = useRoute();
+  const { webConfig } = useAppStore();
   const { customEventTrack } = useFirebase();
   const route = useRoute();
   const { webConfig } = useAppStore();
@@ -686,12 +767,31 @@ export default defineEventHandler((event) => {
      */
     only?: "pc" | "mobile";
   }
+  interface Props {
+    /**
+     * 广告配置对象 data-ad-client data-ad-slot 等
+     */
+    adsAttrs?: object;
+    /**
+     * 自定义样式
+     */
+    customClass?: string;
+    /**
+     * 仅在某一端显示
+     */
+    only?: "pc" | "mobile";
+  }
 
+  const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
   const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
 
   /** 设备类型 */
   const { isMobile } = useCustomDevice();
+  /** 设备类型 */
+  const { isMobile } = useCustomDevice();
 
+  /** ins 标签模板引用 */
+  const adsenseRef = useTemplateRef<HTMLElement>("adsense");
   /** ins 标签模板引用 */
   const adsenseRef = useTemplateRef<HTMLElement>("adsense");
 
@@ -705,7 +805,30 @@ export default defineEventHandler((event) => {
   const isAdFilled = ref(true);
   /** 是否进入调试模式 */
   const isShowDebug = ref(false);
+  /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
+  const isShowAd = computed(() => {
+    const isOnlyPc = only === "pc" && !isMobile.value;
+    const isOnlyMobile = only === "mobile" && isMobile.value;
+    return Object.keys(adsAttrs).includes("data-ad-slot") && (isOnlyPc || isOnlyMobile || !only);
+  });
+  /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
+  const isAdFilled = ref(true);
+  /** 是否进入调试模式 */
+  const isShowDebug = ref(false);
 
+  /** 完整的广告位配置对象 */
+  const adsAttrsFull = computed(() => {
+    return Object.assign(
+      {
+        class: "adsbygoogle",
+        style: "display:block",
+        "data-ad-format": "auto",
+        "data-full-width-responsive": "true",
+        "data-ad-client": webConfig.adSense?.clientId,
+      },
+      adsAttrs
+    );
+  });
   /** 完整的广告位配置对象 */
   const adsAttrsFull = computed(() => {
     return Object.assign(
@@ -731,7 +854,24 @@ export default defineEventHandler((event) => {
       }
     });
   });
+  /** 创建一个 DOM 树变动观察器 */
+  const observer = new MutationObserver((mutations) => {
+    // 遍历监听到的 DOM 变化
+    mutations.forEach((mutation) => {
+      const target = mutation.target as Element;
+      if (mutation.attributeName === "data-ad-status") {
+        console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
+        isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
+      }
+    });
+  });
 
+  /** 监视广告是否加载成功，来控制是否显示广告内容区 */
+  const observeAdStatus = async () => {
+    await nextTick();
+    /** ins 标签 DOM */
+    const ads = adsenseRef.value;
+    if (!ads) return;
   /** 监视广告是否加载成功，来控制是否显示广告内容区 */
   const observeAdStatus = async () => {
     await nextTick();
@@ -744,11 +884,31 @@ export default defineEventHandler((event) => {
       attributes: true, // 监听属性变动
       attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
     });
+    // 观察 ins 标签的 data-ad-status 属性变化
+    observer.observe(ads, {
+      attributes: true, // 监听属性变动
+      attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
+    });
 
     // 初始化检查
     isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
   };
+    // 初始化检查
+    isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
+  };
 
+  /** 展示广告 */
+  const showAd = async () => {
+    if (!isShowAd.value) return;
+    // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
+    await nextTick();
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      customEventTrack.value("load_ads", "expose");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   /** 展示广告 */
   const showAd = async () => {
     if (!isShowAd.value) return;
@@ -770,11 +930,25 @@ export default defineEventHandler((event) => {
     observeAdStatus();
     showAd();
   });
+  onMounted(async () => {
+    // 开启广告调试模式
+    if (route.query.db) {
+      isShowDebug.value = true;
+    }
+    observeAdStatus();
+    showAd();
+  });
 
   onActivated(() => {
     showAd();
   });
+  onActivated(() => {
+    showAd();
+  });
 
+  onBeforeUnmount(() => {
+    observer?.disconnect();
+  });
   onBeforeUnmount(() => {
     observer?.disconnect();
   });
@@ -786,6 +960,7 @@ export default defineEventHandler((event) => {
       <div class="ads-content-title">Advertisement</div>
       <ins ref="adsense" v-bind="adsAttrsFull" />
     </div>
+    <div v-if="isShowDebug" class="ads-debug">{{ adsAttrsFull }}</div>
     <div v-if="isShowDebug" class="ads-debug">{{ adsAttrsFull }}</div>
   </div>
 </template>
@@ -799,11 +974,28 @@ export default defineEventHandler((event) => {
     font-weight: 400;
     font-size: 16px;
   }
+  .ads-item {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-weight: 400;
+    font-size: 16px;
+  }
 
   .ads-content {
     border-bottom: 1px solid #c6c6c6;
     height: fit-content;
+  .ads-content {
+    border-bottom: 1px solid #c6c6c6;
+    height: fit-content;
 
+    .ads-content-title {
+      display: flex;
+      place-items: center;
+      font-size: 10px;
+      color: #999;
+      line-height: normal;
     .ads-content-title {
       display: flex;
       place-items: center;
@@ -817,11 +1009,24 @@ export default defineEventHandler((event) => {
         flex: 1;
         border-bottom: 1px solid #c6c6c6;
       }
+      &::before,
+      &::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #c6c6c6;
+      }
 
       &::before {
         margin-right: 15px;
       }
+      &::before {
+        margin-right: 15px;
+      }
 
+      &::after {
+        margin-left: 15px;
+      }
+    }
       &::after {
         margin-left: 15px;
       }
@@ -831,7 +1036,17 @@ export default defineEventHandler((event) => {
       text-align: center;
     }
   }
+    .adsbygoogle {
+      text-align: center;
+    }
+  }
 
+  .ads-debug {
+    border: 2px solid red;
+    margin-bottom: 2px;
+    background-color: #ffe786;
+    color: #000;
+  }
   .ads-debug {
     border: 2px solid red;
     margin-bottom: 2px;
@@ -957,8 +1172,12 @@ export default <RouterConfig>{
 旧方案：在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
 
 ```html
+```html
 <!-- pages/detail.vue -->
 <script setup lang="ts">
+  definePageMeta({
+    path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
+  });
   definePageMeta({
     path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
   });
@@ -996,9 +1215,12 @@ import type { RouteLocationRaw } from "vue-router";
 
 export const useCustomRouting = () => {
   const route = useRoute();
+  const route = useRoute();
 
   /** 路由跳转时携带 channel params 和 query 参数 */
   const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
+
     const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
 
     // 如果是字符串，则直接跳转
@@ -1007,6 +1229,7 @@ export const useCustomRouting = () => {
       return navigateTo(
         {
           path: fullPath,
+          query: route.query,
           query: route.query,
         },
         options
@@ -1022,7 +1245,12 @@ export const useCustomRouting = () => {
               ...route.params,
               ...to?.params,
             },
+            params: {
+              ...route.params,
+              ...to?.params,
+            },
             query: {
+              ...route.query,
               ...route.query,
               ...to?.query,
             },
@@ -1032,13 +1260,17 @@ export const useCustomRouting = () => {
       } else {
         const { path, query, ...rest } = to;
         const fullPath = `${fullChannel}${path}`;
+        const { path, query, ...rest } = to;
+        const fullPath = `${fullChannel}${path}`;
         return navigateTo(
           {
             path: fullPath,
             query: {
               ...query,
               ...route.query,
+              ...route.query,
             },
+            ...rest,
             ...rest,
           },
           options
@@ -1052,6 +1284,9 @@ export const useCustomRouting = () => {
     const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
     const queryString = new URLSearchParams(route.query as Record<string, string>).toString();
     const fullQueryString = queryString ? `?${queryString}` : "";
+    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
+    const queryString = new URLSearchParams(route.query as Record<string, string>).toString();
+    const fullQueryString = queryString ? `?${queryString}` : "";
     return `${fullChannel}${path}${fullQueryString}`;
   };
 
@@ -1059,6 +1294,7 @@ export const useCustomRouting = () => {
 };
 ```
 
+```html
 ```html
 <script setup lang="ts">
 const { smartNavigate, getHref } = useCustomRouting()
@@ -1111,6 +1347,7 @@ export default defineNuxtConfig({
 });
 ```
 
+```html
 ```html
 <!-- pages/privacy-policy.vue -->
 <script setup lang="ts">
