@@ -3,9 +3,9 @@ import type { Config } from 'tailwindcss'
 const config: Config = {
   // 定义需要扫描的文件
   content: [
-    './layouts/**/*.{vue,js,ts,jsx,tsx}',
-    './pages/**/*.{vue,js,ts,jsx,tsx}',
-    './components/**/*.{vue,js,ts,jsx,tsx}',
+    './app/layouts/**/*.{vue,js,ts,jsx,tsx}',
+    './app/pages/**/*.{vue,js,ts,jsx,tsx}',
+    './app/components/**/*.{vue,js,ts,jsx,tsx}',
   ],
   // 定义主题
   theme: {
