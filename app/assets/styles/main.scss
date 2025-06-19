@@ -1,5 +1,5 @@
-// 全局样式变量
-@use "./fonts.scss" as *;
+// 定义基础 CSS 变量和一些不适合用 tailwind 实现的样式
+@use "./fonts.css" as *;
 
 *,
 *::before,
@@ -7,7 +7,7 @@
   scrollbar-width: none;
 }
 
-// 定义 CSS 变量，必须放在选择器中，给 tailwind.config.ts 使用
+/** 定义 CSS 变量 */
 :root {
   --bg-color: #fff;
   --text-color: #213547;
@@ -16,7 +16,7 @@
   --theme-color: #007162;
 }
 
-// 暗色模式
+/** 暗色模式 */
 .dark-mode {
   --bg-color: #1a1a1a;
   --text-color: #fffde;
@@ -27,48 +27,11 @@ body {
   color: var(--text-color);
   font-family: "Playfair";
   overflow-x: hidden;
-}
 
-// 容器
-#__nuxt {
-  height: 100dvh;
-  width: 100vw;
-  min-width: 360px;
-}
-
-/** 鼠标悬浮样式 */
-.hoverable {
-  @apply cursor-pointer transition-all duration-300;
-}
-
-/** 左右内边距 */
-.app-wrapper {
-  @apply w-full px-4;
-}
-
-/** 版心 */
-.app-content {
-  @apply w-full max-w-container mx-auto;
-}
-
-/** 法律页面 */
-.legal-content {
-  @apply text-sm md:text-base;
-
-  h2 {
-    @apply text-[1.5em] leading-[1.5] font-bold mb-4;
-  }
-
-  h3 {
-    @apply text-[1.17em] leading-[1.5] font-bold mt-6 mb-2;
-  }
-
-  a {
-    @apply text-primary underline hover:opacity-70;
-  }
-
-  ul > li {
-    @apply list-disc list-inside;
+  #__nuxt {
+    height: 100dvh;
+    width: 100vw;
+    min-width: 360px;
   }
 }
 
@@ -90,7 +53,8 @@ body {
 
 // 悬浮时加粗
 .hover-outline {
-  @apply cursor-pointer transition-all duration-300;
+  cursor: pointer;
+  transition: all 0.3s;
   @extend .outline-base;
 
   &:hover::after {

@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     cdnURL: process.env.NUXT_APP_CDN_URL, // 静态资源路径
   },
   /** 全局样式文件 */
-  css: ['~/assets/styles/global.scss'],
+  css: ['~/assets/styles/main.scss', '~/assets/styles/tailwind.css'],
   /** 运行时变量 */
   runtimeConfig: {
     public: {

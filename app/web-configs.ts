@@ -1,8 +1,6 @@
 // 网站配置
 
 const defaultConfig = {
-  novelTemplate: 26,
-  homeSectionOrderIndex: 0,
   // 网站标题
   webTitle: 'App Title',
   // 网站标题模板
@@ -66,7 +64,7 @@ const defaultConfig = {
     home_2: { index: 'ad2', headScript: '', bodyScript: '' },
   },
   // TikTok Pixel Track
-  pixelTrackKey: '1234567890',
+  pixelTrackKey: '',
   // Facebook Track
   fbq: '',
   // AdScore
