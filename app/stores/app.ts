@@ -3,8 +3,8 @@ export const useAppStore = defineStore('app', () => {
   /** 网站配置 */
   const webConfig = ref<WebConfig>({} as WebConfig)
 
-  /** 章节列表抽屉是否打开 */
-  const drawer = ref(false)
+  /** MenuDrawer 状态 */
+  const menuDrawerOpened = ref(false)
 
   /** 章节列表 */
   const chapterListData = ref<{
@@ -19,7 +19,7 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     webConfig,
-    drawer,
+    menuDrawerOpened,
     chapterListData,
   }
 })

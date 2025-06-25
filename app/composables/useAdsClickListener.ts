@@ -1,12 +1,9 @@
 /**
- * 监听广告点击
+ * @name 监听广告点击
  * TODO 增加广告点击上报 (不含关闭按钮)
  * TODO 广告加载不成功时，不监听 iframe 点击
  * TODO 监听广告是否出现在页面中
  */
-
-import { onMounted } from 'vue'
-
 interface IframeObj {
   element: HTMLIFrameElement
   ins: HTMLElement
@@ -14,10 +11,13 @@ interface IframeObj {
   adSlot?: string
 }
 
-export const useAdsClickListener = () => {
-  const { customEventTrack } = useFirebase()
+export function useAdsClickListener() {
+  if (process.env.NODE_ENV !== 'production') return
+  const { $firebase } = useNuxtApp()
   const ttTrack = useTikTokTrack()
   const fbTrack = useFBTrack()
+  const bigoTrack = useBigoTrack()
+  const { webConfig } = useAppStore()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
@@ -61,18 +61,26 @@ export const useAdsClickListener = () => {
             if (window.JSCallAndroid && typeof window.JSCallAndroid.adClick === 'function') {
               window.JSCallAndroid.adClick(JSON.stringify(transformData))
             }
-            else {
-              // console.log('🚀🚀🚀 transformData: ', transformData)
-            }
 
             // 2. firebase 上报
-            customEventTrack.value('ad_click', 'click', {
+            $firebase.logEvent('ad_click', 'click', {
               'data-ad-slot': iframeObj.adSlot,
             })
 
             // 3. TikTok 上报
-            ttTrack(iframeObj.adSlot || '0000', 'click', 'ad_iframe_click')
-            fbTrack(iframeObj.adSlot || '0000')
+            if (webConfig.ttq) {
+              ttTrack(iframeObj.adSlot || '0000')
+            }
+
+            // 4. Facebook 上报
+            if (webConfig.fbq) {
+              fbTrack(iframeObj.adSlot || '0000')
+            }
+
+            // 5. Bigo 上报
+            if (webConfig.bigo) {
+              bigoTrack()
+            }
           }
         })
       }
@@ -93,12 +101,9 @@ export const useAdsClickListener = () => {
             && node.closest('ins.adsbygoogle')
             && node.style.display !== 'none'
           ) {
-            // console.log('🚀🚀🚀 有广告 iframe 插入', node, node.closest('ins.adsbygoogle'))
+            console.log('🚀🚀🚀 有广告 iframe 插入', node, node.closest('ins.adsbygoogle'))
             // 2. 在检测到广告 iframe 插入后，调用 setupIframeTracking
-            setupIframeTracking(
-              node,
-              node.closest('ins.adsbygoogle') as HTMLElement,
-            )
+            setupIframeTracking(node, node.closest('ins.adsbygoogle') as HTMLElement)
           }
         })
       })

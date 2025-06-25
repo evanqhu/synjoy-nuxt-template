@@ -2,6 +2,10 @@
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 
+definePageMeta({
+  name: 'about-us',
+})
+
 useSeoMeta({
   title: 'About Us',
 })
@@ -33,10 +37,8 @@ const compiledMarkdown = computed(() => {
 <template>
   <div class="app-wrapper">
     <div class="app-content py-8">
-      <div
-        class="legal-content"
-        v-html="compiledMarkdown"
-      />
+      <!-- eslint-disable-next-line vue/no-v-html vue/max-attributes-per-line -->
+      <div class="legal-content" v-html="compiledMarkdown" />
     </div>
   </div>
 </template>

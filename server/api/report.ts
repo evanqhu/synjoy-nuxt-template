@@ -1,9 +1,15 @@
-// app/api/report.ts
-export default defineEventHandler(async (event) => {
-  const originHost = getHeader(event, 'host')?.split(':')[0] || 'localhost'
-  const host = originHost.replace(/^www\./, '')
+/**
+ * @name 上报路由切换
+ * @description 在路由切换时上报
+ */
+import type { H3Event } from 'h3'
+import { getHost } from '../utils/index'
+
+export async function defineEventHandler(event: H3Event) {
+  const host = getHost(event)
   const url = event.node.req.url
 
+  // 只上报非静态资源请求
   if (!url?.includes('.')) {
     const data = {
       dt: new Date().toISOString().split('T')[0], // 当前日期，格式为 YYYY-MM-DD
@@ -32,4 +38,4 @@ export default defineEventHandler(async (event) => {
       return { success: false, data: error }
     }
   }
-})
+}

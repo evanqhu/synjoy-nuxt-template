@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   /** 开发工具 */
   devtools: { enabled: true },
   app: {
-    cdnURL: process.env.NUXT_APP_CDN_URL, // 静态资源路径
+    // cdnURL: process.env.NUXT_APP_CDN_URL, // 静态资源路径
   },
   /** 全局样式文件 */
   css: ['~/assets/styles/main.scss', '~/assets/styles/tailwind.css'],
@@ -78,7 +78,7 @@ export default defineNuxtConfig({
       },
       {
         prefix: 'logo',
-        dir: './app/assets/logos',
+        dir: './public/logos',
       },
     ],
   },

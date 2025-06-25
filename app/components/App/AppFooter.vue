@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const appStore = useAppStore()
 const { webConfig } = appStore
-// const { getHref } = useCustomRouting()
+const { getHref } = useCustomRouting()
 const resourcesList = [
   {
     name: 'About Us',
@@ -56,7 +56,7 @@ const handleSocialLinkClick = () => {
             <NuxtLink
               v-for="item in resourcesList"
               :key="item.name"
-              :href="item.path"
+              :href="getHref(item.path)"
               class="text-primary hoverable hover:opacity-70"
             >
               {{ item.name }}
