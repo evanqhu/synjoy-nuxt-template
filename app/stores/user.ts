@@ -1,6 +1,7 @@
+// oxlint-disable no-empty-file
 // import type { UserInfo } from '~/api/modules/user'
 
-// // User Store
+// User Store
 // export const useUserStore = defineStore('user', () => {
 //   // 是否已登录
 //   const isAuth = ref(false)

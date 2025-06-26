@@ -1,4 +1,3 @@
-<!-- 默认布局 -->
 <template>
   <div class="w-full">
     <AppHeader />

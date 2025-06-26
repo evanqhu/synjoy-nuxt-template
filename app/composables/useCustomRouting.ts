@@ -1,13 +1,18 @@
 /**
- * 自定义路由跳转方法，用于在路由跳转时保留当前 channel 参数和查询参数
+ * @name 自定义路由跳转方法
+ * @description 用于在路由跳转时保留当前 channel(params) 参数和 db(query) 参数
  */
-// 定义路由参数类型
 import type { RouteLocationRaw } from 'vue-router'
 
-export const useCustomRouting = () => {
-  const route = useRoute()
+/** 只保留 db 字段的 query 参数 */
+function pickDbQuery(query: Record<string, any>) {
+  return query && query.db ? { db: query.db } : {}
+}
 
-  /** 路由跳转时携带 channel params 和 query 参数 */
+export function useCustomRouting(customRoute?: ReturnType<typeof useRoute> | any) {
+  const route = customRoute || useRoute()
+
+  /** 路由跳转时携带 channel params 和 db query 参数 */
   const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
     const fullChannel = route.params.channel ? `/${route.params.channel}` : '' // /channel12
 
@@ -16,21 +21,22 @@ export const useCustomRouting = () => {
       const fullPath = `${fullChannel}${to}`
       return navigateTo({
         path: fullPath,
-        query: route.query,
+        query: pickDbQuery(route.query),
       }, options)
     }
     // 如果是对象
     else {
       if ('name' in to) {
+        const { params, query, ...rest } = to
         return navigateTo({
-          ...to,
+          ...rest,
           params: {
-            ...route.params,
-            ...to?.params,
+            ...(route.params.channel ? { channel: route.params.channel } : {}),
+            ...params,
           },
           query: {
-            ...route.query,
-            ...to?.query,
+            ...pickDbQuery(route.query),
+            ...query,
           },
         }, options)
       }
@@ -38,21 +44,22 @@ export const useCustomRouting = () => {
         const { path, query, ...rest } = to
         const fullPath = `${fullChannel}${path}`
         return navigateTo({
+          ...rest,
           path: fullPath,
           query: {
+            ...pickDbQuery(route.query),
             ...query,
-            ...route.query,
           },
-          ...rest,
         }, options)
       }
     }
   }
 
-  /** 获取包含 channel params 和 query 参数的跳转链接 */
+  /** 获取包含 channel params 和 db query 参数的跳转链接 */
   const getHref = (path: string) => {
     const fullChannel = route.params.channel ? `/${route.params.channel}` : '' // /channel12
-    const queryString = new URLSearchParams(route.query as Record<string, string>).toString()
+    const dbQuery = pickDbQuery(route.query)
+    const queryString = new URLSearchParams(dbQuery as Record<string, string>).toString()
     const fullQueryString = queryString ? `?${queryString}` : ''
     return `${fullChannel}${path}${fullQueryString}`
   }

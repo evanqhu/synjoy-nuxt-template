@@ -1,4 +1,7 @@
-// API 接口请求 (如果有其他后端接口地址，封装其他的组合式函数)
+/**
+ * @name 请求方法封装
+ * @description 封装 $fetch 方法
+ */
 import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 
 export type RequestParams = NitroFetchOptions<NitroFetchRequest, 'options' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'trace'>

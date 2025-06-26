@@ -1,7 +1,7 @@
 <!-- AdSense -->
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
-const { customEventTrack } = useFirebase()
+const { $firebase } = useNuxtApp()
 const route = useRoute()
 const { webConfig } = useAppStore()
 
@@ -89,7 +89,7 @@ const showAd = async () => {
   await nextTick()
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
-    customEventTrack.value('load_ads', 'expose')
+    $firebase.logEvent('load_ads', 'expose')
   }
   catch (error) {
     console.error(error)

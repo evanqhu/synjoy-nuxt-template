@@ -13,9 +13,8 @@ const defaultConfig = {
   webUrl: 'templateweb.com',
   // 网站 logo
   webLogo: 'logo1',
-  // Reuqest header
   // 关于我们
-  aboutUs: `The about us of template web. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores rem autem ratione eius ullam, voluptas saepe odit maiores aspernatur corrupti, minima consectetur soluta deleniti alias nisi atque aliquam! Repudiandae, alias.`,
+  aboutUs: `The about us of template web.`,
   // Firebase
   firebase: {
     apiKey: '',
@@ -43,39 +42,35 @@ const defaultConfig = {
   adExchange: {
     home_1: {
       index: 'ad1',
-      headScript: `<script>
-        window.googletag = window.googletag || { cmd: [] };
-        googletag.cmd.push(() => {
-          googletag
-            .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
-            .addService(googletag.pubads());
-          googletag.enableServices();
-        });
-      </script>`,
-      bodyScript: `<div id="banner-ad" style="width: 300px; height: 250px">
+      headScript: `
         <script>
-          console.log('banner-ad')
+          window.googletag = window.googletag || { cmd: [] };
           googletag.cmd.push(() => {
-            googletag.display("banner-ad");
+            googletag
+              .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
+              .addService(googletag.pubads());
+            googletag.enableServices();
           });
-        </script>
-      </div>`,
+        </script>`,
+      bodyScript: `
+        <div id="banner-ad" style="width: 300px; height: 250px">
+          <script>
+            console.log('banner-ad')
+            googletag.cmd.push(() => {
+              googletag.display("banner-ad");
+            });
+          </script>
+        </div>`,
     },
-    home_2: { index: 'ad2', headScript: '', bodyScript: '' },
   },
   // TikTok Pixel Track
-  pixelTrackKey: '',
+  // ttq: '',
   // Facebook Track
-  fbq: '',
+  // fbq: '',
+  // Bigo Track
+  // bigo: '',
   // AdScore
-  // adScore: `
-  //   <script
-  //     async
-  //     src="//c.adsco.re"
-  //     type="text/javascript"
-  //     onload='AdscoreInit("QiU9AwAAAAAAp492dOvJyheQIhXKZEU1pnhHoro",
-  //     {sub_id: "pixeltripai.com",async_callback: 1});'>
-  //   </script>`,
+  // adScore: ''
 }
 
 export default {
@@ -86,10 +81,11 @@ export default {
 
 type DefaultConfig = typeof defaultConfig
 
-export type WebConfig = Omit<DefaultConfig, 'adExchange' | 'pixelTrackKey' | 'fbq' | 'adScore' | 'adSense'> & {
-  adExchange?: any
-  pixelTrackKey?: string
-  adScore?: string
-  fbq?: string
+export type WebConfig = Omit<DefaultConfig, 'adSense' | 'adExchange' | 'ttq' | 'fbq' | 'bigo' | 'adScore'> & {
   adSense?: Partial<DefaultConfig['adSense']>
+  adExchange?: Partial<DefaultConfig['adExchange']>
+  ttq?: string
+  fbq?: string
+  bigo?: string
+  adScore?: string
 }

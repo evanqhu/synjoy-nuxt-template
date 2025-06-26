@@ -1,8 +1,7 @@
 <!-- Ad Exchange 广告 -->
 <!-- https://developers.google.com/publisher-tag/guides/get-started?hl=zh-cn -->
 <script lang="ts" setup>
-// const { $eventTrack } = useNuxtApp()
-const { customEventTrack } = useFirebase()
+const { $firebase } = useNuxtApp()
 const route = useRoute()
 
 interface AdConfig {
@@ -59,8 +58,7 @@ const insertAdxScript = async () => {
       document.body.appendChild(newScript)
     }
   }
-  // $eventTrack('load_ads', 'expose')
-  customEventTrack.value('load_ads', 'expose', {
+  $firebase.logEvent('load_ads', 'expose', {
     adExcahnge: adsAttrs.index,
   })
 }

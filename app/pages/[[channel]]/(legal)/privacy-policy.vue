@@ -3,11 +3,15 @@
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 
+definePageMeta({
+  name: 'privacy-policy',
+})
+
 useSeoMeta({
   title: 'Privacy Policy',
 })
 
-const { webConfig } = useAppStore()
+// const { webConfig } = useAppStore()
 
 const content = ref(`
 ## Privacy Policy
@@ -40,10 +44,8 @@ const compiledMarkdown = computed(() => {
 <template>
   <div class="app-wrapper">
     <div class="app-content py-8">
-      <div
-        class="legal-content"
-        v-html="compiledMarkdown"
-      />
+      <!-- eslint-disable-next-line vue/no-v-html vue/max-attributes-per-line -->
+      <div class="legal-content" v-html="compiledMarkdown" />
     </div>
   </div>
 </template>
