@@ -17,16 +17,16 @@
 - **图片优化**：`@nuxt/image`
 - **设备检测**：`@nuxtjs/device` + 自定义 useCustomDevice
 - **API 封装**：`$fetch` 二次封装，统一错误处理
-- **日志系统**：自研 nuxt3-winston-log 模块，基于 winston + daily-rotate-file
+- **日志系统**：自研 `nuxt3-winston-log` 模块，基于 `winston` + `daily-rotate-file`
 - **路由系统**：自定义路由系统，支持多渠道
-- **广告与分析**：Google AdSense、AdExchange、Firebase Analytics、useAdsClickListener、TikTok/Facebook/Bigo 埋点
+- **广告与分析**：Google AdSense、AdExchange、Firebase Analytics、`useAdsClickListener`、TikTok/Facebook/Bigo 埋点
 - **类型系统**：TypeScript 全面类型约束
 - **开发工具**：Vite、ESLint、Sass、vue-tsc
-- **CI/CD**：支持 Docker 部署，内置 run.sh 脚本
+- **CI/CD**：支持 Docker 部署，内置 `run.sh` 脚本
 
 ---
 
-## 三、目录结构与职责
+## 三、目录结构
 
 ```plain text
 ├── app
@@ -115,9 +115,145 @@
 
 ### 4. API 封装
 
-- `utils/request.ts` 基于 $fetch 封装 get/post，统一拦截、错误处理、401 跳转。
+- `utils/request.ts` 基于 `$fetch` 封装 `get/post`，统一拦截、错误处理、401 跳转。
 - `api/modules/` 目录定义业务 API 类型与请求方法。
 - `api/index.ts` 汇总导出。
+
+> 项目统一要求，所有的接口请求都通过服务端进行代理转发
+
+1️⃣ 在 `/app/utils/request.ts` 中封装自定义的请求方法，可设置 baseURL 和响应拦截器等
+
+```typescript
+/**
+ * @name 请求方法封装
+ * @description 封装 $fetch 方法
+ */
+import type { NitroFetchOptions, NitroFetchRequest } from "nitropack";
+
+export type RequestParams = NitroFetchOptions<
+  NitroFetchRequest,
+  "options" | "get" | "head" | "patch" | "post" | "put" | "delete" | "connect" | "trace"
+>;
+
+/** 自定义封装 $fetch 方法 */
+export const customFetch = $fetch.create({
+  // 设置请求根路径
+  baseURL: "/api",
+  // 设置超时时间为 20 秒
+  timeout: 1000 * 20,
+  // 请求拦截器
+  onRequest({ options }) {
+    // 设置请求根路径
+    options.baseURL = "/api";
+
+    // const { webConfig } = useAppStore()
+
+    // options.headers.set('home_template', '2')
+  },
+  // 响应拦截器
+  onResponse({ response }) {
+    if (!response.ok) {
+      console.error("请求失败", response.statusText);
+      throw new Error(`请求错误：${response.status}`);
+    }
+
+    // 与后端约定的数据响应格式
+    const { data, code, msg, success } = response._data;
+
+    if (!success) {
+      console.error("接口错误：", msg);
+      // 创建一个包含完整错误信息的错误对象
+      const error = new Error(msg || "接口错误");
+      // 将接口返回的所有信息附加到错误对象上
+      Object.assign(error, { code, data, success });
+      throw error;
+    }
+
+    // 通过修改 response._data 来修改响应数据
+    response._data = data;
+  },
+  // 响应错误拦截器
+  onResponseError({ response }) {
+    if (response.status === 401) {
+      navigateTo("/login");
+    }
+  },
+});
+
+/** 自动导出方法 */
+export const request = {
+  get<T>(url: string, params?: RequestParams) {
+    return customFetch<T>(url, { method: "get", ...params });
+  },
+  post<T>(url: string, data?: Record<string, unknown>, params?: RequestParams) {
+    return customFetch<T>(url, { method: "post", body: data, ...params });
+  },
+};
+```
+
+2️⃣ 在 `/app/api/modules/xxx.ts` 中定义各模块各接口的请求方法
+
+```typescript
+// api/modules/user.ts 登录模块接口
+/** 登录 */
+export const login = (data: { ggToken: string }) => {
+  return request.post<UserResponse>("/user/login", data);
+};
+
+/** 退出登录 */
+export const logout = async () => {
+  return request.get("/user/logout");
+};
+```
+
+3️⃣ 在 `/app/api/index.ts` 中汇总导出所有模块的请求方法并导出
+
+```typescript
+// api/index.ts 汇总各模块请求函数，统一导出
+import * as defaultApi from "./modules/default";
+import * as userApi from "./modules/user";
+
+export const api = {
+  defaultApi,
+  userApi,
+};
+```
+
+4️⃣ 在 `nuxt.config.ts` 中配置自动导入
+
+```typescript
+export default defineNuxtConfig({
+  imports: {
+    dirs: ["api"], // api 文件夹顶层路径中的资源会被自动导入
+  },
+});
+```
+
+5️⃣ 在组件中使用
+
+```html
+<script setup lang="ts">
+  /** 获取推荐列表 */
+  const { data: homeContent } = await useAsyncData("homeContent", api.defaultApi.requestHomeContent);
+</script>
+```
+
+6️⃣ 在 `server/api/[...].ts` 中配置本地开发代理
+
+```typescript
+import { joinURL } from "ufo";
+
+export default defineEventHandler(async (event) => {
+  const runtimeConfig = useRuntimeConfig();
+  const proxyUrl = runtimeConfig.public.apiBase || "";
+
+  // 替换开头 的/api，用 正则表达式
+  const path = event.path.replace(/^\/api/, "");
+  const target = joinURL(proxyUrl, path);
+
+  return proxyRequest(event, target);
+});
+```
 
 ### 5. 组合式函数
 
@@ -135,6 +271,22 @@
 
 - 全局样式 main.scss、tailwind.css，支持 PC/移动端响应式。
 - 支持自定义断点、媒体查询。
+
+### 8. 广告组件
+
+- 封装 `<AdsbyGoogle>` 和 `<AdsbyExchange>` 广告组件
+
+**使用该组件**
+
+`ads-attrs` 是一个对象，只需要传递 `data-ad-slot` 属性即可，其他属性均已设置默认值，如果需要覆盖则可自行传递，会覆盖默认值
+
+```html
+<AdsbyGoogle :ads-attrs="adSense?.home_1" />
+```
+
+**广告调试**
+
+在 `url` 后面增加 `db` `query`参数即可，如 `www.xxx.com?db=1`，表示开启 debug 模式
 
 ## 五、服务端实现细节
 

@@ -20,7 +20,6 @@ export const customFetch = $fetch.create({
     // const { webConfig } = useAppStore()
 
     // options.headers.set('home_template', '2')
-    // options.headers.set('novel_template', webConfig.novelTemplate.toString())
   },
   // 响应拦截器
   onResponse({ response }) {
