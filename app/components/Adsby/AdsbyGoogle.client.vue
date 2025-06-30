@@ -34,7 +34,7 @@ const isShowAd = computed(() => {
   const isOnlyMobile = only === 'mobile' && isMobile.value
   return Object.keys(adsAttrs).includes('data-ad-slot') && (isOnlyPc || isOnlyMobile || !only)
 })
-/** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
+/** 系统是否向广告单元返回了广告（如果未返回广告，则隐藏广告内容及标题） */
 const isAdFilled = ref(true)
 /** 是否进入调试模式 */
 const isShowDebug = ref(false)
@@ -65,7 +65,7 @@ const observer = new MutationObserver((mutations) => {
   })
 })
 
-/** 监视广告是否加载成功，来控制是否显示广告内容区 */
+/** 监视系统是否向广告单元返回了广告，来控制是否显示广告内容区 */
 const observeAdStatus = async () => {
   await nextTick()
   /** ins 标签 DOM */
@@ -87,6 +87,7 @@ const showAd = async () => {
   if (!isShowAd.value) return
   // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
   await nextTick()
+  console.log('🚀🚀🚀 adsenseRef.value: ', adsenseRef.value)
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
     $firebase.logEvent('load_ads', 'expose')
