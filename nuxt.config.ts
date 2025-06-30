@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@pinia/nuxt',
     '@nuxt/image',
-    '@nuxtjs/device',
     '@nuxt/icon',
     '@element-plus/nuxt',
     '@nuxtjs/tailwindcss',
