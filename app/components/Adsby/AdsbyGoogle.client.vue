@@ -2,6 +2,7 @@
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
 const { $firebase } = useNuxtApp()
+console.log('🚀🚀🚀 $firebase: ', $firebase)
 const route = useRoute()
 const { webConfig } = useAppStore()
 
@@ -66,8 +67,7 @@ const observer = new MutationObserver((mutations) => {
 })
 
 /** 监视系统是否向广告单元返回了广告，来控制是否显示广告内容区 */
-const observeAdStatus = async () => {
-  await nextTick()
+function observeAdStatus() {
   /** ins 标签 DOM */
   const ads = adsenseRef.value
   if (!ads) return
@@ -83,10 +83,11 @@ const observeAdStatus = async () => {
 }
 
 /** 展示广告 */
-const showAd = async () => {
+async function showAd() {
   if (!isShowAd.value) return
   // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-  await nextTick()
+  if (!adsenseRef.value) return
+  // await nextTick()
   console.log('🚀🚀🚀 adsenseRef.value: ', adsenseRef.value)
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({})
@@ -102,8 +103,11 @@ onMounted(async () => {
   if (route.query.db) {
     isShowDebug.value = true
   }
-  observeAdStatus()
-  showAd()
+  await nextTick()
+  setTimeout(() => {
+    observeAdStatus()
+    showAd()
+  }, 100)
 })
 
 onActivated(() => {

@@ -5,7 +5,7 @@
 import type { H3Event } from 'h3'
 import { getHost } from '../utils/index'
 
-export async function defineEventHandler(event: H3Event) {
+export default defineEventHandler(async (event: H3Event) => {
   const host = getHost(event)
   const url = event.node.req.url
 
@@ -38,4 +38,4 @@ export async function defineEventHandler(event: H3Event) {
       return { success: false, data: error }
     }
   }
-}
+})

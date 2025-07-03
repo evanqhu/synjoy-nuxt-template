@@ -4,7 +4,7 @@
 import type { H3Event } from 'h3'
 import { joinURL } from 'ufo'
 
-export async function defineEventHandler(event: H3Event) {
+export default defineEventHandler((event: H3Event) => {
   const runtimeConfig = useRuntimeConfig()
   const proxyUrl = runtimeConfig.public.apiBase || ''
 
@@ -13,4 +13,4 @@ export async function defineEventHandler(event: H3Event) {
   const target = joinURL(proxyUrl, path)
 
   return proxyRequest(event, target)
-}
+})
