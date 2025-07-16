@@ -4,12 +4,13 @@
 export default defineNuxtConfig({
   /** 模块 */
   modules: [
-    '@nuxt/eslint',
-    '@pinia/nuxt',
-    '@nuxt/image',
-    '@nuxt/icon',
-    '@element-plus/nuxt',
-    '@nuxtjs/tailwindcss',
+   '@nuxt/eslint',
+   '@pinia/nuxt',
+   '@nuxt/image',
+   '@nuxt/icon',
+   '@element-plus/nuxt',
+   '@nuxtjs/tailwindcss',
+   '@nuxtjs/device',
   ],
   /** 自动导入 */
   imports: {
