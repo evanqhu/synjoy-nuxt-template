@@ -33,7 +33,7 @@ const adsenseRef = useTemplateRef<HTMLElement>('adsense')
 const isShowAd = computed(() => {
   const isOnlyPc = only === 'pc' && !isMobile.value
   const isOnlyMobile = only === 'mobile' && isMobile.value
-  return Object.keys(adsAttrs).includes('data-ad-slot') && (isOnlyPc || isOnlyMobile || !only)
+  return adsAttrs?.['data-ad-slot'] && (isOnlyPc || isOnlyMobile || !only)
 })
 /** 系统是否向广告单元返回了广告（如果未返回广告，则隐藏广告内容及标题） */
 const isAdFilled = ref(true)
