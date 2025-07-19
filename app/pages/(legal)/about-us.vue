@@ -2,10 +2,6 @@
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 
-definePageMeta({
-  name: 'about-us',
-})
-
 useSeoMeta({
   title: 'About Us',
 })

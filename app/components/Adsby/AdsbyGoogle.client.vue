@@ -2,7 +2,6 @@
 <!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
 <script lang="ts" setup>
 const { $firebase } = useNuxtApp()
-console.log('🚀🚀🚀 $firebase: ', $firebase)
 const route = useRoute()
 const { webConfig } = useAppStore()
 

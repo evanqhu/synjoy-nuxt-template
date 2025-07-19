@@ -18,6 +18,7 @@ export function useAdsClickListener() {
   const fbTrack = useFBTrack()
   const bigoTrack = useBigoTrack()
   const { webConfig } = useAppStore()
+  const route = useRoute()
 
   let isTrackingSetup = false // 是否已经设置监听
   let intervalTimer: NodeJS.Timeout | undefined // 定时器
@@ -70,6 +71,13 @@ export function useAdsClickListener() {
             // 3. TikTok 上报
             if (webConfig.ttq) {
               ttTrack(iframeObj.adSlot || '0000')
+              // 非首页，二次上报
+              if (route.name !== 'index') {
+                const timer = setTimeout(() => {
+                  ttTrack(iframeObj.adSlot || '0000')
+                  clearTimeout(timer)
+                }, 0)
+              }
             }
 
             // 4. Facebook 上报

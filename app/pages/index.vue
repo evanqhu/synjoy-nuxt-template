@@ -1,8 +1,5 @@
 <!-- 首页 home -->
 <script setup lang="ts">
-definePageMeta({
-  name: 'index',
-})
 </script>
 
 <template>

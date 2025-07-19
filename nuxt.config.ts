@@ -4,13 +4,13 @@
 export default defineNuxtConfig({
   /** 模块 */
   modules: [
-   '@nuxt/eslint',
-   '@pinia/nuxt',
-   '@nuxt/image',
-   '@nuxt/icon',
-   '@element-plus/nuxt',
-   '@nuxtjs/tailwindcss',
-   '@nuxtjs/device',
+    '@nuxt/eslint',
+    '@pinia/nuxt',
+    '@nuxt/image',
+    '@nuxt/icon',
+    '@element-plus/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/device',
   ],
   /** 自动导入 */
   imports: {
@@ -36,16 +36,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   /** Vite 配置 */
   vite: {
-    esbuild: process.env.NODE_ENV === 'production'
-      ? {
-        // 打包时移除 console.log
-          pure: process.env.NUXT_DROP_CONSOLE === 'true' ? ['console.log'] : [],
-          // 打包时移除 debugger
-          drop: ['debugger'],
-          // 打包时移除所有注释
-          legalComments: 'none',
-        }
-      : undefined,
+    esbuild:
+      process.env.NODE_ENV === 'production'
+        ? {
+            // 打包时移除 console.log
+            pure: process.env.NUXT_DROP_CONSOLE === 'true' ? ['console.log'] : [],
+            // 打包时移除 debugger
+            drop: ['debugger'],
+            // 打包时移除所有注释
+            legalComments: 'none',
+          }
+        : undefined,
     css: {
       preprocessorOptions: {
         // 引入全局样式变量

@@ -3,7 +3,7 @@
  * @description 根据请求的 host，加载对应的配置到 nuxtApp 的上下文中，即 event.context.config
  */
 import { getHost } from '../utils/index'
-import webConfigs from '~/web-configs'
+import webConfigs from '~/web.configs'
 
 export default defineEventHandler((event) => {
   const host = getHost(event)

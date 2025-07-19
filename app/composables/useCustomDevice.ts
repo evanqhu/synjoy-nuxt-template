@@ -1,9 +1,11 @@
 /**
  * @name 自定义检测设备类型（基于屏幕宽度，768px 作为分界点）
+ * @note 不要使用 isMobile 来约束 UI，可能会导致水合错误
+ * @note onMounted 之后，isMobile 的值才是正确的
  */
-export const useCustomDevice = () => {
+export function useCustomDevice() {
   // 初始化响应式状态
-  const isMobile = ref(false)
+  const isMobile = ref(true)
   const isDesktop = ref(false)
 
   // 更新状态的方法

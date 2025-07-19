@@ -1,8 +1,9 @@
-import type { WebConfig as ConfigType } from '../app/web-configs.ts'
+import type { getAnalytics } from 'firebase/analytics'
+import type { WebConfig as ConfigType } from './app/web.configs.js'
 
 declare global {
   interface Window {
-    JSCallAndroid: Fun
+    JSCallAndroid: any
     adsbygoogle: any
     ttq: any
     fbq: any
@@ -17,7 +18,7 @@ declare global {
 declare module '#app' {
   interface NuxtApp {
     $firebase: {
-      analytics: Analytics | null
+      analytics: ReturnType<typeof getAnalytics> | null
       logEvent: (eventName: string, method: string, eventParams?: Record<string, any>) => void
     }
   }
