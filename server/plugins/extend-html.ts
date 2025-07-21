@@ -1,3 +1,5 @@
+import type { WebConfig } from '~/web.configs'
+
 /**
  * @name 扩展模板
  * @description 在 HTML 模板中注入脚本，如 adScore 和 fbq 脚本
