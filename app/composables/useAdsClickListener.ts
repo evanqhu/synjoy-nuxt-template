@@ -17,6 +17,7 @@ export function useAdsClickListener() {
   const ttTrack = useTikTokTrack()
   const fbTrack = useFBTrack()
   const bigoTrack = useBigoTrack()
+  const kwaiTrack = useKwaiTrack()
   const { webConfig } = useAppStore()
   const route = useRoute()
 
@@ -88,6 +89,11 @@ export function useAdsClickListener() {
             // 5. Bigo 上报
             if (webConfig.bigo) {
               bigoTrack()
+            }
+
+            // 6. Kwai 上报
+            if (webConfig.kwai) {
+              kwaiTrack(iframeObj.adSlot || '0000')
             }
           }
         })

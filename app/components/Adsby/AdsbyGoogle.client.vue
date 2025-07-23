@@ -83,6 +83,7 @@ function observeAdStatus() {
 
 /** 展示广告 */
 async function showAd() {
+  if (process.env.NODE_ENV === 'development') return
   if (!isShowAd.value) return
   // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
   if (!adsenseRef.value) return

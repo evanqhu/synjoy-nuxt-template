@@ -87,5 +87,6 @@ export type WebConfig = Omit<DefaultConfig, 'adSense' | 'adExchange' | 'ttq' | '
   ttq?: string
   fbq?: string
   bigo?: string
+  kwai?: string
   adScore?: string
 }

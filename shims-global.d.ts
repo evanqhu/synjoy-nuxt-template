@@ -8,6 +8,7 @@ declare global {
     ttq: any
     fbq: any
     bge: any
+    kwaiq: any
     google: any
     googleCallback: any
   }
