@@ -6,11 +6,11 @@ export const useKwaiTrack = () => {
   }
 
   const kwaiTrack = (ads: string, event: string = 'completeRegistration') => {
-    console.log('🚀🚀🚀 Kwai Track', ads)
     if (!window.kwaiq) {
       console.error('Kwai Track is not supported.')
       return () => {}
     }
+    console.log('🚀🚀🚀 Kwai Track', ads)
     window.kwaiq.instance(webConfig.kwai).track(event)
   }
 

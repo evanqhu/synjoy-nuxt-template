@@ -9,11 +9,11 @@ export function useFBTrack() {
   }
 
   const fbTrack = (id: number | string, event: string = 'AddToCart') => {
-    console.log('🚀🚀🚀 FB Track', id)
     if (!window.fbq) {
       console.error('FB Track is not supported.')
       return () => {}
     }
+    console.log('🚀🚀🚀 FB Track', id)
     // 标准事件
     window.fbq('track', event, {
       content_ids: [id],

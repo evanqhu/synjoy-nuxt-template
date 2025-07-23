@@ -11,11 +11,11 @@ export function useBigoTrack() {
   const { webConfig } = useAppStore()
 
   const bigoTrack = (event: string = 'button') => {
-    console.log('🚀🚀🚀 Bigo Track')
     if (!window.bge) {
       console.error('Bigo Track is not supported.')
       return () => {}
     }
+    console.log('🚀🚀🚀 Bigo Track')
     window.bge('event', event, { configId: webConfig.bigo })
   }
 

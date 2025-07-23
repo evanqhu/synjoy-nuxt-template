@@ -9,11 +9,11 @@ export function useTikTokTrack() {
   }
 
   const ttTrack = (id: number | string, event: string = 'ClickButton') => {
-    console.log('🚀🚀🚀 TikTok Track', id)
     if (!window.ttq) {
       console.error('TikTok Pixel Track is not supported.')
       return () => {}
     }
+    console.log('🚀🚀🚀 TikTok Track', id)
     window.ttq.track(event, {
       value: '100',
       currency: 'USD',
