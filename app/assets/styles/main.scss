@@ -9,7 +9,7 @@
 
 /** 定义 CSS 变量 */
 :root {
-  --bg-color: #fff;
+  --bg-color: #ffffff;
   --text-color: #213547;
   --header-height: 4rem;
   --container-width: 1200px;
@@ -19,7 +19,7 @@
 /** 暗色模式 */
 .dark-mode {
   --bg-color: #1a1a1a;
-  --text-color: #ffffdee;
+  --text-color: #ffffffde;
 }
 
 body {
