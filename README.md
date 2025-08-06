@@ -2,24 +2,24 @@
 
 ## 一、项目简介
 
-本项目基于 Nuxt 3 + Vue 3 + TypeScript，结合 Pinia 状态管理、Element Plus 组件库、TailwindCSS 原子化样式、Winston 日志、Firebase 分析、服务端中间件等，构建现代化 Web 应用模板，支持多端适配、广告集成、灵活配置和高可维护性。
+本项目基于 Nuxt 4 + Vue 3 + TypeScript，结合 Pinia 状态管理、Element Plus 组件库、TailwindCSS 原子化样式、Winston 日志、Firebase 分析、服务端中间件等，构建现代化 Web 应用模板，支持多端适配、广告集成、灵活配置和高可维护性。
 
 ---
 
 ## 二、技术栈与核心依赖
 
-- **前端框架**：Nuxt 3 (Vue 3, Composition API, SSR)
+- **前端框架**：Nuxt 4 (Vue 3, Composition API, SSR)
 - **状态管理**：Pinia
 - **代码规范化**：`@nuxt/eslint`、`stylistic`
-- **UI 组件**库：Element Plus
+- **UI 组件库**：Element Plus
 - **样式方案**：TailwindCSS4、SCSS
 - **图标方案**：`@nuxt/icon`，支持本地 SVG 图标和自定义 Logo
 - **图片优化**：`@nuxt/image`
-- **设备检测**：`@nuxtjs/device` + 自定义 useCustomDevice
+- **设备检测**：`@nuxtjs/device` + 自定义 `useCustomDevice`
 - **API 封装**：`$fetch` 二次封装，统一错误处理
 - **日志系统**：自研 `nuxt3-winston-log` 模块，基于 `winston` + `daily-rotate-file`
 - **路由系统**：自定义路由系统，支持多渠道
-- **广告与分析**：Google AdSense、AdExchange、Firebase Analytics、`useAdsClickListener`、TikTok/Facebook/Bigo 埋点
+- **广告与分析**：`Google AdSense`、`AdExchange`、`Firebase Analytics`、`useAdsClickListener`、`TikTok/Facebook/Bigo` 埋点
 - **类型系统**：TypeScript 全面类型约束
 - **开发工具**：Vite、ESLint、Sass、vue-tsc
 - **CI/CD**：支持 Docker 部署，内置 `run.sh` 脚本
@@ -45,15 +45,15 @@
 │   │   ├── useCustomRouting.ts         # 路由跳转
 │   │   ├── useTikTokTrack.ts           # TikTok 统计
 │   │   ├── useFBTrack.ts               # Facebook 统计
+│   │   ├── useKwaiTrack.ts             # 快手 统计
 │   │   └── useBigoTrack.ts             # Bigo 统计
 │   ├── layouts/                        # 布局组件
 │   ├── middleware/                     # 路由中间件
 │   │   ├── auth.global.ts              # 用户认证
 │   │   └── validate-channel.global.ts  # 渠道验证
 │   ├── pages/                          # 路由页面
-│   │   └── [[channel]]/                # 多渠道页面
-│   │       ├── (legal)/                # 法律条款相关页面
-│   │       └── index.vue               # 首页
+│   │   ├── (legal)/                    # 法律条款相关页面
+│   │   └── index.vue                   # 首页
 │   ├── plugins/                        # 插件
 │   │   ├── firebase.client.ts          # Firebase 分析
 │   │   ├── load-config.server.ts       # 服务端配置加载
@@ -66,6 +66,7 @@
 │   │   ├── index.ts                    # 工具函数
 │   │   └── request.ts                  # API 请求封装
 │   ├── web-configs.ts                  # 网站配置
+│   ├── router.options.ts.ts            # 自定义路由
 │   └── app.vue                         # 应用入口
 ├── modules/                            # Nuxt 模块
 │   └── nuxt3-winston-log/              # 自定义日志模块
@@ -85,7 +86,6 @@
 │   ├── plugins/                        # 插件
 │   │   └── extend-html.ts              # 动态注入 favicon、广告脚本、meta 信息
 │   └── utils/                          # 工具函数
-├── types/                              # 类型定义
 ├── Dockerfile                          # Docker 配置
 ├── run.sh                              # 部署脚本
 ├── nuxt.config.ts                      # Nuxt 配置
@@ -99,9 +99,9 @@
 
 ### 1. 页面与布局
 
-- 入口 `app.vue` 负责全局 SEO、Loading、布局切换。
-- 默认布局 `layouts/default.vue` 统一头部、底部、内容区。
-- 页面文件夹支持多渠道（[[channel]]）和法务页面（about-us、privacy-policy 等）。
+- 入口 `app.vue` 负责全局 SEO、Loading、布局切换
+- 默认布局 `layouts/default.vue` 统一头部、底部、内容区
+- 使用自定义的 `router.options.ts` 实现多渠道路由
 
 ### 2. 组件化
 
@@ -269,7 +269,7 @@ export default defineEventHandler(async (event) => {
 
 ### 7. 样式与适配
 
-- 全局样式 main.scss、tailwind.css，支持 PC/移动端响应式。
+- 全局样式 `main.scss`、`tailwind.css`，支持 PC/移动端响应式。
 - 支持自定义断点、媒体查询。
 
 ### 8. 广告组件
