@@ -30,9 +30,6 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2024-11-01',
-  nitro: {
-    preset: 'cloudflare',
-  },
   /** Vite 配置 */
   vite: {
     esbuild: process.env.NODE_ENV === 'production'
