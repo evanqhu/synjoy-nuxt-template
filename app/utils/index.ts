@@ -1,0 +1,5 @@
+/** 字符串首字母大写 */
+export function capitalizeFirstLetter(str?: string) {
+  if (!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}

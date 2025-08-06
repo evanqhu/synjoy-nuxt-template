@@ -1,20 +1,16 @@
 /**
- * 用于本地开发环境代理
+ * @name 通过服务端转发请求
  */
+import type { H3Event } from 'h3'
 import { joinURL } from 'ufo'
 
-export default defineEventHandler(async (event) => {
-  // Proxy url
+export default defineEventHandler((event: H3Event) => {
   const runtimeConfig = useRuntimeConfig()
   const proxyUrl = runtimeConfig.public.apiBase || ''
-  // console.log('🚀🚀🚀 proxyUrl: ', proxyUrl)
 
-  // check the path
   // 替换开头 的/api，用 正则表达式
   const path = event.path.replace(/^\/api/, '')
   const target = joinURL(proxyUrl, path)
-  // console.log('🚀🚀🚀 target: ', target)
 
-  // proxy it
   return proxyRequest(event, target)
 })

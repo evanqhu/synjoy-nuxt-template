@@ -1,0 +1,80 @@
+// 定义基础 CSS 变量和一些不适合用 tailwind 实现的样式
+@use "./fonts.css" as *;
+
+*,
+*::before,
+*::after {
+  scrollbar-width: none;
+}
+
+/** 定义 CSS 变量 */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #213547;
+  --header-height: 4rem;
+  --container-width: 1200px;
+  --theme-color: #007162;
+}
+
+/** 暗色模式 */
+.dark-mode {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffffde;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Playfair";
+  overflow-x: hidden;
+
+  #__nuxt {
+    height: 100dvh;
+    width: 100vw;
+    min-width: 360px;
+  }
+}
+
+// 基础描边样式
+.outline-base {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    transition: box-shadow 0.3s;
+  }
+}
+
+// 悬浮时加粗
+.hover-outline {
+  cursor: pointer;
+  transition: all 0.3s;
+  @extend .outline-base;
+
+  &:hover::after {
+    box-shadow: inset 0 0 0 2px var(--theme-color);
+  }
+}
+
+// 激活时加粗
+.outline-thumb {
+  @extend .outline-base;
+
+  &::after {
+    transition: none;
+  }
+
+  &.outline-thumb-active::after {
+    box-shadow: inset 0 0 0 2px var(--theme-color);
+  }
+
+  &.outline-thumb-active:hover {
+    opacity: 1;
+  }
+}

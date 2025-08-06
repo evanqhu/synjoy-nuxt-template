@@ -1,193 +1,133 @@
-# Nuxt3 项目模板
+# synjoy-nuxt-template 技术方案说明
 
-## 简介
+## 一、项目简介
 
-该项目是基于 [Nuxt3](https://nuxt.com/) 的服务端渲染项目模板，集成了一些常用的功能和配置，方便快速搭建网站项目。
+本项目基于 Nuxt 3 + Vue 3 + TypeScript，结合 Pinia 状态管理、Element Plus 组件库、TailwindCSS 原子化样式、Winston 日志、Firebase 分析、服务端中间件等，构建现代化 Web 应用模板，支持多端适配、广告集成、灵活配置和高可维护性。
 
-### 功能配置
+---
 
-- 使用 ESLint 和 Stylistic 用于语法和样式校验 ([@/nuxt/eslint](https://eslint.nuxt.com/packages/module))
-- 使用 Pinia 状态管理器 ([@pinia/nuxt](https://pinia.vuejs.org/ssr/nuxt.html))
-- 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 处理图标
-- 使用 [@nuxt/image](https://image.nuxt.com/) 处理图片
-- 使用 [@nuxtjs/device](https://nuxt.com/modules/device) 结合自定义的 `useCustomDevice()` 响应式获取设备类型
-- 使用 [@element-plus/nuxt](https://nuxt.com/modules/element-plus) 作为 UI 组件库
-- 封装 `AdsbyGoogle` 和 `AdsbyExchange` 组件
-- 在服务器使用中间件加载 `web-configs.ts`，实现多域名适配；实现上报 `Header` 和 `www` 重定向
-- 在 `app/router.options.ts` 中使用自定义路由 `path` ，实现分渠道路由
-- 封装 `useCustomRouting()` 扩展 `navigateTo()` 方法，实现携带渠道路径 `params` 参数和 `query` 参数跳转
-- 封装 `request()`，提供网络请求最佳实践
-- 封装 `useFirebase()` ，提供 `customLogEvent` 和 `customEventTrack` 方法
-- 封装 `useAdsClickListener()` 监听广告点击
-- 使用 Winston 进行服务端日志上报
+## 二、技术栈与核心依赖
 
-### 目录结构
+- **前端框架**：Nuxt 3 (Vue 3, Composition API, SSR)
+- **状态管理**：Pinia
+- **代码规范化**：`@nuxt/eslint`、`stylistic`
+- **UI 组件**库：Element Plus
+- **样式方案**：TailwindCSS4、SCSS
+- **图标方案**：`@nuxt/icon`，支持本地 SVG 图标和自定义 Logo
+- **图片优化**：`@nuxt/image`
+- **设备检测**：`@nuxtjs/device` + 自定义 useCustomDevice
+- **API 封装**：`$fetch` 二次封装，统一错误处理
+- **日志系统**：自研 `nuxt3-winston-log` 模块，基于 `winston` + `daily-rotate-file`
+- **路由系统**：自定义路由系统，支持多渠道
+- **广告与分析**：Google AdSense、AdExchange、Firebase Analytics、`useAdsClickListener`、TikTok/Facebook/Bigo 埋点
+- **类型系统**：TypeScript 全面类型约束
+- **开发工具**：Vite、ESLint、Sass、vue-tsc
+- **CI/CD**：支持 Docker 部署，内置 `run.sh` 脚本
+
+---
+
+## 三、目录结构
 
 ```plain text
-├── api                                # 后端接口
-│   ├── index.ts                       # API 统一导出
-│   └── modules/                       # API 模块
-├── app                                # 项目配置
-│   └── router.options.ts              # 路由配置
-├── assets                             # 静态资源
-│   ├── icons/                         # SVG 图标
-│   ├── logos/                         # Logo 资源
-│   └── styles/                        # 样式文件
-├── components                         # 公共组件
-│   ├── Adsby/                         # 广告组件
-│   └── App/                           # 公共 Header 和 Footer 组件
-├── composables                        # 组合式函数
-│   ├── useCustomDevice.ts             # 设备检测
-│   ├── useCustomRouting.ts            # 路由跳转
-│   ├── useFirebase.ts                 # Firebase 相关
-│   ├── useTikTokTrack.ts              # TikTok 统计
-│   ├── useFBTrack.ts                  # Facebook 统计
-│   └── useAdsClickListener.ts         # 广告点击监听
-├── layouts                            # 布局组件
-│   └── default.vue                    # 默认布局
-├── logs                               # 服务端日志
-├── middleware                         # 路由中间件
-│   ├── auth.global.ts                 # 全局认证中间件
-│   └── my-middleware.ts               # 自定义中间件
-├── modules                            # Nuxt 模块
-│   └── nuxt3-winston-log/             # 服务端日志记录模块
-├── pages                              # 路由页面
-│   ├── (legal)/                       # 法律条款相关页面
-│   ├── detail.vue                     # 详情页
-│   └── index.vue                      # 首页
-├── plugins                            # 插件
-│   └── load-config.server.ts          # 服务端的配置加载插件
-├── public                             # 公共资源
-├── server                             # 服务端
-│   ├── api/                           # 服务端 API，代理所有接口请求
-│   ├── middleware/                    # 服务端中间件，用于加载网站配置，Header 上报，www 重定向
-│   └── plugins/                       # 服务端插件，扩展 html
-├── stores                             # 状态管理
-│   ├── app.ts                         # 应用状态
-│   └── user.ts                        # 用户状态
-├── types                              # 类型定义
-├── utils                              # 工具函数
-│   ├── constants.ts                   # 常量
-│   ├── request.ts                     # 网络请求
-│   └── index.ts                       # 通用工具方法
-├── .env                               # 公共环境变量
-├── .env.development                   # 开发环境变量
-├── .env.production                    # 生产环境变量
-├── .env.stage                         # 测试环境变量
-├── app.vue                            # 应用入口
-├── error.vue                          # 错误页面
-├── nuxt.config.ts                     # Nuxt 配置
-├── package.json                       # 项目配置
-├── tsconfig.json                      # TypeScript 配置
-├── Dockerfile                         # Docker 配置
-├── run.sh                             # 部署脚本
-└── web-configs.ts                     # 网站配置
+├── app
+│   ├── api/                            # API 接口
+│   │   ├── index.ts                    # API 统一导出
+│   │   └── modules/                    # API 模块
+│   ├── assets/                         # 静态资源
+│   │   ├── icons/                      # SVG 图标
+│   │   └── styles/                     # 样式文件
+│   ├── components/                     # 公共组件
+│   │   ├── Adsby/                      # 广告组件
+│   │   └── App/                        # 公共 Header 和 Footer 组件
+│   ├── composables/                    # 组合式函数
+│   │   ├── useAdsClickListener.ts      # 广告点击监听
+│   │   ├── useCustomDevice.ts          # 设备检测
+│   │   ├── useCustomRouting.ts         # 路由跳转
+│   │   ├── useTikTokTrack.ts           # TikTok 统计
+│   │   ├── useFBTrack.ts               # Facebook 统计
+│   │   └── useBigoTrack.ts             # Bigo 统计
+│   ├── layouts/                        # 布局组件
+│   ├── middleware/                     # 路由中间件
+│   │   ├── auth.global.ts              # 用户认证
+│   │   └── validate-channel.global.ts  # 渠道验证
+│   ├── pages/                          # 路由页面
+│   │   └── [[channel]]/                # 多渠道页面
+│   │       ├── (legal)/                # 法律条款相关页面
+│   │       └── index.vue               # 首页
+│   ├── plugins/                        # 插件
+│   │   ├── firebase.client.ts          # Firebase 分析
+│   │   ├── load-config.server.ts       # 服务端配置加载
+│   │   └── route-reporter.client.ts    # 路由切换上报
+│   ├── stores/                         # 状态管理
+│   │   ├── app.ts                      # 全局状态管理
+│   │   └── user.ts                     # 用户状态管理
+│   ├── utils/                          # 工具函数
+│   │   ├── constants.ts                # 常量
+│   │   ├── index.ts                    # 工具函数
+│   │   └── request.ts                  # API 请求封装
+│   ├── web-configs.ts                  # 网站配置
+│   └── app.vue                         # 应用入口
+├── modules/                            # Nuxt 模块
+│   └── nuxt3-winston-log/              # 自定义日志模块
+├── public/                             # 公共资源
+│   ├── images/                         # 网站图片
+│   ├── logos/                          # 网站 Logo
+│   └── health.html                     # 健康检查文件
+├── logs/                               # 服务端日志
+├── server/                             # 服务端
+│   ├── api/                            # 后端接口
+│   │   ├── [...].ts                    # API 代理
+│   │   └── report.ts                   # 路由切换上报
+│   ├── middleware/                     # 中间件
+│   │   ├── load-config.ts              # 根据域名加载配置
+│   │   ├── report-headers.ts           # 请求头上报统计
+│   │   └── redirect-www.ts             # 域名重定向
+│   ├── plugins/                        # 插件
+│   │   └── extend-html.ts              # 动态注入 favicon、广告脚本、meta 信息
+│   └── utils/                          # 工具函数
+├── types/                              # 类型定义
+├── Dockerfile                          # Docker 配置
+├── run.sh                              # 部署脚本
+├── nuxt.config.ts                      # Nuxt 配置
+├── tsconfig.json                       # TypeScript 配置
+├── package.json                        # 项目配置
 ```
 
-## 快速开始
+---
 
-### 脚本介绍
+## 四、前端实现细节
 
-```yaml
-{ "scripts": {
-      # 启动开发服务器
-      "dev": "nuxi dev --dotenv .env.development --host",
-      # 开发环境打包并预览
-      "dev:pre": "nuxi build --dotenv .env.development && nuxi preview",
-      # 生产构建
-      "build": "nuxi build --dotenv .env.production",
-      # 开发构建
-      "build:dev": "nuxi build --dotenv .env.development",
-      # 测试构建
-      "build:stage": "nuxi build --dotenv .env.stage",
-      # 生成 .nuxt 文件夹
-      "prepare": "nuxi prepare",
-      # 预览 (需在打包后执行)
-      "preview": "nuxi preview",
-      # 生成静态文件 dist，用于部署在静态托管服务上
-      "generate": "nuxi generate",
-      # 服务器部署
-      "deploy": "PORT=5000 node .output/server/index.mjs",
-      # 语法校验
-      "lint": "eslint .",
-      # 语法校验并修复
-      "lint-fix": "eslint . --fix",
-    } }
-```
+### 1. 页面与布局
 
-### 环境变量
+- 入口 `app.vue` 负责全局 SEO、Loading、布局切换。
+- 默认布局 `layouts/default.vue` 统一头部、底部、内容区。
+- 页面文件夹支持多渠道（[[channel]]）和法务页面（about-us、privacy-policy 等）。
 
-公共环境变量 `.env`
+### 2. 组件化
 
-```ini
-# 公共环境变量
+- 头部、底部、广告等均为独立组件，支持响应式和多端适配。
+- 图标、Logo 支持本地 SVG 动态加载。
 
-# Google Client ID
-NUXT_GOOGLE_CLIENT_ID = 'xxx.apps.googleusercontent.com'
-```
+### 3. 状态管理
 
-开发环境变量 `.env.development`
+- `stores/app.ts` 管理全局配置、菜单状态等。
+- `stores/user.ts` 预留用户登录、信息、登出等逻辑。
 
-```ini
-# 开发环境
+### 4. API 封装
 
-# API 接口地址
-NUXT_PUBLIC_API_BASE = 'https://api.test.com/'
-
-# 开发服务器端口号
-NUXT_PORT = 1024
-```
-
-生产环境变量 `.env.production`
-
-```ini
-# 生产环境
-
-# API 接口地址
-NUXT_PUBLIC_API_BASE = 'https://api.prod.com/'
-
-# 是否删除控制台输出语句
-NUXT_DROP_CONSOLE = 'false'
-```
-
-## 开发指南
-
-### 🎯 全局样式
-
-1. 所有样式文件存放在 `～/assets/styles` 文件夹下
-2. 在 `nuxt.config.ts` 中配置 css 属性，引入全局样式，这里的样式文件会被加载在 HTML 文件的 `<head>` 中，但是无法使用其中的变量
-3. 如果需要使用变量，可以在 Vite 的 `scss` 中进行配置
-4. 已安装 Element Plus 组件库，如果需要修改其样式，可以在 `element.scss` 文件中修改
-5. 全局公共样式和变量写在 `global.scss` 中；Element UI 的样式覆盖写在 `element.scss` 中；字体引入写在 `fonts.scss` 中
-6. 该项目仅需要在 `nuxt.config.ts` 中通过 Vite 的 scss 配置引入 `global.scss` 即可
-
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  /** 全局样式文件 */
-  // css: ["~/assets/styles/main.scss"],
-
-  /** Vite 配置 */
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "~/assets/styles/global.scss" as *;', // 引入全局样式
-        },
-      },
-    },
-  },
-});
-```
-
-### 🎯 网络请求及本地开发代理
+- `utils/request.ts` 基于 `$fetch` 封装 `get/post`，统一拦截、错误处理、401 跳转。
+- `api/modules/` 目录定义业务 API 类型与请求方法。
+- `api/index.ts` 汇总导出。
 
 > 项目统一要求，所有的接口请求都通过服务端进行代理转发
 
-1️⃣ 在 `utils/request.ts` 中封装自定义的请求方法，可设置 baseURL 和响应拦截器等
+1️⃣ 在 `/app/utils/request.ts` 中封装自定义的请求方法，可设置 baseURL 和响应拦截器等
 
 ```typescript
-// API 接口请求 (如果有其他后端接口地址，封装其他的组合式函数)
+/**
+ * @name 请求方法封装
+ * @description 封装 $fetch 方法
+ */
 import type { NitroFetchOptions, NitroFetchRequest } from "nitropack";
 
 export type RequestParams = NitroFetchOptions<
@@ -202,11 +142,14 @@ export const customFetch = $fetch.create({
   // 设置超时时间为 20 秒
   timeout: 1000 * 20,
   // 请求拦截器
-  // onRequest({ options }) {
-  //   const { webConfig } = useAppStore()
-  //   options.headers.set('home_template', '2')
-  //   options.headers.set('novel_template', webConfig.novelTemplate.toString())
-  // },
+  onRequest({ options }) {
+    // 设置请求根路径
+    options.baseURL = "/api";
+
+    // const { webConfig } = useAppStore()
+
+    // options.headers.set('home_template', '2')
+  },
   // 响应拦截器
   onResponse({ response }) {
     if (!response.ok) {
@@ -228,10 +171,6 @@ export const customFetch = $fetch.create({
 
     // 通过修改 response._data 来修改响应数据
     response._data = data;
-
-    // 直接返回 data 不生效
-    // return data
-    // response._data = new myBusinessResponse(response._data)
   },
   // 响应错误拦截器
   onResponseError({ response }) {
@@ -252,7 +191,7 @@ export const request = {
 };
 ```
 
-2️⃣ 在 `api/modules/xxx.ts` 中定义各模块各接口的请求方法
+2️⃣ 在 `/app/api/modules/xxx.ts` 中定义各模块各接口的请求方法
 
 ```typescript
 // api/modules/user.ts 登录模块接口
@@ -267,7 +206,7 @@ export const logout = async () => {
 };
 ```
 
-3️⃣ 在 `api/index.ts` 中汇总导出所有模块的请求方法并导出
+3️⃣ 在 `/app/api/index.ts` 中汇总导出所有模块的请求方法并导出
 
 ```typescript
 // api/index.ts 汇总各模块请求函数，统一导出
@@ -295,10 +234,7 @@ export default defineNuxtConfig({
 ```html
 <script setup lang="ts">
   /** 获取推荐列表 */
-  const { data: recommendationListData } = useLazyAsyncData(
-    "recommendationList",
-    api.defaultApi.fetchRecommendationList
-  );
+  const { data: homeContent } = await useAsyncData("homeContent", api.defaultApi.requestHomeContent);
 </script>
 ```
 
@@ -308,538 +244,37 @@ export default defineNuxtConfig({
 import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event) => {
-  // Proxy url
   const runtimeConfig = useRuntimeConfig();
   const proxyUrl = runtimeConfig.public.apiBase || "";
-  // console.log('🚀🚀🚀 proxyUrl: ', proxyUrl)
 
-  // check the path
   // 替换开头 的/api，用 正则表达式
   const path = event.path.replace(/^\/api/, "");
   const target = joinURL(proxyUrl, path);
-  // console.log('🚀🚀🚀 target: ', target)
 
-  // proxy it
   return proxyRequest(event, target);
 });
 ```
 
-### 🎯 图标
+### 5. 组合式函数
 
-1️⃣ 使用 [@nuxt/icon](https://nuxt.com/modules/icon) 模块 (推荐使用 🎯)
+- `useCustomRouting`：路由跳转参数保留（如 channel、db）。
+- `useAdsClickListener`：广告点击监听与多渠道埋点。
+- `useFBTrack`、`useTikTokTrack`、`useBigoTrack`：第三方埋点。
 
-官方的 icon 解决方案
+### 6. 插件机制
 
-1. 安装模块
+- `firebase.client.ts`：集成 Firebase Analytics，自动上报事件。
+- `route-reporter.client.ts`：路由切换自动上报。
+- `load-config.server.ts`：服务端渲染时将配置注入 Pinia。
 
-```shell
-npx nuxi module add icon
-```
+### 7. 样式与适配
 
-2. 配置
+- 全局样式 main.scss、tailwind.css，支持 PC/移动端响应式。
+- 支持自定义断点、媒体查询。
 
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  /** 模块 */
-  modules: ["@nuxt/icon"],
-  /** Nuxt Icon 模块 */
-  icon: {
-    customCollections: [
-      {
-        prefix: "local",
-        dir: "./assets/icons",
-      },
-      {
-        prefix: "logo",
-        dir: "./assets/logos",
-      },
-    ],
-  },
-});
-```
+### 8. 广告组件
 
-3. 使用
-
-```html
-<Icon name="local:nuxt" size="2rem" /> <Icon name="logo:nuxt" size="2rem" />
-```
-
-可以传 `size` `color` 等属性
-
-2️⃣ 使用 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件 (已弃用 ⚠)
-
-参考：https://juejin.cn/post/7311895107530883081
-
-### 🎯 图片
-
-使用 [NuxtImg](https://image.nuxt.com/get-started/installation) 模块
-
-1. 安装模块
-
-```sh
-npx nuxi@latest module add image
-```
-
-2. 配置
-
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  /** 模块 */
-  modules: ["@nuxt/image"],
-});
-```
-
-3. 使用
-
-```html
-<NuxtImg src="/images/demo.jpg" />
-```
-
-```html
-<NuxtImg
-  provider="cloudinary"
-  src="/remote/nuxt-org/blog/going-full-static/main.png"
-  width="300"
-  height="169"
-  loading="lazy"
-/>
-
-<NuxtImg src="/demo.jpg" />
-<NuxtImg src="https://image.lexica.art/xxx" loading="lazy" />
-```
-
-> 当设置 loading='lazy' 时，图片出现在视口时才会被加载，但是根据浏览器的特性，不一定是完全出现在视口才会加载，比如在谷歌浏览器中，当图片距离顶部的距离小于 3000px 时，图片就会被加载
-
-- `src` 必须是**绝对路径** (因此可以使用外部 `url` 图片地址)
-- 如果是相对路径，图片必须放在 `public` 文件夹下
-- 注意：图片传到 CDN 上没有用，依然加载的是服务器所在主机上的图片
-
-如果不把图片放在 `public` 下，建议直接使用 `img` 标签即可
-
-### 🎯 元信息
-
-使用 `useHead` 和 `useSeoMeta` 来定义元信息
-
-```typescript
-/** 定义组件 head 数据，可在服务端渲染，可使用响应式数据 */
-useSeoMeta({
-  title: webConfig.webTitle,
-  titleTemplate: "%s | " + webConfig.metaTitleTemplate,
-  description: webConfig.metaDescription,
-  ogTitle: webConfig.webTitle,
-  ogDescription: webConfig.metaDescription,
-});
-
-useHead(
-  {
-    script: [...globalScripts],
-    link: [
-      {
-        rel: "icon",
-        href: (await import(`~/assets/logos/${webConfig.webLogo}.svg`)).default,
-      },
-    ],
-  },
-  { mode: "client" }
-);
-```
-
-### 🎯 移动端适配
-
-使用媒体查询来区分 PC 端和移动端的样式；移动端和 PC 端分界点为 `768px`；样式移动端优先
-
-```scss
-// 媒体查询 (移动端优先)
-$breakPoints: (
-  "pc": $device-point,
-);
-
-@mixin responseTo($device: "pc") {
-  $config: map.get($breakPoints, $device);
-  @if $config == null {
-    @error "设备类型 '#{$device}' 未在 $breakPoints 中定义。可用的设备类型有: #{map.keys($breakPoints)}";
-  }
-  @media screen and (min-width: $config) {
-    @content;
-  }
-}
-```
-
-```scss
-.home {
-  width: 200px;
-  @include responseTo("pc") {
-    width: 100%;
-  }
-}
-```
-
-PC 端和移动端的逻辑差异，需要使用 `NuxtDevice` 模块配合自定义的 `useCustomDevice()` 来处理
-
-** 自定义 `useCustomDevice()` **
-
-原生的 [NuxtDevice](https://nuxt.com/modules/device) 模块返回的值不是响应式的，这里进行封装，增加响应式
-
-```typescript
-// composables/useCustomDevice.ts
-// 自定义检测设备类型
-export const useCustomDevice = () => {
-  // 从 Nuxt App 获取 device module 的实例
-  const { $device } = useNuxtApp();
-
-  // 初始化响应式状态
-  const isMobile = ref($device.isMobile);
-  const isDesktop = ref(!$device.isMobile);
-
-  // 更新状态的方法
-  const _resizeHandler = () => {
-    const userAgent = navigator.userAgent.toLocaleLowerCase();
-    const matchesMobile = /mobile|android|webos|iphone|ipod|blackberry/i.test(userAgent);
-    isMobile.value = matchesMobile;
-    isDesktop.value = !matchesMobile;
-  };
-
-  // 监听 window resize 事件
-  onMounted(() => {
-    window.addEventListener("resize", _resizeHandler);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener("resize", _resizeHandler);
-  });
-
-  return {
-    isMobile,
-    isDesktop,
-  };
-};
-```
-
-使用 `useCustomDevice()` 返回的值是响应式的，切换页面大小时这个值会自动改变
-
-```html
-<script setup lang="ts">
-  const { isMobile } = useCustomDevice();
-</script>
-
-<template>
-  <div>isMobile: {{ isMobile }}</div>
-</template>
-```
-
-### 🎯 Firebase
-
-由于不建议将辅助函数放在全局命名空间中，因此这里不再使用插件方法，而是使用组合式函数来实现
-
-在 `composables` 中新建 `useFirebase.ts` 文件
-
-`composables/useFirebase.ts`
-
-```typescript
-import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
-
-export const useFirebase = () => {
-  // 定义默认的 log 和 track 函数
-  const customLogEvent = shallowRef((eventName: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Log: ${eventName}`, eventParams);
-  });
-  const customEventTrack = shallowRef((eventName: string, method: string, eventParams = {}) => {
-    console.log(`🚀🚀🚀 Client Track: ${eventName}`, method, eventParams);
-  });
-  // 仅客户端运行
-  onBeforeMount(async () => {
-    // 开发环境不运行 firebase
-    if (process.env.NODE_ENV === "development") {
-      customLogEvent.value = (eventName: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Log: ${eventName}`, eventParams);
-      };
-      customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
-        console.log(`🚀🚀🚀 Client Development Track: ${eventName}`, method, eventParams);
-      };
-    } else {
-      const { webConfig } = useAppStore();
-      const firebaseConfig = webConfig.firebase || {};
-
-      /** 初始化 Firebase */
-      const initializeFirebase = () => {
-        const firebaseApp = initializeApp(firebaseConfig);
-
-        // 启用 Analytics
-        const analyticsInstance = getAnalytics(firebaseApp);
-        return analyticsInstance;
-      };
-
-      try {
-        await isSupported();
-        const analytics = initializeFirebase();
-
-        // 记录一个名为 "in_page" 的事件，表示用户进入页面
-        logEvent(analytics, "in_page");
-        console.log("🚀🚀🚀 firebase analytics: ", "in_page");
-
-        customLogEvent.value = (eventName: string, eventParams = {}) => {
-          logEvent(analytics, eventName, eventParams);
-          console.log("🚀🚀🚀 firebase analytics: ", eventName);
-        };
-        customEventTrack.value = (eventName: string, method: string, eventParams = {}) => {
-          const _eventParams = {
-            time: new Date(),
-            message: eventName,
-            method,
-            ...eventParams,
-          };
-          logEvent(analytics, eventName, _eventParams);
-          console.log("🚀🚀🚀 firebase analytics: ", eventName);
-        };
-      } catch (error) {
-        console.error("🚀🚀🚀 Firebase Analytics is not supported", error);
-      }
-    }
-  });
-
-  return {
-    customLogEvent,
-    customEventTrack,
-  };
-};
-```
-
-使用时通过 `const { customEventTrack } = useFirebase()` 得到相应的函数
-
-### 🎯 AdSense
-
-1️⃣ **广告脚本**
-
-在 `app.vue` 中通过 `useHead()` 加载广告脚本，配置文件存储在 appStore 中
-
-广告脚本仅在**生产环境**的**客户端**加载
-
-2️⃣ **ads.txt**
-
-`ads.txt` 通过服务端中间件 `server/middleware/load-config.ts` 处理
-
-**同时也是在这里根据 host 加载网站配置到 nuxt 上下文中**
-
-```typescript
-/**
- * server/middleware/load-config.ts
- * 服务器中间件
- * 根据请求的 host，加载对应的配置到 nuxtApp 的上下文中
- */
-import webConfigs from "~/configs/web-configs";
-
-export default defineEventHandler((event) => {
-  // console.log('🚀🚀🚀 process.env.NODE_ENV: ', process.env.NODE_ENV)
-
-  const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
-  const host = originHost.replace(/^www\./, "");
-
-  // console.log('🚀🚀🚀 请求的 host: ', host)
-
-  const config = webConfigs[host] || webConfigs.localhost;
-
-  // 将配置注入到响应的上下文中
-  event.context.config = config;
-
-  /** 处理 ads.txt 请求 */
-  const url = event.node.req.url;
-  // console.log('🚀🚀🚀 请求的 url: ', url)
-
-  // 如果请求的路径是 /ads.txt
-  if (url === "/ads.txt") {
-    // 设置响应类型为纯文本
-    event.node.res.setHeader("Content-Type", "text/plain");
-
-    // 返回自定义的 ads.txt 内容
-    event.node.res.end(config.adSense?.ads);
-  }
-});
-```
-
-3️⃣ **广告组件**
-
-封装一个 `AdsbyGoogle` 组件，在组件内的 `onMounted` 生命周期中使用 `window.adsbygoogle.push({})` 方法加载广告
-
-```html
-<!-- components/AdsbyGoogle.client.vue -->
-<!-- AdSense -->
-<!-- https://support.google.com/adsense/answer/9274634?hl=zh-Hans -->
-<script lang="ts" setup>
-  const { customEventTrack } = useFirebase();
-  const route = useRoute();
-  const { webConfig } = useAppStore();
-
-  interface Props {
-    /**
-     * 广告配置对象 data-ad-client data-ad-slot 等
-     */
-    adsAttrs?: object;
-    /**
-     * 自定义样式
-     */
-    customClass?: string;
-    /**
-     * 仅在某一端显示
-     */
-    only?: "pc" | "mobile";
-  }
-
-  const { adsAttrs = {}, customClass = "", only } = defineProps<Props>();
-
-  /** 设备类型 */
-  const { isMobile } = useCustomDevice();
-
-  /** ins 标签模板引用 */
-  const adsenseRef = useTemplateRef<HTMLElement>("adsense");
-
-  /** 是否显示广告（如果广告位配置对象不含 data-ad-slot 属性则不显示广告） */
-  const isShowAd = computed(() => {
-    const isOnlyPc = only === "pc" && !isMobile.value;
-    const isOnlyMobile = only === "mobile" && isMobile.value;
-    return Object.keys(adsAttrs).includes("data-ad-slot") && (isOnlyPc || isOnlyMobile || !only);
-  });
-  /** 广告是否填充成功（如果广告填充失败，则隐藏广告内容及标题） */
-  const isAdFilled = ref(true);
-  /** 是否进入调试模式 */
-  const isShowDebug = ref(false);
-
-  /** 完整的广告位配置对象 */
-  const adsAttrsFull = computed(() => {
-    return Object.assign(
-      {
-        class: "adsbygoogle",
-        style: "display:block",
-        "data-ad-format": "auto",
-        "data-full-width-responsive": "true",
-        "data-ad-client": webConfig.adSense?.clientId,
-      },
-      adsAttrs
-    );
-  });
-
-  /** 创建一个 DOM 树变动观察器 */
-  const observer = new MutationObserver((mutations) => {
-    // 遍历监听到的 DOM 变化
-    mutations.forEach((mutation) => {
-      const target = mutation.target as Element;
-      if (mutation.attributeName === "data-ad-status") {
-        console.log("🚀🚀🚀 [AdsbyGoogle] 广告状态发生改变");
-        isAdFilled.value = target.getAttribute("data-ad-status") !== "unfilled";
-      }
-    });
-  });
-
-  /** 监视广告是否加载成功，来控制是否显示广告内容区 */
-  const observeAdStatus = async () => {
-    await nextTick();
-    /** ins 标签 DOM */
-    const ads = adsenseRef.value;
-    if (!ads) return;
-
-    // 观察 ins 标签的 data-ad-status 属性变化
-    observer.observe(ads, {
-      attributes: true, // 监听属性变动
-      attributeFilter: ["data-ad-status"], // 只监听 data-ad-status 属性
-    });
-
-    // 初始化检查
-    isAdFilled.value = ads.getAttribute("data-ad-status") !== "unfilled";
-  };
-
-  /** 展示广告 */
-  const showAd = async () => {
-    if (!isShowAd.value) return;
-    // NOTE 必须加这个，否则访问到的 ads 实例为 undefined
-    await nextTick();
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      customEventTrack.value("load_ads", "expose");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  onMounted(async () => {
-    // 开启广告调试模式
-    if (route.query.db) {
-      isShowDebug.value = true;
-    }
-    observeAdStatus();
-    showAd();
-  });
-
-  onActivated(() => {
-    showAd();
-  });
-
-  onBeforeUnmount(() => {
-    observer?.disconnect();
-  });
-</script>
-
-<template>
-  <div v-if="isShowAd" class="ads-item">
-    <div v-show="isAdFilled" class="ads-content" :class="customClass">
-      <div class="ads-content-title">Advertisement</div>
-      <ins ref="adsense" v-bind="adsAttrsFull" />
-    </div>
-    <div v-if="isShowDebug" class="ads-debug">{{ adsAttrsFull }}</div>
-  </div>
-</template>
-
-<style lang="scss" scoped>
-  .ads-item {
-    margin: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    font-weight: 400;
-    font-size: 16px;
-  }
-
-  .ads-content {
-    border-bottom: 1px solid #c6c6c6;
-    height: fit-content;
-
-    .ads-content-title {
-      display: flex;
-      place-items: center;
-      font-size: 10px;
-      color: #999;
-      line-height: normal;
-
-      &::before,
-      &::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #c6c6c6;
-      }
-
-      &::before {
-        margin-right: 15px;
-      }
-
-      &::after {
-        margin-left: 15px;
-      }
-    }
-
-    .adsbygoogle {
-      text-align: center;
-    }
-  }
-
-  .ads-debug {
-    border: 2px solid red;
-    margin-bottom: 2px;
-    background-color: #ffe786;
-    color: #000;
-  }
-</style>
-```
+- 封装 `<AdsbyGoogle>` 和 `<AdsbyExchange>` 广告组件
 
 **使用该组件**
 
@@ -849,279 +284,98 @@ export default defineEventHandler((event) => {
 <AdsbyGoogle :ads-attrs="adSense?.home_1" />
 ```
 
-4️⃣ **广告调试**
+**广告调试**
 
 在 `url` 后面增加 `db` `query`参数即可，如 `www.xxx.com?db=1`，表示开启 debug 模式
 
-### 🎯 根据 host 加载网站配置
+## 五、服务端实现细节
 
-1️⃣ 在服务器上加载配置
+### 1. API 代理与上报
 
-通过服务端中间件 `server/middleware/load-config.ts` 根据请求的 host 将相应的网站配置加载到上下文，见上方 ads.txt 相关代码
+- `server/api/[...].ts`：通用 API 代理，转发到环境变量配置的后端。
+- `server/api/report.ts`：路由切换上报，采集 header、host、path、时间戳等。
 
-```typescript
-event.context.config = config;
+### 2. 中间件
+
+- `load-config.ts`：根据 host 注入对应 webConfig，并处理 /ads.txt。
+- `report-headers.ts`：请求头上报到统计后端。
+- `redirect-www.ts`：www 域名重定向。
+
+### 3. 插件
+
+- `extend-html.ts`：动态注入 favicon、广告脚本、meta 信息等。
+
+### 4. 工具
+
+- `utils/index.ts`：如 getHost，辅助中间件和 API。
+
+---
+
+## 六、自定义日志系统
+
+- `modules/nuxt3-winston-log/`：自研 Nuxt3 日志模块
+  - 支持 info/error 分级、日志轮转、压缩归档
+  - 自动重写 console.info/error，统一输出到文件和控制台
+  - 可配置日志路径、文件名、保留天数、最大体积
+  - 支持服务端请求日志钩子
+
+---
+
+## 七、配置与多环境支持
+
+- `web-configs.ts` 支持多 host 配置，自动按 host 注入
+- 支持多广告位、埋点、邮箱、Logo、描述等
+- 通过中间件和插件自动注入到前端 Pinia
+- 支持 /ads.txt 动态输出
+
+---
+
+## 八、CI/CD 与部署
+
+- `Dockerfile` 支持容器化部署
+- `run.sh` 一键启动
+- 支持多环境变量（.env.development/.production/.stage）
+- 推荐使用 pnpm 管理依赖
+
+---
+
+## 九、最佳实践与扩展建议
+
+- 组件、API、状态、工具分层清晰，便于扩展
+- 推荐按业务模块拆分 API、Store、Composables
+- 日志、埋点、广告等均可按需裁剪
+- 支持多站点/多渠道/多语言扩展
+
+---
+
+## 主流程调用关系图
+
+```mermaid
+graph TD
+  A[用户访问页面] --> B[Nuxt 路由匹配]
+  B --> C[加载 app.vue]
+  C --> D[加载默认布局 default.vue]
+  D --> E[渲染 AppHeader/AppFooter/内容区]
+  E --> F[页面组件加载，如 index.vue]
+  F --> G[Pinia 状态管理 appStore]
+  G --> H[webConfig 注入（服务端中间件+插件）]
+  F --> I[API 请求（request.ts 封装）]
+  I --> J["API 代理到 server/api/[...].ts"]
+  J --> K[转发到后端 API 服务]
+  C --> L[全局 SEO/Meta 设置]
+  C --> M[广告监听与埋点 useAdsClickListener]
+  C --> N[Firebase Analytics 插件]
+  C --> O[路由切换上报插件]
+  B --> P[前端中间件（如 auth.global.ts）]
+  B --> Q[服务端中间件（load-config/report-headers/redirect-www）]
+  Q --> H
+  Q --> R[动态输出 ads.txt]
+  Q --> S[请求头上报统计]
+  Q --> T[域名重定向]
+  C --> U[自定义日志模块 nuxt3-winston-log]
+  U --> V[重写 console.info/error]
+  U --> W[日志写入文件（info/error 分级）]
+  U --> X[服务端请求日志钩子]
+  C --> Y[全局样式与 TailwindCSS]
+  C --> Z[图标与图片优化]
 ```
-
-2️⃣ 在服务端渲染时将配置存储到状态管理器
-
-通过服务端插件 `plugins/load-config.server.ts` 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
-
-```typescript
-// plugins/load-config.server.ts
-/**
- * 服务端插件
- * 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
- */
-import type { Pinia } from "pinia";
-
-// 将 nuxtApp 上下文中的网站配置注入到 Pinia Store 中
-export default defineNuxtPlugin((nuxtApp) => {
-  const pinia = nuxtApp.$pinia as Pinia;
-  // 获取 Pinia Store 实例
-  const appStore = useAppStore(pinia); // NOTE 下次遇到数据共享和不共享的例子时再做记录
-
-  // 从服务端上下文中注入配置到 Pinia
-  appStore.webConfig = nuxtApp.ssrContext?.event.context.config || {};
-});
-```
-
-### 🎯 Header 上报
-
-通过服务器的 `report-headers` 中间件进行上报
-
-```typescript
-// server/middleware/report-headers.ts
-export default defineEventHandler(async (event) => {
-  const originHost = getHeader(event, "host")?.split(":")[0] || "localhost";
-  const host = originHost.replace(/^www\./, "");
-  const url = event.node.req.url;
-  console.log("🚀🚀🚀 请求的 url: ", url);
-
-  if (!url?.includes(".")) {
-    const data = {
-      dt: new Date().toISOString().split("T")[0], // 当前日期，格式为 YYYY-MM-DD
-      host: host,
-      path: url,
-      timestamp: Date.now(),
-      ...event.node.req.headers,
-    };
-    // 异步地发送 POST 请求到后端的 /abc 接口
-    try {
-      // 使用 $fetch 发送 POST 请求
-      await $fetch("http://data-tr.videodownloader.software/web/report", {
-        method: "POST",
-        body: data,
-      });
-    } catch (error) {
-      // 处理错误，但不影响后续的渲染
-      console.error("Error sending data to /web/report:", error);
-    }
-  }
-});
-```
-
-### 🎯 分渠道路由
-
-> 实现分渠道路由，访问 `/` 和访问 `/channelX` 是同一个页面，X 取值为 1 ～ 99，同时在跳转路由的时候，保留路径中的 `channelX`；另外路由跳转保留 query 参数。
-
-1️⃣ **实现路由**
-
-最新方案：在 `app/router.options.ts` 中配置路由
-
-```typescript
-/**
- * 自定义路由
- * 为所有路由添加可选的 channel1～99 前缀
- * 无需在每个路由组件中使用 definePageMeta 来重新定义路由了
- */
-import type { RouterConfig } from "@nuxt/schema";
-
-export default <RouterConfig>{
-  routes: (_routes) => {
-    const routes = [..._routes];
-
-    // 为所有路由添加可选的 channel 前缀
-    routes.forEach((route) => {
-      // 检查路径中是否已经包含 channel 参数
-      if (!route.path.includes(":channel(channel[1-9]")) {
-        route.path = `/:channel(channel[1-9]\\d?)?${route.path}`;
-      }
-    });
-
-    return routes;
-  },
-};
-```
-
-旧方案：在路由组件中通过 `definePageMeta` 的 `path` 配置项来自定义扩展路由
-
-```html
-<!-- pages/detail.vue -->
-<script setup lang="ts">
-  definePageMeta({
-    path: "/:channel(channel[1-9]\\d?)?/detail", // 实现分渠道路由
-  });
-</script>
-```
-
-也可以在 `nuxt.config.ts` 中通过 hooks 进行配置
-
-```typescript
-export default defineNuxtConfig({
-  hooks: {
-    "pages:extend"(pages) {
-      // 新增路由
-      pages.push({
-        name: "HomeChannel",
-        path: "/:channel(channel[1-9]\\d?)",
-        file: "~/pages/index.vue",
-      });
-    },
-  },
-});
-```
-
-2️⃣ **路由跳转**
-
-封装自定义路由跳转函数，替换原生的 `navigateTo()` 方法；同时封装生成跳转链接的函数 `getHref()`，用于生成跳转链接。
-
-```typescript
-// composables/useCustomRouting.ts
-/**
- * 自定义路由跳转方法，用于在路由跳转时保留当前 channel 参数和查询参数
- */
-// 定义路由参数类型
-import type { RouteLocationRaw } from "vue-router";
-
-export const useCustomRouting = () => {
-  const route = useRoute();
-
-  /** 路由跳转时携带 channel params 和 query 参数 */
-  const smartNavigate = (to: RouteLocationRaw, options?: Record<string, any>) => {
-    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
-
-    // 如果是字符串，则直接跳转
-    if (typeof to === "string") {
-      const fullPath = `${fullChannel}${to}`;
-      return navigateTo(
-        {
-          path: fullPath,
-          query: route.query,
-        },
-        options
-      );
-    }
-    // 如果是对象
-    else {
-      if ("name" in to) {
-        return navigateTo(
-          {
-            ...to,
-            params: {
-              ...route.params,
-              ...to?.params,
-            },
-            query: {
-              ...route.query,
-              ...to?.query,
-            },
-          },
-          options
-        );
-      } else {
-        const { path, query, ...rest } = to;
-        const fullPath = `${fullChannel}${path}`;
-        return navigateTo(
-          {
-            path: fullPath,
-            query: {
-              ...query,
-              ...route.query,
-            },
-            ...rest,
-          },
-          options
-        );
-      }
-    }
-  };
-
-  /** 获取包含 channel params 和 query 参数的跳转链接 */
-  const getHref = (path: string) => {
-    const fullChannel = route.params.channel ? `/${route.params.channel}` : ""; // /channel12
-    const queryString = new URLSearchParams(route.query as Record<string, string>).toString();
-    const fullQueryString = queryString ? `?${queryString}` : "";
-    return `${fullChannel}${path}${fullQueryString}`;
-  };
-
-  return { smartNavigate, getHref };
-};
-```
-
-```html
-<script setup lang="ts">
-const { smartNavigate, getHref } = useCustomRouting()
-</script>
-
-<template>
-  <header class="header">
-    <div class="header__left" @click="smartNavigate('/')">
-    <NuxtLink :href="getHref('/detail')">to detail</NuxtLink>
-  </header>
-</template>
-```
-
-### 🎯 服务端日志
-
-使用 Winston 进行日志记录，在项目中封装 nuxt3-winston-log 模块，重写 Node.js 的 `console` 方法，将日志记录到文件中
-
-## 项目部署
-
-1️⃣ **Node 服务器部署**
-
-1. Node 版本：>20
-2. 安装 pnpm：`npm install pnpm`
-3. 打包：`pnpm run build`
-4. 将 `.output/public` 文件夹下的全部内容上传到指定的 CDN 文件夹
-5. 执行 `PORT=5000 node .output/server/index.mjs` 命令启动服务器 (或者执行 `pnpm run deploy`)
-
-目前使用 Docker 部署，项目中已添加 `Dockerfile` 和 `run.sh`
-
-## 其它
-
-### 混合渲染
-
-对于部分页面，比如免责声明和隐私协议等静态页面，可以在构建时 (build) 生成
-
-**更正**：这些页面中包含动态内容，比如 url 等，需要根据客户端请求的 host 来决定，因此无法在构建时生成，只能通过服务端渲染来实现。
-
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  /** 服务器路由渲染规则 */
-  routeRules: {
-    "/privacy-policy": { prerender: true },
-  },
-
-  /** 实验性配置 */
-  experimental: {
-    inlineRouteRules: true, // 启用后可以在路由组件中使用 defineRouteRules() 配置 prerender
-  },
-});
-```
-
-```html
-<!-- pages/privacy-policy.vue -->
-<script setup lang="ts">
-defineRouteRules({
-  prerender: true,
-});
-</script>
-```
-
-可以在 `nuxt.config` 中配置 `routeRules`，也可以在路由组件中通过 `defineRouteRules` 配置 (需开启 `experimental.inlineRouteRules` 选项)。设置指定路由为 prerender，在构建时生成对应的 HTML 文件。
-
-构建后，输出目录 `.output/public` 中会生成 `privacy-policy/index.html` 文件。访问 `/privacy-policy` 路由时会直接返回相应的 HTML 文件，服务端不再重新渲染。之后在客户端进行水合激活。
-
-推荐使用 `defineRouteRules`

@@ -1,0 +1,47 @@
+/** tailwind 样式文件 */
+@import "tailwindcss";
+
+/** 自定义主题变量 */
+@theme {
+  --spacing-header: var(--header-height);
+  --max-width-container: var(--container-width);
+  --color-primary: var(--theme-color);
+}
+
+@layer components {
+  /** 鼠标悬浮样式 */
+  .hoverable {
+    @apply cursor-pointer transition-all duration-300;
+  }
+
+  /** 左右内边距 */
+  .app-wrapper {
+    @apply w-full px-4;
+  }
+
+  /** 版心 */
+  .app-content {
+    @apply w-full max-w-container mx-auto;
+  }
+
+  /** 法律页面 */
+  .legal-content {
+    @apply text-sm md:text-base;
+
+    h2 {
+      @apply text-[1.5em] leading-[1.5] font-bold mb-4;
+    }
+
+    h3 {
+      @apply text-[1.17em] leading-[1.5] font-bold mt-6 mb-2;
+    }
+
+    a {
+      @apply text-primary underline hover:opacity-70;
+    }
+
+    ul > li {
+      @apply list-disc list-inside;
+    }
+  }
+}
