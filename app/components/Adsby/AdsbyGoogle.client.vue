@@ -123,6 +123,7 @@ onBeforeUnmount(() => {
   <div
     v-if="isShowAd"
     class="ads-item"
+    :style="{ margin: isAdFilled ? '1rem 0' : '0' }"
   >
     <div
       v-show="isAdFilled"
@@ -148,7 +149,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .ads-item {
-  margin: 1rem 0;
   display: flex;
   flex-direction: column;
   width: 100%;
