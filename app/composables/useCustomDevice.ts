@@ -3,12 +3,11 @@
  * @note 不要使用 isMobile 来约束 UI，可能会导致水合错误
  * @note onMounted 之后，isMobile 的值才是正确的
  */
-export function useCustomDevice() {
-  // 初始化响应式状态
-  const isMobile = ref(true)
-  const isDesktop = ref(false)
-  const initialWidth = ref<number>() // 初始宽度
+const isMobile = ref(true)
+const isDesktop = ref(false)
+const initialWidth = ref<number>() // 初始宽度
 
+export function useCustomDevice() {
   // 更新状态的方法
   const _resizeHandler = () => {
     const width = window.innerWidth
