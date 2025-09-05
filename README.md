@@ -46,6 +46,7 @@
 │   │   ├── useTikTokTrack.ts           # TikTok 统计
 │   │   ├── useFBTrack.ts               # Facebook 统计
 │   │   ├── useKwaiTrack.ts             # 快手 统计
+│   │   ├── useBingTrack.ts             # Bing 统计
 │   │   └── useBigoTrack.ts             # Bigo 统计
 │   ├── layouts/                        # 布局组件
 │   ├── middleware/                     # 路由中间件
@@ -259,7 +260,7 @@ export default defineEventHandler(async (event) => {
 
 - `useCustomRouting`：路由跳转参数保留（如 channel、db）。
 - `useAdsClickListener`：广告点击监听与多渠道埋点。
-- `useFBTrack`、`useTikTokTrack`、`useBigoTrack`：第三方埋点。
+- `useFBTrack`、`useTikTokTrack`、`useBigoTrack` 等：第三方埋点。
 
 ### 6. 插件机制
 

@@ -99,6 +99,11 @@ export default defineNitroPlugin((nitroApp) => {
       `)
     }
 
+    // 注入 bing 脚本
+    if (config.bing) {
+      html.head.push(config.bing)
+    }
+
     // 注入 adScore 脚本
     if (config.adScore) {
       html.head.push(`

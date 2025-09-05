@@ -9,6 +9,7 @@ declare global {
     fbq: any
     bge: any
     kwaiq: any
+    uetq: any
     google: any
     googleCallback: any
   }

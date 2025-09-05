@@ -81,7 +81,7 @@ export default {
 
 type DefaultConfig = typeof defaultConfig
 
-export type WebConfig = Omit<DefaultConfig, 'adSense' | 'adExchange' | 'ttq' | 'fbq' | 'bigo' | 'adScore'> & {
+export type WebConfig = Omit<DefaultConfig, 'adSense' | 'adExchange' | 'ttq' | 'fbq' | 'bigo' | 'adScore' | 'bing'> & {
   adSense?: Partial<DefaultConfig['adSense']>
   adExchange?: Partial<DefaultConfig['adExchange']>
   ttq?: string
@@ -89,4 +89,5 @@ export type WebConfig = Omit<DefaultConfig, 'adSense' | 'adExchange' | 'ttq' | '
   bigo?: string
   kwai?: string
   adScore?: string
+  bing?: string
 }
