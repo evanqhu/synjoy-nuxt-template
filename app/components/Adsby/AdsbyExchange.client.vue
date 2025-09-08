@@ -19,15 +19,26 @@ interface Props {
    * 自定义样式
    */
   customClass?: string
+  /**
+   * 仅在某一端显示
+   */
+  only?: 'pc' | 'mobile'
 }
 
-const { adsAttrs = {} as AdConfig, customClass = '' } = defineProps<Props>()
+const { adsAttrs = {} as AdConfig, customClass = '', only } = defineProps<Props>()
+
+/** 设备类型 */
+const { isMobile } = useCustomDevice()
 
 /** adx 广告标签模板引用 */
 const adxRef = useTemplateRef<HTMLElement>('adx')
 
 /** 是否显示广告 */
-const isShowAd = computed(() => !!(adsAttrs.headScript || adsAttrs.bodyScript))
+const isShowAd = computed(() => {
+  const isOnlyPc = only === 'pc' && !isMobile.value
+  const isOnlyMobile = only === 'mobile' && isMobile.value
+  return !!(adsAttrs.headScript || adsAttrs.bodyScript) && (isOnlyPc || isOnlyMobile || !only)
+})
 /** 是否进入调试模式 */
 const isShowDebug = ref(false)
 
